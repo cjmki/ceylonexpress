@@ -74,164 +74,219 @@ const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-ceylon-light to-ceylon-bg py-20">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 mb-10 md:mb-0">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-4xl md:text-6xl font-bold text-ceylon-text mb-4"
+      <section className="relative bg-ceylon-bg py-0">
+        <div className="w-full h-[80vh] relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/30 z-10"></div>
+          <img
+            src="https://images.unsplash.com/photo-1627894483216-2138af692e32?w=1600&q=80"
+            alt="Sri Lankan Cuisine"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 z-20 flex items-center">
+            <div className="container mx-auto px-6">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="max-w-2xl"
+              >
+                <h2 className="text-lg font-medium text-ceylon-light mb-2">
+                  NEW MENU
+                </h2>
+                <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                  Now serving
+                  <br />
+                  summer
+                </h1>
+                <p className="text-xl text-white/90 mb-8 max-w-lg">
+                  Experience the rich flavors and aromatic spices of Sri Lanka
+                  with our premium catering services.
+                </p>
+                <Button className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-8 py-6 text-lg">
+                  ORDER NOW
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+        <div className="container mx-auto px-6 py-6 flex justify-center md:justify-between items-center border-b border-gray-200">
+          <div className="hidden md:flex space-x-12 text-lg font-medium">
+            <a
+              href="#"
+              className="text-ceylon-text hover:text-ceylon-accent border-b-2 border-ceylon-accent pb-2"
             >
-              Authentic Sri Lankan Cuisine
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-xl text-ceylon-text mb-8"
+              Our Story
+            </a>
+            <a
+              href="#"
+              className="text-ceylon-text hover:text-ceylon-accent pb-2"
             >
-              Experience the rich flavors and aromatic spices of Sri Lanka with
-              our premium catering services. Perfect for events, parties, and
-              introducing your guests to the wonders of Ceylon cuisine.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex space-x-4"
+              Locations
+            </a>
+            <a
+              href="#"
+              className="text-ceylon-text hover:text-ceylon-accent pb-2"
             >
-              <Button className="bg-ceylon-accent hover:bg-ceylon-dark text-white">
-                Order Now
-              </Button>
+              Catering
+            </a>
+          </div>
+          <div className="flex space-x-6">
+            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+              <Instagram className="h-6 w-6" />
+            </a>
+            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+              <Facebook className="h-6 w-6" />
+            </a>
+            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+              <Twitter className="h-6 w-6" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Categories */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-16">
+            <h2 className="text-4xl font-bold text-ceylon-text mb-6 md:mb-0">
+              Our Specialties
+            </h2>
+            <div className="flex space-x-2">
               <Button
                 variant="outline"
-                className="border-ceylon-accent text-ceylon-accent hover:bg-ceylon-light"
-                onClick={() => (window.location.href = "/menu")}
+                className="border-ceylon-text text-ceylon-text hover:bg-ceylon-light rounded-full px-6"
               >
-                View Menu
+                View All
               </Button>
-            </motion.div>
+            </div>
           </div>
-          <div className="md:w-1/2">
-            <motion.img
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              src="https://images.unsplash.com/photo-1627894483216-2138af692e32?w=800&q=80"
-              alt="Sri Lankan Cuisine"
-              className="rounded-lg shadow-xl w-full h-auto"
-            />
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center">
-          <a
-            href="#menu"
-            className="bg-ceylon-light rounded-full p-2 shadow-md transform translate-y-1/2 hover:translate-y-1/3 transition-transform"
-          >
-            <ChevronDown className="h-6 w-6 text-ceylon-accent" />
-          </a>
-        </div>
-      </section>
 
-      {/* Featured Items */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Featured Menu Items
-          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <Card
-                key={item}
-                className="overflow-hidden hover:shadow-lg transition-shadow"
+            {[
+              {
+                name: "KALE CAESAR",
+                image:
+                  "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",
+                description:
+                  "Roasted chicken, tomatoes, parmesan crisps, shaved parmesan, kale, romaine, lime",
+                price: "$12.95",
+              },
+              {
+                name: "GUACAMOLE GREENS",
+                image:
+                  "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
+                description:
+                  "Roasted chicken, avocado, tomatoes, red onions, tortilla chips, spring mix",
+                price: "$13.95",
+              },
+              {
+                name: "BUFFALO CHICKEN BOWL",
+                image:
+                  "https://images.unsplash.com/photo-1580013759032-c96505e24c1f?w=500&q=80",
+                description:
+                  "Blackened chicken, pickled carrots, celery, blue cheese, breadcrumbs, hot sauce",
+                price: "$14.95",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-300"
               >
-                <img
-                  src={`https://images.unsplash.com/photo-156512340969${item}-7b5ef63a2efb?w=400&q=80`}
-                  alt="Food Item"
-                  className="w-full h-48 object-cover"
-                />
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">
-                    Signature Dish {item}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 left-4 bg-ceylon-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+                    POPULAR
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2 text-ceylon-text">
+                    {item.name}
                   </h3>
-                  <p className="text-gray-600 mb-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    do eiusmod tempor incididunt ut labore.
+                  <p className="text-gray-600 mb-4 text-sm">
+                    {item.description}
                   </p>
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-orange-500">
-                      ${(10 + item).toFixed(2)}
+                    <span className="text-lg font-bold text-ceylon-accent">
+                      {item.price}
                     </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-orange-500 text-orange-500 hover:bg-orange-50"
-                    >
-                      Add to Order
+                    <Button className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-4">
+                      Order now
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
-          <div className="text-center mt-10">
-            <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-              View Full Menu
-            </Button>
-          </div>
         </div>
       </section>
 
-      {/* Menu Section */}
-      <section id="menu" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Menu</h2>
-          <MenuSection />
-        </div>
-      </section>
+      {/* Menu Section - Hidden for now */}
+      {/* Will be added back when content is ready */}
 
       {/* About Section */}
-      <section id="about" className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0">
+      <section id="about" className="py-24 bg-ceylon-bg">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-lg font-medium text-ceylon-accent mb-2">
+              OUR STORY
+            </h2>
+            <h3 className="text-4xl md:text-5xl font-bold text-ceylon-text">
+              About Ceylon Express
+            </h3>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="md:w-1/2 relative">
+              <div className="absolute -top-6 -left-6 w-24 h-24 bg-ceylon-accent/20 rounded-full -z-10"></div>
               <img
                 src="https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?w=800&q=80"
-                alt="About Us"
-                className="rounded-lg shadow-xl w-full h-auto"
+                alt="About Ceylon Express"
+                className="rounded-xl shadow-2xl w-full h-auto object-cover z-10 relative"
               />
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-ceylon-accent/10 rounded-full -z-10"></div>
             </div>
-            <div className="md:w-1/2 md:pl-12">
-              <h2 className="text-3xl font-bold mb-6">About Our Food Truck</h2>
-              <p className="text-gray-600 mb-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+
+            <div className="md:w-1/2">
+              <h2 className="text-3xl font-bold mb-6 text-ceylon-text">
+                Authentic Sri Lankan Cuisine
+              </h2>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                At Ceylon Express, we bring the rich and vibrant flavors of Sri
+                Lanka directly to your events. Our passion for authentic cuisine
+                drives us to source the freshest ingredients and traditional
+                spices to create memorable dining experiences.
               </p>
-              <p className="text-gray-600 mb-6">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Founded in 2018, our food truck and catering service has quickly
+                become known for exceptional quality and service. We pride
+                ourselves on sharing our cultural heritage through food that
+                delights and inspires.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <div className="bg-orange-100 p-3 rounded-full mr-4">
-                    <Clock className="h-6 w-6 text-orange-500" />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-center bg-white p-4 rounded-lg shadow-md transition-all hover:shadow-lg">
+                  <div className="bg-ceylon-accent/10 p-3 rounded-full mr-4">
+                    <Clock className="h-6 w-6 text-ceylon-accent" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Business Hours</h3>
+                    <h3 className="font-semibold text-ceylon-text">
+                      Business Hours
+                    </h3>
                     <p className="text-sm text-gray-600">Mon-Sat: 10AM - 8PM</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <div className="bg-orange-100 p-3 rounded-full mr-4">
-                    <MapPin className="h-6 w-6 text-orange-500" />
+                <div className="flex items-center bg-white p-4 rounded-lg shadow-md transition-all hover:shadow-lg">
+                  <div className="bg-ceylon-accent/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-6 w-6 text-ceylon-accent" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Locations</h3>
+                    <h3 className="font-semibold text-ceylon-text">
+                      Locations
+                    </h3>
                     <p className="text-sm text-gray-600">
                       Downtown & City Park
                     </p>
