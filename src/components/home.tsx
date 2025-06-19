@@ -11,11 +11,10 @@ import {
   Facebook,
   Twitter,
   ShoppingBag,
+  Construction,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import MenuSection from "./MenuSection";
-import OrderForm from "./OrderForm";
 
 const Home = () => {
   return (
@@ -37,28 +36,13 @@ const Home = () => {
               Home
             </a>
             <a
-              href="/menu"
-              className="text-ceylon-text hover:text-ceylon-accent transition-colors"
+              href="https://www.instagram.com/ceylonexpress_se/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ceylon-text hover:text-ceylon-accent transition-colors flex items-center gap-2"
             >
-              Menu
-            </a>
-            <a
-              href="#about"
-              className="text-ceylon-text hover:text-ceylon-accent transition-colors"
-            >
-              About
-            </a>
-            <a
-              href="#order"
-              className="text-ceylon-text hover:text-ceylon-accent transition-colors"
-            >
-              Order
-            </a>
-            <a
-              href="#contact"
-              className="text-ceylon-text hover:text-ceylon-accent transition-colors"
-            >
-              Contact
+              <Instagram className="h-4 w-4" />
+              Instagram
             </a>
           </div>
           <div className="md:hidden">
@@ -90,20 +74,32 @@ const Home = () => {
                 transition={{ duration: 0.7 }}
                 className="max-w-2xl"
               >
-                <h2 className="text-lg font-medium text-ceylon-light mb-2">
-                  NEW MENU
-                </h2>
+                <div className="flex items-center gap-3 mb-4">
+                  <Construction className="h-8 w-8 text-ceylon-light" />
+                  <h2 className="text-lg font-medium text-ceylon-light">
+                    UNDER CONSTRUCTION
+                  </h2>
+                </div>
                 <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                  Now serving
+                  Ceylon Express
                   <br />
-                  summer
+                  Coming Soon
                 </h1>
                 <p className="text-xl text-white/90 mb-8 max-w-lg">
-                  Experience the rich flavors and aromatic spices of Sri Lanka
-                  with our premium catering services.
+                  We're working hard to bring you the authentic flavors of Sri
+                  Lanka. Follow us on Instagram for updates on our launch!
                 </p>
-                <Button className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-8 py-6 text-lg">
-                  ORDER NOW
+                <Button
+                  className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-8 py-6 text-lg flex items-center gap-2"
+                  onClick={() =>
+                    window.open(
+                      "https://www.instagram.com/ceylonexpress_se/",
+                      "_blank",
+                    )
+                  }
+                >
+                  <Instagram className="h-5 w-5" />
+                  Follow Us on Instagram
                 </Button>
               </motion.div>
             </div>
@@ -111,359 +107,160 @@ const Home = () => {
         </div>
         <div className="container mx-auto px-6 py-6 flex justify-center md:justify-between items-center border-b border-gray-200">
           <div className="hidden md:flex space-x-12 text-lg font-medium">
-            <a
-              href="#"
-              className="text-ceylon-text hover:text-ceylon-accent border-b-2 border-ceylon-accent pb-2"
-            >
-              Our Story
-            </a>
-            <a
-              href="#"
-              className="text-ceylon-text hover:text-ceylon-accent pb-2"
-            >
-              Locations
-            </a>
-            <a
-              href="#"
-              className="text-ceylon-text hover:text-ceylon-accent pb-2"
-            >
-              Catering
-            </a>
+            <span className="text-ceylon-text/60">Coming Soon - Our Story</span>
+            <span className="text-ceylon-text/60">Coming Soon - Locations</span>
+            <span className="text-ceylon-text/60">Coming Soon - Catering</span>
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+            <a
+              href="https://www.instagram.com/ceylonexpress_se/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-ceylon-text hover:text-ceylon-accent transition-colors"
+            >
               <Instagram className="h-6 w-6" />
             </a>
-            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+            <span className="text-ceylon-text/40">
               <Facebook className="h-6 w-6" />
-            </a>
-            <a href="#" className="text-ceylon-text hover:text-ceylon-accent">
+            </span>
+            <span className="text-ceylon-text/40">
               <Twitter className="h-6 w-6" />
-            </a>
+            </span>
           </div>
         </div>
       </section>
 
-      {/* Featured Categories */}
+      {/* Under Construction Message */}
       <section className="py-24 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-16">
-            <h2 className="text-4xl font-bold text-ceylon-text mb-6 md:mb-0">
-              Our Specialties
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-2xl mx-auto">
+            <Construction className="h-16 w-16 text-ceylon-accent mx-auto mb-6" />
+            <h2 className="text-4xl font-bold text-ceylon-text mb-6">
+              We're Building Something Amazing
             </h2>
-            <div className="flex space-x-2">
+            <p className="text-lg text-gray-600 mb-8">
+              Ceylon Express is currently under construction. We're working hard
+              to bring you authentic Sri Lankan cuisine with a modern twist.
+              Stay tuned for our grand opening!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
-                variant="outline"
-                className="border-ceylon-text text-ceylon-text hover:bg-ceylon-light rounded-full px-6"
+                className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-8 py-3 flex items-center gap-2"
+                onClick={() =>
+                  window.open(
+                    "https://www.instagram.com/ceylonexpress_se/",
+                    "_blank",
+                  )
+                }
               >
-                View All
+                <Instagram className="h-5 w-5" />
+                Follow Our Journey
               </Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "KALE CAESAR",
-                image:
-                  "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",
-                description:
-                  "Roasted chicken, tomatoes, parmesan crisps, shaved parmesan, kale, romaine, lime",
-                price: "$12.95",
-              },
-              {
-                name: "GUACAMOLE GREENS",
-                image:
-                  "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80",
-                description:
-                  "Roasted chicken, avocado, tomatoes, red onions, tortilla chips, spring mix",
-                price: "$13.95",
-              },
-              {
-                name: "BUFFALO CHICKEN BOWL",
-                image:
-                  "https://images.unsplash.com/photo-1580013759032-c96505e24c1f?w=500&q=80",
-                description:
-                  "Blackened chicken, pickled carrots, celery, blue cheese, breadcrumbs, hot sauce",
-                price: "$14.95",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-lg overflow-hidden group hover:shadow-xl transition-all duration-300"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 left-4 bg-ceylon-accent text-white text-xs font-bold px-3 py-1 rounded-full">
-                    POPULAR
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 text-ceylon-text">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4 text-sm">
-                    {item.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-ceylon-accent">
-                      {item.price}
-                    </span>
-                    <Button className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-4">
-                      Order now
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Menu Section - Hidden for now */}
-      {/* Will be added back when content is ready */}
-
-      {/* About Section */}
-      <section id="about" className="py-24 bg-ceylon-bg">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-lg font-medium text-ceylon-accent mb-2">
-              OUR STORY
-            </h2>
-            <h3 className="text-4xl md:text-5xl font-bold text-ceylon-text">
-              About Ceylon Express
-            </h3>
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2 relative">
-              <div className="absolute -top-6 -left-6 w-24 h-24 bg-ceylon-accent/20 rounded-full -z-10"></div>
-              <img
-                src="https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?w=800&q=80"
-                alt="About Ceylon Express"
-                className="rounded-xl shadow-2xl w-full h-auto object-cover z-10 relative"
-              />
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-ceylon-accent/10 rounded-full -z-10"></div>
-            </div>
-
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold mb-6 text-ceylon-text">
-                Authentic Sri Lankan Cuisine
-              </h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                At Ceylon Express, we bring the rich and vibrant flavors of Sri
-                Lanka directly to your events. Our passion for authentic cuisine
-                drives us to source the freshest ingredients and traditional
-                spices to create memorable dining experiences.
+              <p className="text-sm text-gray-500">
+                Get updates on our launch date and menu previews
               </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Founded in 2018, our food truck and catering service has quickly
-                become known for exceptional quality and service. We pride
-                ourselves on sharing our cultural heritage through food that
-                delights and inspires.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-center bg-white p-4 rounded-lg shadow-md transition-all hover:shadow-lg">
-                  <div className="bg-ceylon-accent/10 p-3 rounded-full mr-4">
-                    <Clock className="h-6 w-6 text-ceylon-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-ceylon-text">
-                      Business Hours
-                    </h3>
-                    <p className="text-sm text-gray-600">Mon-Sat: 10AM - 8PM</p>
-                  </div>
-                </div>
-                <div className="flex items-center bg-white p-4 rounded-lg shadow-md transition-all hover:shadow-lg">
-                  <div className="bg-ceylon-accent/10 p-3 rounded-full mr-4">
-                    <MapPin className="h-6 w-6 text-ceylon-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-ceylon-text">
-                      Locations
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Downtown & City Park
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Order Section */}
-      <section id="order" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Place Your Order
-          </h2>
+      {/* Coming Soon Section */}
+      <section className="py-24 bg-ceylon-bg">
+        <div className="container mx-auto px-6 text-center">
           <div className="max-w-3xl mx-auto">
-            <OrderForm />
-          </div>
-        </div>
-      </section>
+            <h2 className="text-lg font-medium text-ceylon-accent mb-2">
+              COMING SOON
+            </h2>
+            <h3 className="text-4xl md:text-5xl font-bold text-ceylon-text mb-8">
+              Authentic Sri Lankan Experience
+            </h3>
+            <p className="text-lg text-gray-600 mb-12 leading-relaxed">
+              We're preparing to bring you the most authentic Sri Lankan dining
+              experience. From traditional curries to modern fusion dishes, our
+              menu will celebrate the rich culinary heritage of Ceylon.
+            </p>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            What Our Customers Say
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <Card key={item} className="p-6">
-                <div className="flex items-center mb-4">
-                  <img
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=customer${item}`}
-                    alt="Customer"
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
-                  <div>
-                    <h3 className="font-semibold">Customer Name {item}</h3>
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="bg-ceylon-accent/10 p-3 rounded-full w-fit mx-auto mb-4">
+                  <Coffee className="h-8 w-8 text-ceylon-accent" />
                 </div>
-                <p className="text-gray-600 italic">
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam."
+                <h4 className="font-semibold text-ceylon-text mb-2">
+                  Traditional Recipes
+                </h4>
+                <p className="text-sm text-gray-600">
+                  Authentic family recipes passed down through generations
                 </p>
-              </Card>
-            ))}
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="bg-ceylon-accent/10 p-3 rounded-full w-fit mx-auto mb-4">
+                  <MapPin className="h-8 w-8 text-ceylon-accent" />
+                </div>
+                <h4 className="font-semibold text-ceylon-text mb-2">
+                  Mobile Service
+                </h4>
+                <p className="text-sm text-gray-600">
+                  Food truck and catering services coming to your location
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="bg-ceylon-accent/10 p-3 rounded-full w-fit mx-auto mb-4">
+                  <Clock className="h-8 w-8 text-ceylon-accent" />
+                </div>
+                <h4 className="font-semibold text-ceylon-text mb-2">
+                  Fresh Daily
+                </h4>
+                <p className="text-sm text-gray-600">
+                  Made fresh daily with premium ingredients and spices
+                </p>
+              </div>
+            </div>
+
+            <Button
+              className="bg-ceylon-accent hover:bg-ceylon-dark text-white rounded-full px-8 py-4 text-lg flex items-center gap-2 mx-auto"
+              onClick={() =>
+                window.open(
+                  "https://www.instagram.com/ceylonexpress_se/",
+                  "_blank",
+                )
+              }
+            >
+              <Instagram className="h-5 w-5" />
+              Stay Updated on Instagram
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-16 bg-gray-800 text-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
-              <p className="mb-6">
-                Have questions or want to book our food truck for your event?
-                Reach out to us!
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>(123) 456-7890</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>123 Street Name, City, State</span>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>Mon-Sat: 10AM - 8PM</span>
-                </div>
-              </div>
-              <div className="flex space-x-4 mt-6">
-                <a
-                  href="#"
-                  className="bg-gray-700 p-2 rounded-full hover:bg-orange-500 transition-colors"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="bg-gray-700 p-2 rounded-full hover:bg-orange-500 transition-colors"
-                >
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="bg-gray-700 p-2 rounded-full hover:bg-orange-500 transition-colors"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-              </div>
-            </div>
-            <div className="md:w-1/2">
-              <form className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium mb-1"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
-                      placeholder="Your Name"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium mb-1"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
-                      placeholder="Your Email"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
-                    placeholder="Subject"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium mb-1"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500 text-white"
-                    placeholder="Your Message"
-                  ></textarea>
-                </div>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white w-full">
-                  Send Message
-                </Button>
-              </form>
-            </div>
+      <section className="py-16 bg-gray-800 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-6">Get In Touch</h2>
+          <p className="text-lg mb-8 max-w-2xl mx-auto">
+            Interested in catering services or want to know when we launch?
+            Follow us on Instagram for the latest updates!
+          </p>
+
+          <div className="flex justify-center space-x-6 mb-8">
+            <a
+              href="https://www.instagram.com/ceylonexpress_se/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105"
+            >
+              <Instagram className="h-6 w-6" />
+            </a>
+            <span className="bg-gray-700 p-3 rounded-full opacity-50">
+              <Facebook className="h-6 w-6" />
+            </span>
+            <span className="bg-gray-700 p-3 rounded-full opacity-50">
+              <Twitter className="h-6 w-6" />
+            </span>
           </div>
+
+          <p className="text-sm text-gray-400">
+            More contact options coming soon!
+          </p>
         </div>
       </section>
 
@@ -472,11 +269,14 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <ShoppingBag className="h-6 w-6 text-orange-500" />
-              <span className="text-xl font-bold text-white">FoodTruck</span>
+              <Coffee className="h-6 w-6 text-ceylon-accent" />
+              <span className="text-xl font-bold text-white">
+                Ceylon Express
+              </span>
             </div>
             <div className="text-sm">
-              &copy; {new Date().getFullYear()} FoodTruck. All rights reserved.
+              &copy; {new Date().getFullYear()} Ceylon Express. All rights
+              reserved.
             </div>
           </div>
         </div>
