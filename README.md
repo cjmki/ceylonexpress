@@ -1,30 +1,116 @@
-# React + TypeScript + Vite
+# Ceylon Express
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Authentic Sri Lankan Cuisine - Coming Soon
 
-Currently, two official plugins are available:
+## About
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Ceylon Express is preparing to bring authentic Sri Lankan flavors through our food truck and catering services. This website showcases our brand and provides updates on our upcoming launch.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Next.js 14** - React framework with App Router for optimal SEO
+- **TypeScript** - Type-safe code
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+- **Supabase** - Backend as a service (optional)
+- **Lucide React** - Icon library
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+First, install dependencies:
+
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Then, run the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Project Structure
+
+The project follows a modular component architecture. See [STRUCTURE.md](./STRUCTURE.md) for detailed documentation.
+
+```
+ceylonexpress/
+├── app/
+│   ├── components/         # Reusable React components
+│   ├── constants/          # Data and constants
+│   ├── menu/              # Menu page route
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Home page
+├── public/
+│   └── images/            # Logo and assets
+├── src/
+│   ├── index.css          # Global styles
+│   ├── lib/               # Utility functions
+│   └── types/             # TypeScript types
+└── [config files]
+```
+
+## Features
+
+- ✅ Server-side rendering (SSR) for better SEO
+- ✅ Optimized metadata and Open Graph tags
+- ✅ Responsive design
+- ✅ Custom Ceylon Express brand colors
+- ✅ Animated hero section
+- ✅ Mobile-friendly navigation
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run types:supabase` - Generate Supabase types
+
+## Brand Colors
+
+The site uses custom Ceylon Express brand colors defined in `tailwind.config.js`:
+
+- `ceylon-orange`: #D9873B (Burnt orange)
+- `ceylon-yellow`: #F0D871 (Golden yellow)
+- `ceylon-cream`: #F5EDA0 (Light cream/pale yellow)
+- `ceylon-blue`: #A7C7D7 (Light blue/sky blue)
+- `ceylon-bg`: #F5EDA0 (Light cream - main background)
+- `ceylon-accent`: #D9873B (Burnt orange - accents)
+- `ceylon-light`: #F5EDA0 (Light cream - subtle elements)
+- `ceylon-dark`: #A7C7D7 (Light blue - contrast)
+- `ceylon-text`: #1A1A1A (Black text)
+
+## Deployment
+
+This project is ready to deploy on Vercel, Netlify, or any other Next.js-compatible platform.
+
+For Vercel:
+
+```bash
+npm run build
+```
+
+Then deploy using the Vercel CLI or connect your GitHub repository to Vercel.
+
+## Environment Variables
+
+If using Supabase, create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_PROJECT_ID=your-project-id
+```
+
+## Social Media
+
+Follow Ceylon Express:
+- Instagram: [@ceylonexpress.se](https://www.instagram.com/ceylonexpress.se/)
+- Facebook: [ceylonexpressse](https://www.facebook.com/ceylonexpressse)
+
+## License
+
+© 2024 Ceylon Express. All rights reserved.

@@ -1,0 +1,30 @@
+{
+  "name": "Ceylon Express - Authentic Sri Lankan Cuisine",
+  "short_name": "Ceylon Express",
+  "icons": [
+    {
+      "src": "/logo_transparent.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#D97706",
+  "background_color": "#1F2937",
+  "display": "standalone",
+  "description": "Authentic Sri Lankan flavors made fresh daily",
+  "start_url": "/",
+  "scope": "/"
+}

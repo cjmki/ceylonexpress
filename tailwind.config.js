@@ -51,13 +51,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Ceylon Express colors based on logo
+        // Ceylon Express colors based on color palette
         ceylon: {
-          bg: "#F9B05E", // Main orange background from logo
-          text: "#1A1A1A", // Black text from logo
-          accent: "#D97706", // Darker orange for accents
-          light: "#FCD9A8", // Lighter orange for subtle elements
-          dark: "#8B4513", // Dark brown for contrast elements
+          bg: "#F5EDA0", // Light cream/pale yellow background
+          text: "#1A1A1A", // Black text for readability
+          accent: "#D9873B", // Burnt orange for accents
+          light: "#F5EDA0", // Light cream for subtle elements
+          dark: "#A7C7D7", // Light blue for contrast elements
+          orange: "#D9873B", // Burnt orange
+          yellow: "#F0D871", // Golden yellow
+          cream: "#F5EDA0", // Light cream/pale yellow
+          blue: "#A7C7D7", // Light blue/sky blue
         },
       },
       borderRadius: {
