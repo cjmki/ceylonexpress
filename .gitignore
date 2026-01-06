@@ -39,3 +39,6 @@ next-env.d.ts
 # tempo
 tempo.config.json
 tempobook/
+
+# Local Netlify folder
+.netlify

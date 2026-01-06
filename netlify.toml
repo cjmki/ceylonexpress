@@ -1,12 +1,10 @@
 [build]
   command = "npm run build"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "20.17.0"
+  NODE_VERSION = "20"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 

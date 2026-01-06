@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
-      <main className="pt-16">
+      <main>
         <Hero />
         <AboutSection />
         <LocationSection />
