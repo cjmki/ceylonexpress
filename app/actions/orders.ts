@@ -13,7 +13,10 @@ interface OrderFormData {
   customerName: string
   customerEmail: string
   customerPhone: string
+  deliveryMethod: string
   deliveryAddress: string
+  deliveryDate: string
+  deliveryTime: string
   orderItems: CartItem[]
   totalAmount: number
   notes?: string
@@ -28,7 +31,10 @@ export async function createOrder(formData: OrderFormData) {
         customer_name: formData.customerName,
         customer_email: formData.customerEmail,
         customer_phone: formData.customerPhone,
+        delivery_method: formData.deliveryMethod,
         delivery_address: formData.deliveryAddress,
+        delivery_date: formData.deliveryDate,
+        delivery_time: formData.deliveryTime,
         total_amount: formData.totalAmount,
         notes: formData.notes,
         status: 'pending'
