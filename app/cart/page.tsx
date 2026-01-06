@@ -21,11 +21,14 @@ export default function CartPage() {
     customerName: '',
     customerEmail: '',
     customerPhone: '',
+    deliveryMethod: '',
     deliveryAddress: '',
     deliveryDate: '',
     deliveryTime: '',
     notes: ''
   })
+
+  const pickupAddress = 'Bondhagsvägen, Upplands-Bro'
 
   // Calculate minimum date (tomorrow)
   const getMinDate = () => {
@@ -54,17 +57,22 @@ export default function CartPage() {
       })
 
       if (result.success) {
-        clearCart()
+        // Navigate first, then clear cart to avoid showing empty cart message
         router.push(`/order-confirmation/${result.orderId}`)
+        // Clear cart after a short delay to ensure navigation has started
+        setTimeout(() => {
+          clearCart()
+        }, 100)
       } else {
         setError(result.error || 'Failed to place order. Please try again.')
+        setIsSubmitting(false)
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.')
       console.error(err)
-    } finally {
       setIsSubmitting(false)
     }
+    // Don't set isSubmitting to false on success - keep loading state during redirect
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -74,7 +82,7 @@ export default function CartPage() {
     })
   }
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !isSubmitting) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <MenuNavigation />
@@ -256,20 +264,53 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="deliveryAddress" className="block text-sm font-bold text-ceylon-text mb-2">
-                    Delivery Address *
+                  <label htmlFor="deliveryMethod" className="block text-sm font-bold text-ceylon-text mb-2">
+                    Delivery Method *
                   </label>
-                  <textarea
-                    id="deliveryAddress"
-                    name="deliveryAddress"
+                  <select
+                    id="deliveryMethod"
+                    name="deliveryMethod"
                     required
-                    rows={3}
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
-                    placeholder="Street address, city, postal code"
-                    value={formData.deliveryAddress}
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white"
+                    value={formData.deliveryMethod}
                     onChange={handleInputChange}
-                  />
+                  >
+                    <option value="">Select delivery method</option>
+                    <option value="delivery">Delivery (Stockholm area only)</option>
+                    <option value="pickup">Pick up from {pickupAddress}</option>
+                  </select>
                 </div>
+                
+                {formData.deliveryMethod === 'delivery' && (
+                  <div>
+                    <label htmlFor="deliveryAddress" className="block text-sm font-bold text-ceylon-text mb-2">
+                      Delivery Address *
+                    </label>
+                    <textarea
+                      id="deliveryAddress"
+                      name="deliveryAddress"
+                      required
+                      rows={3}
+                      className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                      placeholder="Street address, city, postal code (Stockholm area only)"
+                      value={formData.deliveryAddress}
+                      onChange={handleInputChange}
+                    />
+                    <p className="text-xs text-ceylon-text/60 mt-1">
+                      ⚠️ We only deliver within Stockholm area
+                    </p>
+                  </div>
+                )}
+                
+                {formData.deliveryMethod === 'pickup' && (
+                  <div className="bg-ceylon-cream p-4 rounded border-2 border-ceylon-orange/30">
+                    <p className="font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
+                    <p className="text-ceylon-text">{pickupAddress}</p>
+                    <p className="text-xs text-ceylon-text/60 mt-2">
+                      We&apos;ll send you the exact address and instructions after confirming your order
+                    </p>
+                  </div>
+                )}
                 
                 <div>
                   <label htmlFor="deliveryDate" className="block text-sm font-bold text-ceylon-text mb-2">
