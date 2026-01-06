@@ -6,6 +6,7 @@ import { Plus, Check } from 'lucide-react'
 import Link from 'next/link'
 import MenuNavigation from '../components/MenuNavigation'
 import Footer from '../components/Footer'
+import TestingBanner from '../components/TestingBanner'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
 
@@ -72,6 +73,7 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <MenuNavigation />
+      <TestingBanner />
 
       {/* Menu Content */}
       <section className="flex-1 py-20 px-6">

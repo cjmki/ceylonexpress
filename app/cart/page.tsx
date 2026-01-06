@@ -9,6 +9,7 @@ import { useCart } from '../contexts/CartContext'
 import { createOrder } from '../actions/orders'
 import MenuNavigation from '../components/MenuNavigation'
 import Footer from '../components/Footer'
+import TestingBanner from '../components/TestingBanner'
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart()
@@ -61,6 +62,7 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <MenuNavigation />
+        <TestingBanner />
         
         <div className="flex-1 flex items-center justify-center px-6">
           <motion.div
@@ -92,6 +94,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <MenuNavigation />
+      <TestingBanner />
       
       <section className="flex-1 py-20 px-6">
         <div className="container mx-auto max-w-5xl">

@@ -7,6 +7,7 @@ import { CheckCircle, Mail, Phone, MapPin, Package } from 'lucide-react'
 import Link from 'next/link'
 import MenuNavigation from '../../components/MenuNavigation'
 import Footer from '../../components/Footer'
+import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
 
 interface OrderItem {
@@ -59,6 +60,7 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <MenuNavigation />
+        <TestingBanner />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
@@ -74,6 +76,7 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <MenuNavigation />
+        <TestingBanner />
         <div className="flex-1 flex items-center justify-center px-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-ceylon-text mb-4">Order Not Found</h2>
@@ -96,6 +99,7 @@ export default function OrderConfirmationPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <MenuNavigation />
+      <TestingBanner />
       
       <section className="flex-1 py-20 px-6">
         <div className="container mx-auto max-w-4xl">
@@ -249,7 +253,7 @@ export default function OrderConfirmationPage() {
         </div>
       </section>
 
-      <MenuFooter />
+      <Footer />
     </div>
   )
 }
