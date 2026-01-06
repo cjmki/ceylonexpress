@@ -68,26 +68,23 @@ export default function Hero() {
               className="flex flex-wrap gap-4"
             >
               <a
-                href="https://www.instagram.com/ceylonexpress.se/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/menu"
                 className="group relative overflow-hidden bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl"
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Instagram className="h-5 w-5" />
-                  Follow Our Journey
+                <span className="relative z-10">
+                  Order Now
                 </span>
                 <div className="absolute inset-0 bg-ceylon-text transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </a>
 
               <a
-                href="https://www.facebook.com/ceylonexpressse"
+                href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group border-2 border-ceylon-orange text-ceylon-orange px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 flex items-center gap-2"
               >
-                <Facebook className="h-5 w-5" />
-                Facebook
+                <Instagram className="h-5 w-5" />
+                Follow Us
               </a>
             </motion.div>
 

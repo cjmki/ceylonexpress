@@ -1,9 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { Instagram, Facebook } from 'lucide-react'
+import { Instagram, Facebook, ShoppingCart } from 'lucide-react'
+import { useCart } from '../contexts/CartContext'
 
 export default function MenuNavigation() {
+  const { getItemCount } = useCart()
+  const cartItemCount = getItemCount()
+
   return (
     <nav className="py-6 border-b border-ceylon-text/10">
       <div className="container mx-auto px-6">
@@ -24,6 +28,18 @@ export default function MenuNavigation() {
           </div>
 
           <div className="flex items-center gap-4">
+            <Link
+              href="/cart"
+              className="relative text-ceylon-text hover:text-ceylon-orange transition-all hover:scale-110 duration-300 mr-1"
+              aria-label="View cart"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-ceylon-orange text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
             <a
               href="https://www.instagram.com/ceylonexpress.se/"
               target="_blank"

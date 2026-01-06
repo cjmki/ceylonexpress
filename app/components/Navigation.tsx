@@ -1,10 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { Instagram, Facebook } from 'lucide-react'
+import { Instagram, Facebook, ShoppingCart } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useCart } from '../contexts/CartContext'
 
 export default function Navigation() {
+  const { getItemCount } = useCart()
+  const cartItemCount = getItemCount()
+
   return (
     <motion.nav 
       initial={{ y: -100 }}
@@ -15,6 +19,13 @@ export default function Navigation() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-8">
+            <Link
+              href="/menu"
+              className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
+            >
+              Menu
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-ceylon-orange group-hover:w-full transition-all duration-300"></span>
+            </Link>
             <a
               href="#about"
               className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
@@ -31,7 +42,19 @@ export default function Navigation() {
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/cart"
+              className="relative text-ceylon-text hover:text-ceylon-orange transition-all hover:scale-110 duration-300 mr-1"
+              aria-label="View cart"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-ceylon-orange text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
             <a
               href="https://www.instagram.com/ceylonexpress.se/"
               target="_blank"
