@@ -1,51 +1,110 @@
 'use client'
 
 import Link from 'next/link'
-import { Instagram, Facebook } from 'lucide-react'
+import { Instagram, Facebook, Heart } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="py-8 px-6 border-t border-ceylon-text/10">
-      <div className="container mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-ceylon-text/50">
+    <footer className="relative py-12 px-6 bg-ceylon-text text-white overflow-hidden">
+      {/* Decorative pattern */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: `radial-gradient(circle at 30px 30px, #F0D871 2px, transparent 0)`,
+        backgroundSize: '60px 60px'
+      }}></div>
+
+      <div className="container mx-auto max-w-7xl relative z-10">
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
+          {/* Brand */}
+          <div>
+            <h3 
+              className="text-2xl font-bold mb-2 text-ceylon-yellow"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              Ceylon Express
+            </h3>
+            <p className="text-sm text-white/60 mb-4">
+              Sri Lankan Inspired • Stockholm, Sweden
+            </p>
+            <p className="text-white/80 leading-relaxed">
+              Bringing authentic island flavors to your neighborhood through 
+              our food truck and catering services.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-bold text-ceylon-yellow mb-4 uppercase tracking-wider text-sm">
+              Explore
+            </h4>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="#about"
+                  className="text-white/80 hover:text-ceylon-yellow transition-colors inline-block"
+                >
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#location"
+                  className="text-white/80 hover:text-ceylon-yellow transition-colors inline-block"
+                >
+                  Location
+                </a>
+              </li>
+              <li>
+                <Link
+                  href="/menu"
+                  className="text-white/80 hover:text-ceylon-yellow transition-colors inline-block"
+                >
+                  Menu
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social */}
+          <div>
+            <h4 className="font-bold text-ceylon-yellow mb-4 uppercase tracking-wider text-sm">
+              Connect With Us
+            </h4>
+            <p className="text-white/80 mb-4 text-sm">
+              Follow our journey and stay updated on our launch
+            </p>
+            <div className="flex gap-3">
+              <a
+                href="https://www.instagram.com/ceylonexpress.se/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-ceylon-orange p-3 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Follow us on Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/ceylonexpressse"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-ceylon-blue p-3 rounded-full transition-all duration-300 hover:scale-110"
+                aria-label="Follow us on Facebook"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-white/60">
             © {new Date().getFullYear()} Ceylon Express. All rights reserved.
-          </div>
-          <div className="flex items-center gap-6">
-            <a
-              href="#about"
-              className="text-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
-            >
-              About
-            </a>
-            <a
-              href="#location"
-              className="text-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
-            >
-              Location
-            </a>
-            <a
-              href="https://www.instagram.com/ceylonexpress.se/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
-              aria-label="Follow us on Instagram"
-            >
-              <Instagram className="h-5 w-5" />
-            </a>
-            <a
-              href="https://www.facebook.com/ceylonexpressse"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
-              aria-label="Follow us on Facebook"
-            >
-              <Facebook className="h-5 w-5" />
-            </a>
-          </div>
+          </p>
+          <p className="text-sm text-white/60 flex items-center gap-2">
+            Made with <Heart className="h-4 w-4 text-ceylon-orange fill-current" /> in Stockholm
+          </p>
         </div>
       </div>
     </footer>
   )
 }
-

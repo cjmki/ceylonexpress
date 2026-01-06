@@ -85,15 +85,27 @@ The site uses custom Ceylon Express brand colors defined in `tailwind.config.js`
 
 ## Deployment
 
-This project is ready to deploy on Vercel, Netlify, or any other Next.js-compatible platform.
+This project is configured for **static export** and ready to deploy on Netlify, Vercel, or any static hosting platform.
 
-For Vercel:
+### Deploy to Netlify
+
+The project includes a `netlify.toml` configuration file. Simply:
+
+1. Connect your GitHub repository to Netlify
+2. Netlify will automatically use the settings from `netlify.toml`:
+   - Build command: `npm run build`
+   - Publish directory: `out`
+   - Node version: 20.17.0
+
+3. Deploy!
+
+### Manual Build
 
 ```bash
 npm run build
 ```
 
-Then deploy using the Vercel CLI or connect your GitHub repository to Vercel.
+This generates a static site in the `out` directory.
 
 ## Environment Variables
 
