@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { CheckCircle, Mail, Phone, MapPin, Package } from 'lucide-react'
+import { CheckCircle, Mail, Phone, MapPin, Package, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
 import MenuNavigation from '../../components/MenuNavigation'
 import Footer from '../../components/Footer'
@@ -24,6 +24,8 @@ interface Order {
   customer_email: string
   customer_phone: string
   delivery_address: string
+  delivery_date: string
+  delivery_time: string
   total_amount: number
   status: string
   notes: string | null
@@ -158,6 +160,33 @@ export default function OrderConfirmationPage() {
                 <div>
                   <p className="font-bold text-ceylon-text">Delivery Address</p>
                   <p className="text-ceylon-text/70">{order.delivery_address}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Calendar className="h-5 w-5 text-ceylon-orange mt-1" />
+                <div>
+                  <p className="font-bold text-ceylon-text">Preferred Delivery Date</p>
+                  <p className="text-ceylon-text/70">
+                    {new Date(order.delivery_date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Clock className="h-5 w-5 text-ceylon-orange mt-1" />
+                <div>
+                  <p className="font-bold text-ceylon-text">Delivery Time</p>
+                  <p className="text-ceylon-text/70 capitalize">
+                    {order.delivery_time === 'breakfast' && 'Breakfast (8:00 AM - 10:00 AM)'}
+                    {order.delivery_time === 'lunch' && 'Lunch (12:00 PM - 2:00 PM)'}
+                    {order.delivery_time === 'dinner' && 'Dinner (6:00 PM - 8:00 PM)'}
+                  </p>
                 </div>
               </div>
 

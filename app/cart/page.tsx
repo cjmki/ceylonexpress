@@ -22,8 +22,24 @@ export default function CartPage() {
     customerEmail: '',
     customerPhone: '',
     deliveryAddress: '',
+    deliveryDate: '',
+    deliveryTime: '',
     notes: ''
   })
+
+  // Calculate minimum date (tomorrow)
+  const getMinDate = () => {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    return tomorrow.toISOString().split('T')[0]
+  }
+
+  // Calculate maximum date (30 days from now)
+  const getMaxDate = () => {
+    const maxDate = new Date()
+    maxDate.setDate(maxDate.getDate() + 30)
+    return maxDate.toISOString().split('T')[0]
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,7 +67,7 @@ export default function CartPage() {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -253,6 +269,48 @@ export default function CartPage() {
                     value={formData.deliveryAddress}
                     onChange={handleInputChange}
                   />
+                </div>
+                
+                <div>
+                  <label htmlFor="deliveryDate" className="block text-sm font-bold text-ceylon-text mb-2">
+                    Preferred Delivery Date *
+                  </label>
+                  <input
+                    id="deliveryDate"
+                    name="deliveryDate"
+                    type="date"
+                    required
+                    min={getMinDate()}
+                    max={getMaxDate()}
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    value={formData.deliveryDate}
+                    onChange={handleInputChange}
+                  />
+                  <p className="text-xs text-ceylon-text/60 mt-1">
+                    Select a date between tomorrow and {new Date(getMaxDate()).toLocaleDateString('sv-SE')}
+                  </p>
+                </div>
+                
+                <div>
+                  <label htmlFor="deliveryTime" className="block text-sm font-bold text-ceylon-text mb-2">
+                    Delivery Time *
+                  </label>
+                  <select
+                    id="deliveryTime"
+                    name="deliveryTime"
+                    required
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white"
+                    value={formData.deliveryTime}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select a time slot</option>
+                    <option value="breakfast" disabled>Breakfast (8:00 AM - 10:00 AM) - Coming Soon</option>
+                    <option value="lunch">Lunch (12:00 PM - 2:00 PM)</option>
+                    <option value="dinner" disabled>Dinner (6:00 PM - 8:00 PM) - Coming Soon</option>
+                  </select>
+                  <p className="text-xs text-ceylon-text/60 mt-1">
+                    Currently only offering lunch delivery
+                  </p>
                 </div>
                 
                 <div>
