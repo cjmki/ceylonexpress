@@ -120,84 +120,141 @@ export default function CartPage() {
       <MenuNavigation />
       <TestingBanner />
       
-      <section className="flex-1 py-20 px-6">
+      <section className="flex-1 py-12 md:py-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center gap-4 mb-12">
+            <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-12">
               <Link
                 href="/menu"
                 className="text-ceylon-text hover:text-ceylon-orange transition-colors"
               >
-                <ArrowLeft className="h-6 w-6" />
+                <ArrowLeft className="h-5 w-5 md:h-6 md:w-6" />
               </Link>
-              <h1 className="text-5xl font-bold text-ceylon-text">Your Order</h1>
+              <h1 className="text-3xl md:text-5xl font-bold text-ceylon-text">Your Order</h1>
             </div>
 
             {/* Cart Items */}
-            <div className="bg-white p-8 shadow-lg mb-8">
-              <h2 className="text-2xl font-bold text-ceylon-text mb-6">Order Items</h2>
+            <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-ceylon-text mb-4 md:mb-6">Order Items</h2>
               
               {cart.map((item) => (
-                <div key={item.id} className="flex items-center gap-6 border-b border-ceylon-cream py-6 last:border-b-0">
-                  {item.image_url && (
-                    <img
-                      src={item.image_url}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded"
-                    />
-                  )}
-                  
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-ceylon-text">{item.name}</h3>
-                    <p className="text-ceylon-orange font-bold">{item.price} SEK</p>
+                <div key={item.id} className="border-b border-ceylon-cream py-6 last:border-b-0">
+                  {/* Mobile Layout */}
+                  <div className="md:hidden space-y-4">
+                    <div className="flex gap-4">
+                      {item.image_url && (
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="w-20 h-20 object-cover rounded flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-ceylon-text mb-1">{item.name}</h3>
+                        <p className="text-ceylon-orange font-bold text-sm">{item.price} SEK each</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        
+                        <span className="text-lg font-bold text-ceylon-text min-w-[2.5rem] text-center">
+                          {item.quantity}
+                        </span>
+                        
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <p className="text-lg font-bold text-ceylon-text">
+                          {(item.price * item.quantity).toFixed(2)} SEK
+                        </p>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          aria-label="Remove item"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
-                      aria-label="Decrease quantity"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden md:flex items-center gap-6">
+                    {item.image_url && (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                    )}
                     
-                    <span className="text-xl font-bold text-ceylon-text min-w-[2rem] text-center">
-                      {item.quantity}
-                    </span>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-ceylon-text">{item.name}</h3>
+                      <p className="text-ceylon-orange font-bold">{item.price} SEK</p>
+                    </div>
                     
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
-                      aria-label="Increase quantity"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      
+                      <span className="text-xl font-bold text-ceylon-text min-w-[2rem] text-center">
+                        {item.quantity}
+                      </span>
+                      
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                      
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="ml-4 text-red-600 hover:text-red-800 transition-colors"
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
                     
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="ml-4 text-red-600 hover:text-red-800 transition-colors"
-                      aria-label="Remove item"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </div>
-                  
-                  <div className="text-right min-w-[6rem]">
-                    <p className="text-xl font-bold text-ceylon-text">
-                      {(item.price * item.quantity).toFixed(2)} SEK
-                    </p>
+                    <div className="text-right min-w-[6rem]">
+                      <p className="text-xl font-bold text-ceylon-text">
+                        {(item.price * item.quantity).toFixed(2)} SEK
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
               
-              <div className="mt-8 pt-6 border-t-2 border-ceylon-orange">
+              <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t-2 border-ceylon-orange">
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-ceylon-text">Total</span>
-                  <span className="text-3xl font-bold text-ceylon-orange">
+                  <span className="text-xl md:text-2xl font-bold text-ceylon-text">Total</span>
+                  <span className="text-2xl md:text-3xl font-bold text-ceylon-orange">
                     {getTotal().toFixed(2)} SEK
                   </span>
                 </div>
@@ -205,8 +262,8 @@ export default function CartPage() {
             </div>
 
             {/* Checkout Form */}
-            <div className="bg-white p-8 shadow-lg">
-              <h2 className="text-3xl font-bold text-ceylon-text mb-6">Delivery Details</h2>
+            <div className="bg-white p-4 md:p-8 shadow-lg">
+              <h2 className="text-2xl md:text-3xl font-bold text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
               
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
