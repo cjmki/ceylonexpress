@@ -88,7 +88,7 @@ export default function OrderConfirmationPage() {
             </p>
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors"
+              className="inline-block bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
             >
               Back to Menu
             </Link>
@@ -127,7 +127,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white p-8 shadow-lg mb-8"
+            className="bg-white p-8 shadow-lg mb-8 rounded-2xl"
           >
             <div className="border-b-2 border-ceylon-orange pb-4 mb-6">
               <h2 className="text-2xl font-bold text-ceylon-text">Order Details</h2>
@@ -250,7 +250,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-ceylon-orange/10 border-2 border-ceylon-orange p-8 mb-8"
+            className="bg-ceylon-orange/10 border-2 border-ceylon-orange p-8 mb-8 rounded-2xl"
           >
             <h3 className="text-xl font-bold text-ceylon-text mb-4">What&apos;s Next?</h3>
             <div className="space-y-3 text-ceylon-text/80">
@@ -281,7 +281,7 @@ export default function OrderConfirmationPage() {
           >
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors"
+              className="inline-block bg-ceylon-orange text-white px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
             >
               Order More
             </Link>

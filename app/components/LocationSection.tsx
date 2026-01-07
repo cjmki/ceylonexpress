@@ -137,7 +137,7 @@ export default function LocationSection() {
                 href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden bg-ceylon-orange text-white px-10 py-5 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl inline-flex items-center justify-center gap-3"
+                className="group relative overflow-hidden bg-ceylon-orange text-white px-10 py-5 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl inline-flex items-center justify-center gap-3 rounded-lg"
               >
                 <Instagram className="h-5 w-5 relative z-10" />
                 <span className="relative z-10">Follow on Instagram</span>
@@ -148,7 +148,7 @@ export default function LocationSection() {
                 href="https://www.facebook.com/ceylonexpressse"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group border-2 border-ceylon-orange text-ceylon-orange px-10 py-5 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 inline-flex items-center justify-center gap-3"
+                className="group border-2 border-ceylon-orange text-ceylon-orange px-10 py-5 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 inline-flex items-center justify-center gap-3 rounded-lg"
               >
                 <Facebook className="h-5 w-5" />
                 <span>Follow on Facebook</span>

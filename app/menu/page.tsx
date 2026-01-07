@@ -102,7 +102,7 @@ export default function MenuPage() {
               <p className="text-xl text-ceylon-text/70">No menu items available at the moment.</p>
               <Link
                 href="/"
-                className="inline-block mt-8 border-2 border-ceylon-text text-ceylon-text px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text hover:text-ceylon-cream transition-colors"
+                className="inline-block mt-8 border-2 border-ceylon-text text-ceylon-text px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text hover:text-ceylon-cream transition-colors rounded-lg"
               >
                 Back to Home
               </Link>
@@ -127,10 +127,10 @@ export default function MenuPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow rounded-2xl"
                       >
                         {item.image_url && (
-                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden">
+                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden rounded-t-2xl">
                             <img 
                               src={item.image_url} 
                               alt={item.name}
@@ -154,7 +154,7 @@ export default function MenuPage() {
                             
                             <button
                               onClick={() => handleAddToCart(item)}
-                              className={`flex items-center gap-2 px-6 py-2 font-bold uppercase text-sm tracking-wider transition-all ${
+                              className={`flex items-center gap-2 px-6 py-2 font-bold uppercase text-sm tracking-wider transition-all rounded-lg ${
                                 addedItems.has(item.id)
                                   ? 'bg-green-600 text-white'
                                   : 'bg-ceylon-orange text-white hover:bg-ceylon-text'

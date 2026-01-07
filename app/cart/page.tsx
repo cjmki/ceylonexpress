@@ -102,7 +102,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/menu"
-              className="inline-flex items-center gap-2 bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors"
+              className="inline-flex items-center gap-2 bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
             >
               <ArrowLeft className="h-5 w-5" />
               Browse Menu
@@ -138,7 +138,7 @@ export default function CartPage() {
             </div>
 
             {/* Cart Items */}
-            <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8">
+            <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8 rounded-2xl">
               <h2 className="text-xl md:text-2xl font-bold text-ceylon-text mb-4 md:mb-6">Order Items</h2>
               
               {cart.map((item) => (
@@ -150,7 +150,7 @@ export default function CartPage() {
                         <img
                           src={item.image_url}
                           alt={item.name}
-                          className="w-20 h-20 object-cover rounded flex-shrink-0"
+                          className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
                         />
                       )}
                       <div className="flex-1 min-w-0">
@@ -163,7 +163,7 @@ export default function CartPage() {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="h-4 w-4" />
@@ -175,7 +175,7 @@ export default function CartPage() {
                         
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                           aria-label="Increase quantity"
                         >
                           <Plus className="h-4 w-4" />
@@ -203,7 +203,7 @@ export default function CartPage() {
                       <img
                         src={item.image_url}
                         alt={item.name}
-                        className="w-20 h-20 object-cover rounded"
+                        className="w-20 h-20 object-cover rounded-xl"
                       />
                     )}
                     
@@ -215,7 +215,7 @@ export default function CartPage() {
                     <div className="flex items-center gap-4">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                         aria-label="Decrease quantity"
                       >
                         <Minus className="h-4 w-4" />
@@ -227,7 +227,7 @@ export default function CartPage() {
                       
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors"
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-4 w-4" />
@@ -262,11 +262,11 @@ export default function CartPage() {
             </div>
 
             {/* Checkout Form */}
-            <div className="bg-white p-4 md:p-8 shadow-lg">
+            <div className="bg-white p-4 md:p-8 shadow-lg rounded-2xl">
               <h2 className="text-2xl md:text-3xl font-bold text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
               
               {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
                   {error}
                 </div>
               )}
@@ -281,7 +281,7 @@ export default function CartPage() {
                     name="customerName"
                     type="text"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     placeholder="Enter your full name"
                     value={formData.customerName}
                     onChange={handleInputChange}
@@ -297,7 +297,7 @@ export default function CartPage() {
                     name="customerEmail"
                     type="email"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     placeholder="your.email@example.com"
                     value={formData.customerEmail}
                     onChange={handleInputChange}
@@ -313,7 +313,7 @@ export default function CartPage() {
                     name="customerPhone"
                     type="tel"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     placeholder="+46 70 123 4567"
                     value={formData.customerPhone}
                     onChange={handleInputChange}
@@ -328,7 +328,7 @@ export default function CartPage() {
                     id="deliveryMethod"
                     name="deliveryMethod"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white rounded-lg"
                     value={formData.deliveryMethod}
                     onChange={handleInputChange}
                   >
@@ -348,7 +348,7 @@ export default function CartPage() {
                       name="deliveryAddress"
                       required
                       rows={3}
-                      className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                      className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                       placeholder="Street address, city, postal code (Stockholm area only)"
                       value={formData.deliveryAddress}
                       onChange={handleInputChange}
@@ -360,7 +360,7 @@ export default function CartPage() {
                 )}
                 
                 {formData.deliveryMethod === 'pickup' && (
-                  <div className="bg-ceylon-cream p-4 rounded border-2 border-ceylon-orange/30">
+                  <div className="bg-ceylon-cream p-4 rounded-xl border-2 border-ceylon-orange/30">
                     <p className="font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
                     <p className="text-ceylon-text">{pickupAddress}</p>
                     <p className="text-xs text-ceylon-text/60 mt-2">
@@ -380,7 +380,7 @@ export default function CartPage() {
                     required
                     min={getMinDate()}
                     max={getMaxDate()}
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     value={formData.deliveryDate}
                     onChange={handleInputChange}
                   />
@@ -397,7 +397,7 @@ export default function CartPage() {
                     id="deliveryTime"
                     name="deliveryTime"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white rounded-lg"
                     value={formData.deliveryTime}
                     onChange={handleInputChange}
                   >
@@ -419,14 +419,14 @@ export default function CartPage() {
                     id="notes"
                     name="notes"
                     rows={2}
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors"
+                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     placeholder="Any allergies, preferences, or delivery instructions"
                     value={formData.notes}
                     onChange={handleInputChange}
                   />
                 </div>
 
-                <div className="bg-ceylon-cream p-6 rounded">
+                <div className="bg-ceylon-cream p-6 rounded-xl">
                   <p className="text-sm text-ceylon-text/70 leading-relaxed">
                     <strong>Note:</strong> We will review the availability of your items and contact you 
                     via email or phone to confirm your order. Payment will be collected upon delivery.
@@ -436,7 +436,7 @@ export default function CartPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-ceylon-orange text-white py-4 text-lg font-bold uppercase tracking-wider hover:bg-ceylon-text transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-ceylon-orange text-white py-4 text-lg font-bold uppercase tracking-wider hover:bg-ceylon-text transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
                 >
                   {isSubmitting ? 'Placing Order...' : 'Place Order'}
                 </button>

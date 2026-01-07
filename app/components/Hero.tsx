@@ -32,7 +32,7 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="inline-block mb-6"
             >
-              <div className="bg-ceylon-orange/10 border-l-4 border-ceylon-orange px-6 py-3">
+              <div className="bg-ceylon-orange/10 border-l-4 border-ceylon-orange px-6 py-3 rounded-r-lg">
                 <span className="text-ceylon-orange font-bold tracking-widest text-sm">
                   ශ්‍රී ලංකන් INSPIRED
                 </span>
@@ -69,7 +69,7 @@ export default function Hero() {
             >
               <a
                 href="/menu"
-                className="group relative overflow-hidden bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl"
+                className="group relative overflow-hidden bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl rounded-lg"
               >
                 <span className="relative z-10">
                   Order Now
@@ -81,7 +81,7 @@ export default function Hero() {
                 href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group border-2 border-ceylon-orange text-ceylon-orange px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 flex items-center gap-2"
+                className="group border-2 border-ceylon-orange text-ceylon-orange px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 flex items-center gap-2 rounded-lg"
               >
                 <Instagram className="h-5 w-5" />
                 Follow Us
