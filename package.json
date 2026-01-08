@@ -10,6 +10,7 @@
     "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.45.6",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.0",

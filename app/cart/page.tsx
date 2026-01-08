@@ -10,6 +10,7 @@ import { createOrder } from '../actions/orders'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
+import { formatPrice, CURRENCY } from '../constants/currency'
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart()
@@ -155,7 +156,7 @@ export default function CartPage() {
                       )}
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-bold text-ceylon-text mb-1">{item.name}</h3>
-                        <p className="text-ceylon-orange font-bold text-sm">{item.price} SEK each</p>
+                        <p className="text-ceylon-orange font-bold text-sm">{formatPrice(item.price)} each</p>
                       </div>
                     </div>
                     
@@ -184,7 +185,7 @@ export default function CartPage() {
                       
                       <div className="flex items-center gap-4">
                         <p className="text-lg font-bold text-ceylon-text">
-                          {(item.price * item.quantity).toFixed(2)} SEK
+                          {formatPrice(item.price * item.quantity)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -209,7 +210,7 @@ export default function CartPage() {
                     
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-ceylon-text">{item.name}</h3>
-                      <p className="text-ceylon-orange font-bold">{item.price} SEK</p>
+                      <p className="text-ceylon-orange font-bold">{formatPrice(item.price)}</p>
                     </div>
                     
                     <div className="flex items-center gap-4">
@@ -244,7 +245,7 @@ export default function CartPage() {
                     
                     <div className="text-right min-w-[6rem]">
                       <p className="text-xl font-bold text-ceylon-text">
-                        {(item.price * item.quantity).toFixed(2)} SEK
+                        {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -255,7 +256,7 @@ export default function CartPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-xl md:text-2xl font-bold text-ceylon-text">Total</span>
                   <span className="text-2xl md:text-3xl font-bold text-ceylon-orange">
-                    {getTotal().toFixed(2)} SEK
+                    {formatPrice(getTotal())}
                   </span>
                 </div>
               </div>

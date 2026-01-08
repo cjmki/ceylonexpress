@@ -9,6 +9,7 @@ import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
+import { formatPrice } from '../constants/currency'
 
 interface MenuItem {
   id: string
@@ -149,7 +150,7 @@ export default function MenuPage() {
                           
                           <div className="flex justify-between items-center mt-auto pt-4">
                             <span className="text-2xl font-bold text-ceylon-orange">
-                              {item.price} SEK
+                              {formatPrice(item.price)}
                             </span>
                             
                             <button

@@ -9,6 +9,8 @@ import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
+import { formatPrice } from '../../constants/currency'
+import { formatDateReadable } from '../../constants/dateUtils'
 
 interface OrderItem {
   id: string
@@ -182,12 +184,7 @@ export default function OrderConfirmationPage() {
                     Preferred {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Date
                   </p>
                   <p className="text-ceylon-text/70">
-                    {new Date(order.delivery_date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
+                    {formatDateReadable(order.delivery_date)}
                   </p>
                 </div>
               </div>
@@ -225,11 +222,11 @@ export default function OrderConfirmationPage() {
                     <div className="flex-1">
                       <p className="font-bold text-ceylon-text">{item.menu_item_name}</p>
                       <p className="text-sm text-ceylon-text/70">
-                        {item.quantity} × {item.menu_item_price} SEK
+                        {item.quantity} × {formatPrice(item.menu_item_price)}
                       </p>
                     </div>
                     <p className="font-bold text-ceylon-orange">
-                      {item.subtotal.toFixed(2)} SEK
+                      {formatPrice(item.subtotal)}
                     </p>
                   </div>
                 ))}
@@ -239,7 +236,7 @@ export default function OrderConfirmationPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-ceylon-text">Total</span>
                   <span className="text-3xl font-bold text-ceylon-orange">
-                    {order.total_amount.toFixed(2)} SEK
+                    {formatPrice(order.total_amount)}
                   </span>
                 </div>
               </div>
