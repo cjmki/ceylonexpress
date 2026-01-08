@@ -7,7 +7,7 @@ import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { useCart } from '../contexts/CartContext'
 import { createOrder } from '../actions/orders'
-import MenuNavigation from '../components/MenuNavigation'
+import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
 
@@ -85,7 +85,7 @@ export default function CartPage() {
   if (cart.length === 0 && !isSubmitting) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
-        <MenuNavigation />
+        <Navigation />
         <TestingBanner />
         
         <div className="flex-1 flex items-center justify-center px-6">
@@ -117,10 +117,10 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
-      <MenuNavigation />
+      <Navigation />
       <TestingBanner />
       
-      <section className="flex-1 py-12 md:py-20 px-4 md:px-6">
+      <section className="flex-1 pt-28 pb-12 md:pt-32 md:pb-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

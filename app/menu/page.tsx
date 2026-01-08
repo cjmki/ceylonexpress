@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Check } from 'lucide-react'
 import Link from 'next/link'
-import MenuNavigation from '../components/MenuNavigation'
+import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
 import { useCart } from '../contexts/CartContext'
@@ -72,11 +72,11 @@ export default function MenuPage() {
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
-      <MenuNavigation />
+      <Navigation />
       <TestingBanner />
 
       {/* Menu Content */}
-      <section className="flex-1 py-20 px-6">
+      <section className="flex-1 pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

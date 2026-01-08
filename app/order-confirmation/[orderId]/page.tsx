@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { CheckCircle, Mail, Phone, MapPin, Package, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
-import MenuNavigation from '../../components/MenuNavigation'
+import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
@@ -62,7 +62,7 @@ export default function OrderConfirmationPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
-        <MenuNavigation />
+        <Navigation />
         <TestingBanner />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -78,7 +78,7 @@ export default function OrderConfirmationPage() {
   if (error || !order) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
-        <MenuNavigation />
+        <Navigation />
         <TestingBanner />
         <div className="flex-1 flex items-center justify-center px-6">
           <div className="text-center">
@@ -101,10 +101,10 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
-      <MenuNavigation />
+      <Navigation />
       <TestingBanner />
       
-      <section className="flex-1 py-20 px-6">
+      <section className="flex-1 pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -20,26 +20,33 @@ export default function Navigation() {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-8">
             <Link
+              href="/"
+              className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
+            >
+              Home
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-ceylon-orange group-hover:w-full transition-all duration-300"></span>
+            </Link>
+            <Link
               href="/menu"
               className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
             >
               Menu
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-ceylon-orange group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <a
-              href="#about"
+            <Link
+              href="/#about"
               className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
             >
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-ceylon-orange group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a
-              href="#location"
+            </Link>
+            <Link
+              href="/#location"
               className="text-ceylon-text hover:text-ceylon-orange transition-colors font-semibold uppercase text-sm tracking-wider relative group"
             >
               Location
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-ceylon-orange group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
