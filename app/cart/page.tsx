@@ -88,7 +88,7 @@ export default function CartPage() {
         <Navigation />
         <TestingBanner />
         
-        <div className="flex-1 flex items-center justify-center px-6">
+        <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -120,7 +120,7 @@ export default function CartPage() {
       <Navigation />
       <TestingBanner />
       
-      <section className="flex-1 pt-28 pb-12 md:pt-32 md:pb-20 px-4 md:px-6">
+      <section className="flex-1 pt-36 pb-12 md:pt-40 md:pb-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

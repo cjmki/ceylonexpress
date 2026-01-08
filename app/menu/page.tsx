@@ -76,7 +76,7 @@ export default function MenuPage() {
       <TestingBanner />
 
       {/* Menu Content */}
-      <section className="flex-1 pt-32 pb-20 px-6">
+      <section className="flex-1 pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -127,10 +127,10 @@ export default function MenuPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow rounded-2xl"
+                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow rounded-2xl flex flex-col h-full"
                       >
                         {item.image_url && (
-                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden rounded-t-2xl">
+                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden rounded-t-2xl flex-shrink-0">
                             <img 
                               src={item.image_url} 
                               alt={item.name}
@@ -139,15 +139,15 @@ export default function MenuPage() {
                           </div>
                         )}
                         
-                        <div className="p-6">
-                          <h3 className="text-2xl font-bold text-ceylon-text mb-2">
+                        <div className="p-6 flex flex-col flex-grow">
+                          <h3 className="text-2xl font-bold text-ceylon-text mb-2 break-words">
                             {item.name}
                           </h3>
-                          <p className="text-ceylon-text/70 mb-4 min-h-[3rem]">
+                          <p className="text-ceylon-text/70 mb-4 line-clamp-3">
                             {item.description}
                           </p>
                           
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center mt-auto pt-4">
                             <span className="text-2xl font-bold text-ceylon-orange">
                               {item.price} SEK
                             </span>

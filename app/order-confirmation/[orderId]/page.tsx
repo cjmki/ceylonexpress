@@ -64,7 +64,7 @@ export default function OrderConfirmationPage() {
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
         <TestingBanner />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center pt-32">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
             <p className="mt-4 text-ceylon-text/70">Loading order details...</p>
@@ -80,7 +80,7 @@ export default function OrderConfirmationPage() {
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
         <TestingBanner />
-        <div className="flex-1 flex items-center justify-center px-6">
+        <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-ceylon-text mb-4">Order Not Found</h2>
             <p className="text-xl text-ceylon-text/70 mb-8">
@@ -104,7 +104,7 @@ export default function OrderConfirmationPage() {
       <Navigation />
       <TestingBanner />
       
-      <section className="flex-1 pt-32 pb-20 px-6">
+      <section className="flex-1 pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
