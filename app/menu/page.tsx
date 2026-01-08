@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Check } from 'lucide-react'
 import Link from 'next/link'
-import MenuNavigation from '../components/MenuNavigation'
+import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
+import { formatPrice } from '../constants/currency'
 
 interface MenuItem {
   id: string
@@ -72,11 +73,11 @@ export default function MenuPage() {
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
-      <MenuNavigation />
+      <Navigation />
       <TestingBanner />
 
       {/* Menu Content */}
-      <section className="flex-1 py-20 px-6">
+      <section className="flex-1 pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -102,7 +103,7 @@ export default function MenuPage() {
               <p className="text-xl text-ceylon-text/70">No menu items available at the moment.</p>
               <Link
                 href="/"
-                className="inline-block mt-8 border-2 border-ceylon-text text-ceylon-text px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text hover:text-ceylon-cream transition-colors"
+                className="inline-block mt-8 border-2 border-ceylon-text text-ceylon-text px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text hover:text-ceylon-cream transition-colors rounded-lg"
               >
                 Back to Home
               </Link>
@@ -127,10 +128,10 @@ export default function MenuPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow rounded-2xl flex flex-col h-full"
                       >
                         {item.image_url && (
-                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden">
+                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden rounded-t-2xl flex-shrink-0">
                             <img 
                               src={item.image_url} 
                               alt={item.name}
@@ -139,22 +140,22 @@ export default function MenuPage() {
                           </div>
                         )}
                         
-                        <div className="p-6">
-                          <h3 className="text-2xl font-bold text-ceylon-text mb-2">
+                        <div className="p-6 flex flex-col flex-grow">
+                          <h3 className="text-2xl font-bold text-ceylon-text mb-2 break-words">
                             {item.name}
                           </h3>
-                          <p className="text-ceylon-text/70 mb-4 min-h-[3rem]">
+                          <p className="text-ceylon-text/70 mb-4 line-clamp-3">
                             {item.description}
                           </p>
                           
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center mt-auto pt-4">
                             <span className="text-2xl font-bold text-ceylon-orange">
-                              {item.price} SEK
+                              {formatPrice(item.price)}
                             </span>
                             
                             <button
                               onClick={() => handleAddToCart(item)}
-                              className={`flex items-center gap-2 px-6 py-2 font-bold uppercase text-sm tracking-wider transition-all ${
+                              className={`flex items-center gap-2 px-6 py-2 font-bold uppercase text-sm tracking-wider transition-all rounded-lg ${
                                 addedItems.has(item.id)
                                   ? 'bg-green-600 text-white'
                                   : 'bg-ceylon-orange text-white hover:bg-ceylon-text'

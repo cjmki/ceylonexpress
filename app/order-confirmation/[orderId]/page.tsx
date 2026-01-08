@@ -5,10 +5,12 @@ import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { CheckCircle, Mail, Phone, MapPin, Package, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
-import MenuNavigation from '../../components/MenuNavigation'
+import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
+import { formatPrice } from '../../constants/currency'
+import { formatDateReadable } from '../../constants/dateUtils'
 
 interface OrderItem {
   id: string
@@ -62,9 +64,9 @@ export default function OrderConfirmationPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
-        <MenuNavigation />
+        <Navigation />
         <TestingBanner />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center pt-32">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
             <p className="mt-4 text-ceylon-text/70">Loading order details...</p>
@@ -78,9 +80,9 @@ export default function OrderConfirmationPage() {
   if (error || !order) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
-        <MenuNavigation />
+        <Navigation />
         <TestingBanner />
-        <div className="flex-1 flex items-center justify-center px-6">
+        <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-ceylon-text mb-4">Order Not Found</h2>
             <p className="text-xl text-ceylon-text/70 mb-8">
@@ -88,7 +90,7 @@ export default function OrderConfirmationPage() {
             </p>
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors"
+              className="inline-block bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
             >
               Back to Menu
             </Link>
@@ -101,10 +103,10 @@ export default function OrderConfirmationPage() {
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
-      <MenuNavigation />
+      <Navigation />
       <TestingBanner />
       
-      <section className="flex-1 py-20 px-6">
+      <section className="flex-1 pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -127,7 +129,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white p-8 shadow-lg mb-8"
+            className="bg-white p-8 shadow-lg mb-8 rounded-2xl"
           >
             <div className="border-b-2 border-ceylon-orange pb-4 mb-6">
               <h2 className="text-2xl font-bold text-ceylon-text">Order Details</h2>
@@ -182,12 +184,7 @@ export default function OrderConfirmationPage() {
                     Preferred {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Date
                   </p>
                   <p className="text-ceylon-text/70">
-                    {new Date(order.delivery_date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
+                    {formatDateReadable(order.delivery_date)}
                   </p>
                 </div>
               </div>
@@ -225,11 +222,11 @@ export default function OrderConfirmationPage() {
                     <div className="flex-1">
                       <p className="font-bold text-ceylon-text">{item.menu_item_name}</p>
                       <p className="text-sm text-ceylon-text/70">
-                        {item.quantity} × {item.menu_item_price} SEK
+                        {item.quantity} × {formatPrice(item.menu_item_price)}
                       </p>
                     </div>
                     <p className="font-bold text-ceylon-orange">
-                      {item.subtotal.toFixed(2)} SEK
+                      {formatPrice(item.subtotal)}
                     </p>
                   </div>
                 ))}
@@ -239,7 +236,7 @@ export default function OrderConfirmationPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-ceylon-text">Total</span>
                   <span className="text-3xl font-bold text-ceylon-orange">
-                    {order.total_amount.toFixed(2)} SEK
+                    {formatPrice(order.total_amount)}
                   </span>
                 </div>
               </div>
@@ -250,7 +247,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-ceylon-orange/10 border-2 border-ceylon-orange p-8 mb-8"
+            className="bg-ceylon-orange/10 border-2 border-ceylon-orange p-8 mb-8 rounded-2xl"
           >
             <h3 className="text-xl font-bold text-ceylon-text mb-4">What&apos;s Next?</h3>
             <div className="space-y-3 text-ceylon-text/80">
@@ -281,7 +278,7 @@ export default function OrderConfirmationPage() {
           >
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors"
+              className="inline-block bg-ceylon-orange text-white px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
             >
               Order More
             </Link>
