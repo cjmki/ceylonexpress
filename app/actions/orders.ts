@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { supabase, createServerSupabaseClient } from '@/lib/supabase'
 
 interface CartItem {
   id: string
@@ -124,12 +124,30 @@ export async function getAllOrders() {
 
 // Update order status (for admin)
 export async function updateOrderStatus(orderId: string, status: string) {
-  const { error } = await supabase
-    .from('orders')
-    .update({ status })
-    .eq('id', orderId)
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('orders')
+      .update({ 
+        status,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId)
+      .select()
 
-  if (error) throw error
-  return { success: true }
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Order updated successfully:', data)
+    return { success: true, message: `Order status updated to ${status}` }
+  } catch (error) {
+    console.error('Failed to update order status:', error)
+    return { success: false, error: 'Failed to update order status' }
+  }
 }
 
