@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Plus, Package, UtensilsCrossed } from 'lucide-react'
-import { OrdersTable } from './OrdersTable'
+import { OrdersManager } from './OrdersManager'
 import { MenuItemsTable } from './MenuItemsTable'
 import { AddMenuItemForm } from './AddMenuItemForm'
 import { useRouter } from 'next/navigation'
@@ -112,19 +112,12 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Recent Orders</h2>
-                  <p className="text-sm text-gray-600 mt-1">View and manage customer orders</p>
+                  <h2 className="text-xl font-semibold text-gray-900">Orders Management</h2>
+                  <p className="text-sm text-gray-600 mt-1">View, filter, and manage customer orders</p>
                 </div>
               </div>
 
-              {orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No orders yet</p>
-                  <p className="text-gray-400 text-sm mt-2">Orders will appear here once customers place them</p>
-                </div>
-              ) : (
-                <OrdersTable orders={orders} />
-              )}
+              <OrdersManager />
             </div>
           )}
 

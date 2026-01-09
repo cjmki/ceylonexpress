@@ -198,10 +198,10 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
   }
 
   return (
-    <div className="space-y-4">
+    <>
       {/* Notification Banner */}
       {notification && (
-        <div className={`p-4 rounded-lg border-2 ${
+        <div className={`m-4 p-4 rounded-lg border-2 ${
           notification.type === 'success' 
             ? 'bg-green-50 border-green-300 text-green-800' 
             : 'bg-red-50 border-red-300 text-red-800'
@@ -370,6 +370,6 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
         order={selectedOrder}
         onClose={closeOrderDetails}
       />
-    </div>
+    </>
   )
 }

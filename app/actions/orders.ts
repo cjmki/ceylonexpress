@@ -236,6 +236,103 @@ export async function getAllOrders() {
   return data
 }
 
+// Get orders with pagination and filters (for admin dashboard)
+export async function getFilteredOrders({
+  page = 1,
+  pageSize = 10,
+  status,
+  deliveryMethod,
+  searchQuery,
+  dateFrom,
+  dateTo,
+  sortBy = 'created_at',
+  sortOrder = 'desc'
+}: {
+  page?: number
+  pageSize?: number
+  status?: string
+  deliveryMethod?: string
+  searchQuery?: string
+  dateFrom?: string
+  dateTo?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+} = {}) {
+  'use server'
+  
+  try {
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize
+
+    // Build the base query
+    let query = supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          id,
+          menu_item_name,
+          menu_item_price,
+          quantity,
+          subtotal
+        )
+      `, { count: 'exact' })
+
+    // Apply filters
+    if (status && status !== 'all') {
+      query = query.eq('status', status)
+    }
+
+    if (deliveryMethod && deliveryMethod !== 'all') {
+      query = query.eq('delivery_method', deliveryMethod)
+    }
+
+    if (searchQuery) {
+      // Search across customer name, email, and phone
+      query = query.or(`customer_name.ilike.%${searchQuery}%,customer_email.ilike.%${searchQuery}%,customer_phone.ilike.%${searchQuery}%`)
+    }
+
+    if (dateFrom) {
+      query = query.gte('created_at', dateFrom)
+    }
+
+    if (dateTo) {
+      // Add one day to include the entire end date
+      const endDate = new Date(dateTo)
+      endDate.setDate(endDate.getDate() + 1)
+      query = query.lt('created_at', endDate.toISOString())
+    }
+
+    // Apply sorting
+    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
+
+    // Apply pagination
+    query = query.range(offset, offset + pageSize - 1)
+
+    const { data, error, count } = await query
+
+    if (error) throw error
+
+    return {
+      success: true,
+      data: data || [],
+      totalCount: count || 0,
+      totalPages: Math.ceil((count || 0) / pageSize),
+      currentPage: page
+    }
+  } catch (error) {
+    console.error('Failed to fetch filtered orders:', error)
+    return {
+      success: false,
+      data: [],
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: 1,
+      error: 'Failed to fetch orders'
+    }
+  }
+}
+
 // Update order status (for admin)
 export async function updateOrderStatus(orderId: string, status: string) {
   'use server'
