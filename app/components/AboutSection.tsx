@@ -60,7 +60,7 @@ export default function AboutSection() {
           ></motion.div>
           
           <h2 
-            className="text-5xl md:text-7xl font-bold text-ceylon-text mb-6 leading-tight"
+            className="text-display-sm md:text-display-lg text-ceylon-text mb-6"
             style={{ fontFamily: 'Georgia, serif' }}
           >
             A Taste of
@@ -78,8 +78,8 @@ export default function AboutSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <div className="space-y-6 text-lg text-ceylon-text/80 leading-relaxed">
-              <p className="text-xl text-ceylon-orange font-semibold italic">
+            <div className="space-y-6 text-body-lg text-ceylon-text/80">
+              <p className="text-body-xl text-ceylon-orange font-semibold italic">
                 From our family to yours
               </p>
               
@@ -123,13 +123,13 @@ export default function AboutSection() {
                 <div className="text-6xl font-bold text-ceylon-text/20" style={{ fontFamily: 'Georgia, serif' }}>
                   "
                 </div>
-                <p className="text-2xl text-ceylon-text/80 leading-relaxed italic">
+                <p className="text-heading-md text-ceylon-text/80 italic">
                   Food is not just about taste — it&apos;s about memories, 
                   connection, and the stories we share.
                 </p>
                 <div className="text-right">
-                  <p className="font-bold text-ceylon-orange text-lg">Ceylon Express Team</p>
-                  <p className="text-ceylon-text/60">Stockholm, Sweden</p>
+                  <p className="text-body-lg font-bold text-ceylon-orange">Ceylon Express Team</p>
+                  <p className="text-body-md text-ceylon-text/60">Stockholm, Sweden</p>
                 </div>
               </div>
             </div>
@@ -154,11 +154,11 @@ export default function AboutSection() {
                   <value.icon className="h-8 w-8 text-ceylon-orange group-hover:text-white transition-colors duration-300" />
                 </div>
                 
-                <h3 className="text-2xl font-bold text-ceylon-text mb-3">
+                <h3 className="text-heading-md text-ceylon-text mb-3">
                   {value.title}
                 </h3>
                 
-                <p className="text-ceylon-text/70 leading-relaxed">
+                <p className="text-body-md text-ceylon-text/70">
                   {value.description}
                 </p>
               </div>
@@ -174,10 +174,10 @@ export default function AboutSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <p className="text-ceylon-orange font-bold text-xl mb-2 uppercase tracking-wider">
+          <p className="text-body-xl text-ceylon-orange font-bold mb-2 uppercase tracking-wider">
             Food Truck & Catering Services
           </p>
-          <p className="text-ceylon-text/60 text-lg">
+          <p className="text-body-lg text-ceylon-text/60">
             Launching Soon in Stockholm
           </p>
         </motion.div>

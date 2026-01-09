@@ -85,10 +85,10 @@ export default function MenuPage() {
             transition={{ duration: 0.6 }}
             className="mb-16 text-center"
           >
-            <h1 className="text-6xl md:text-7xl font-bold text-ceylon-text mb-4">
+            <h1 className="text-display-md md:text-display-lg text-ceylon-text mb-4">
               Our Menu
             </h1>
-            <p className="text-xl text-ceylon-text/70 max-w-2xl mx-auto">
+            <p className="text-body-xl text-ceylon-text/70 max-w-2xl mx-auto">
               Authentic Sri Lankan dishes made fresh with traditional recipes
             </p>
           </motion.div>
@@ -117,7 +117,7 @@ export default function MenuPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
                 >
-                  <h2 className="text-3xl font-bold text-ceylon-text mb-8 border-b-2 border-ceylon-orange pb-2 inline-block">
+                  <h2 className="text-heading-xl text-ceylon-text mb-8 border-b-2 border-ceylon-orange pb-2 inline-block">
                     {category}
                   </h2>
                   
@@ -141,15 +141,15 @@ export default function MenuPage() {
                         )}
                         
                         <div className="p-6 flex flex-col flex-grow">
-                          <h3 className="text-2xl font-bold text-ceylon-text mb-2 break-words">
+                          <h3 className="text-heading-md text-ceylon-text mb-2 break-words">
                             {item.name}
                           </h3>
-                          <p className="text-ceylon-text/70 mb-4 line-clamp-3">
+                          <p className="text-body-md text-ceylon-text/70 mb-4 line-clamp-3">
                             {item.description}
                           </p>
                           
                           <div className="flex justify-between items-center mt-auto pt-4">
-                            <span className="text-2xl font-bold text-ceylon-orange">
+                            <span className="text-price text-ceylon-orange">
                               {formatPrice(item.price)}
                             </span>
                             

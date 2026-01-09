@@ -17,15 +17,15 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h3 
-              className="text-2xl font-bold mb-2 text-ceylon-yellow"
+              className="text-heading-md text-ceylon-yellow mb-2"
               style={{ fontFamily: 'Georgia, serif' }}
             >
               Ceylon Express
             </h3>
-            <p className="text-sm text-white/60 mb-4">
+            <p className="text-body-sm text-white/60 mb-4">
               Sri Lankan Inspired • Stockholm, Sweden
             </p>
-            <p className="text-white/80 leading-relaxed">
+            <p className="text-body-md text-white/80">
               Bringing authentic island flavors to your neighborhood through 
               our food truck and catering services.
             </p>
@@ -33,7 +33,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-ceylon-yellow mb-4 uppercase tracking-wider text-sm">
+            <h4 className="text-label text-ceylon-yellow mb-4 uppercase tracking-wider">
               Explore
             </h4>
             <ul className="space-y-2">
@@ -66,10 +66,10 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h4 className="font-bold text-ceylon-yellow mb-4 uppercase tracking-wider text-sm">
+            <h4 className="text-label text-ceylon-yellow mb-4 uppercase tracking-wider">
               Connect With Us
             </h4>
-            <p className="text-white/80 mb-4 text-sm">
+            <p className="text-body-sm text-white/80 mb-4">
               Follow our journey and stay updated on our launch
             </p>
             <div className="flex gap-3">
@@ -97,10 +97,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-white/60">
+          <p className="text-body-sm text-white/60">
             © {new Date().getFullYear()} Ceylon Express. All rights reserved.
           </p>
-          <p className="text-sm text-white/60 flex items-center gap-2">
+          <p className="text-body-sm text-white/60 flex items-center gap-2">
             Made with <Heart className="h-4 w-4 text-ceylon-orange fill-current" /> in Stockholm
           </p>
         </div>

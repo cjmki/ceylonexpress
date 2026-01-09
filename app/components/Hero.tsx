@@ -33,7 +33,7 @@ export default function Hero() {
               className="inline-block mb-6"
             >
               <div className="bg-ceylon-orange/10 border-l-4 border-ceylon-orange px-6 py-3">
-                <span className="text-ceylon-orange font-bold tracking-widest text-sm">
+                <span className="text-ceylon-orange font-bold tracking-widest text-body-sm">
                   ශ්‍රී ලංකන් INSPIRED
                 </span>
               </div>
@@ -43,7 +43,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-5xl md:text-7xl font-bold text-ceylon-text mb-6 leading-[1.1]"
+              className="text-display-sm md:text-display-lg text-ceylon-text mb-6"
               style={{ fontFamily: 'Georgia, serif' }}
             >
               Authentic Flavors
@@ -55,7 +55,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-xl md:text-2xl text-ceylon-text/70 mb-10 leading-relaxed max-w-lg"
+              className="text-body-xl md:text-body-xl text-ceylon-text/70 mb-10 max-w-lg"
             >
               Bringing the warmth of home-cooked Sri Lankan cuisine to Stockholm. 
               Every dish tells a story of tradition, spice, and love.
@@ -69,22 +69,19 @@ export default function Hero() {
             >
               <a
                 href="/menu"
-                className="group relative overflow-hidden bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl"
+                className="btn btn-lg btn-primary btn-slide-up"
               >
-                <span className="relative z-10">
-                  Order Now
-                </span>
-                <div className="absolute inset-0 bg-ceylon-text transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <span>Order Now</span>
               </a>
 
               <a
                 href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group border-2 border-ceylon-orange text-ceylon-orange px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 flex items-center gap-2"
+                className="btn btn-lg btn-outline"
               >
                 <Instagram className="h-5 w-5" />
-                Follow Us
+                <span>Follow Us</span>
               </a>
             </motion.div>
 
@@ -92,7 +89,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="mt-8 text-sm text-ceylon-text/50 italic"
+              className="mt-8 text-body-sm text-ceylon-text/50 italic"
             >
               Coming soon to Stockholm • Food truck & catering services
             </motion.p>
@@ -139,7 +136,7 @@ export default function Hero() {
           transition={{ delay: 1.2, duration: 0.8 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center"
         >
-          <p className="text-sm text-ceylon-text/50 mb-2 uppercase tracking-wider">Scroll to explore</p>
+          <p className="text-body-sm text-ceylon-text/50 mb-2 uppercase tracking-wider">Scroll to explore</p>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
