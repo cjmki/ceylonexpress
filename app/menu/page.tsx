@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Check } from 'lucide-react'
+import { Plus, Check, Eye } from 'lucide-react'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
@@ -10,6 +10,7 @@ import TestingBanner from '../components/TestingBanner'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
 import { formatPrice } from '../constants/currency'
+import { MenuItemModal } from './components/MenuItemModal'
 
 interface MenuItem {
   id: string
@@ -19,12 +20,15 @@ interface MenuItem {
   category: string
   image_url: string | null
   available: boolean
+  includes: string[] | null
 }
 
 export default function MenuPage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(true)
   const [addedItems, setAddedItems] = useState<Set<string>>(new Set())
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { addToCart, getItemCount } = useCart()
 
   useEffect(() => {
@@ -60,8 +64,21 @@ export default function MenuPage() {
     }, 2000)
   }
 
+  const openModal = (item: MenuItem) => {
+    setSelectedItem(item)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setTimeout(() => setSelectedItem(null), 200)
+  }
+
   const cartItemCount = getItemCount()
 
+  // Define category display order
+  const CATEGORY_ORDER = ['Featured', 'Mains', 'Bites', 'Snacks', 'Drinks', 'Specials']
+  
   // Group menu items by category
   const groupedItems = menuItems.reduce((acc, item) => {
     if (!acc[item.category]) {
@@ -70,6 +87,18 @@ export default function MenuPage() {
     acc[item.category].push(item)
     return acc
   }, {} as Record<string, MenuItem[]>)
+
+  // Sort categories by defined order
+  const sortedCategories = Object.entries(groupedItems).sort(([categoryA], [categoryB]) => {
+    const indexA = CATEGORY_ORDER.indexOf(categoryA)
+    const indexB = CATEGORY_ORDER.indexOf(categoryB)
+    
+    // If category is not in the order list, put it at the end
+    const orderA = indexA === -1 ? 999 : indexA
+    const orderB = indexB === -1 ? 999 : indexB
+    
+    return orderA - orderB
+  })
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
@@ -110,7 +139,7 @@ export default function MenuPage() {
             </div>
           ) : (
             <div className="space-y-16">
-              {Object.entries(groupedItems).map(([category, items], categoryIndex) => (
+              {sortedCategories.map(([category, items], categoryIndex) => (
                 <motion.div
                   key={category}
                   initial={{ opacity: 0, y: 20 }}
@@ -121,56 +150,65 @@ export default function MenuPage() {
                     {category}
                   </h2>
                   
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {items.map((item, index) => (
                       <motion.div
                         key={item.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow rounded-2xl flex flex-col h-full"
+                        transition={{ duration: 0.6, delay: index * 0.05 }}
+                        className="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all rounded-xl flex flex-col group cursor-pointer"
+                        onClick={() => openModal(item)}
                       >
-                        {item.image_url && (
-                          <div className="w-full h-48 bg-ceylon-cream/30 overflow-hidden rounded-t-2xl flex-shrink-0">
+                        {/* Image */}
+                        {item.image_url ? (
+                          <div className="w-full h-32 bg-ceylon-cream/30 overflow-hidden relative">
                             <img 
                               src={item.image_url} 
                               alt={item.name}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                              <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-full h-32 bg-gradient-to-br from-ceylon-orange/20 to-ceylon-cream flex items-center justify-center">
+                            <span className="text-4xl">🍛</span>
                           </div>
                         )}
                         
-                        <div className="p-6 flex flex-col flex-grow">
-                          <h3 className="text-heading-md text-ceylon-text mb-2 break-words">
+                        {/* Content */}
+                        <div className="p-3 flex flex-col flex-grow">
+                          <h3 className="text-sm font-bold text-ceylon-text mb-1 line-clamp-2 min-h-[2.5rem]">
                             {item.name}
                           </h3>
-                          <p className="text-body-md text-ceylon-text/70 mb-4 line-clamp-3">
+                          
+                          <p className="text-xs text-ceylon-text/60 mb-2 line-clamp-2">
                             {item.description}
                           </p>
                           
-                          <div className="flex justify-between items-center mt-auto pt-4">
-                            <span className="text-price text-ceylon-orange">
+                          <div className="flex items-center justify-between mt-auto pt-2 border-t border-ceylon-cream">
+                            <span className="text-base font-bold text-ceylon-orange">
                               {formatPrice(item.price)}
                             </span>
                             
                             <button
-                              onClick={() => handleAddToCart(item)}
-                              className={`flex items-center gap-2 px-6 py-2 font-bold uppercase text-sm tracking-wider transition-all rounded-lg ${
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleAddToCart(item)
+                              }}
+                              className={`p-2 rounded-lg transition-all ${
                                 addedItems.has(item.id)
                                   ? 'bg-green-600 text-white'
                                   : 'bg-ceylon-orange text-white hover:bg-ceylon-text'
                               }`}
+                              title="Add to cart"
                             >
                               {addedItems.has(item.id) ? (
-                                <>
-                                  <Check className="h-4 w-4" />
-                                  Added
-                                </>
+                                <Check className="h-4 w-4" />
                               ) : (
-                                <>
-                                  <Plus className="h-4 w-4" />
-                                  Add
-                                </>
+                                <Plus className="h-4 w-4" />
                               )}
                             </button>
                           </div>
@@ -184,6 +222,15 @@ export default function MenuPage() {
           )}
         </div>
       </section>
+
+      {/* Menu Item Modal */}
+      <MenuItemModal
+        item={selectedItem}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onAddToCart={handleAddToCart}
+        isAdded={selectedItem ? addedItems.has(selectedItem.id) : false}
+      />
 
       <Footer />
     </div>

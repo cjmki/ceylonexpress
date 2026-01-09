@@ -81,6 +81,120 @@ export async function getMenuItems() {
   return data
 }
 
+// Get all menu items including unavailable ones (for admin)
+export async function getAllMenuItems() {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .select('*')
+    .order('category', { ascending: true })
+    .order('name', { ascending: true })
+  
+  if (error) throw error
+  return data
+}
+
+// Create new menu item (for admin)
+export async function createMenuItem(menuItemData: {
+  name: string
+  description: string
+  price: number
+  category: string
+  image_url?: string
+  available: boolean
+  includes?: string[]
+}) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('menu_items')
+      .insert([{
+        name: menuItemData.name,
+        description: menuItemData.description,
+        price: menuItemData.price,
+        category: menuItemData.category,
+        image_url: menuItemData.image_url || null,
+        available: menuItemData.available,
+        includes: menuItemData.includes || null
+      }])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item created successfully:', data)
+    return { success: true, data, message: 'Menu item created successfully' }
+  } catch (error) {
+    console.error('Failed to create menu item:', error)
+    return { success: false, error: 'Failed to create menu item' }
+  }
+}
+
+// Update menu item (for admin)
+export async function updateMenuItem(id: string, menuItemData: {
+  name?: string
+  description?: string
+  price?: number
+  category?: string
+  image_url?: string
+  available?: boolean
+  includes?: string[]
+}) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('menu_items')
+      .update(menuItemData)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item updated successfully:', data)
+    return { success: true, data, message: 'Menu item updated successfully' }
+  } catch (error) {
+    console.error('Failed to update menu item:', error)
+    return { success: false, error: 'Failed to update menu item' }
+  }
+}
+
+// Delete menu item (for admin)
+export async function deleteMenuItem(id: string) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { error } = await serverClient
+      .from('menu_items')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item deleted successfully')
+    return { success: true, message: 'Menu item deleted successfully' }
+  } catch (error) {
+    console.error('Failed to delete menu item:', error)
+    return { success: false, error: 'Failed to delete menu item' }
+  }
+}
+
 // Get a single order with its items (for admin or order confirmation)
 export async function getOrderById(orderId: string) {
   const { data: order, error: orderError } = await supabase
@@ -120,6 +234,103 @@ export async function getAllOrders() {
 
   if (error) throw error
   return data
+}
+
+// Get orders with pagination and filters (for admin dashboard)
+export async function getFilteredOrders({
+  page = 1,
+  pageSize = 10,
+  status,
+  deliveryMethod,
+  searchQuery,
+  dateFrom,
+  dateTo,
+  sortBy = 'created_at',
+  sortOrder = 'desc'
+}: {
+  page?: number
+  pageSize?: number
+  status?: string
+  deliveryMethod?: string
+  searchQuery?: string
+  dateFrom?: string
+  dateTo?: string
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+} = {}) {
+  'use server'
+  
+  try {
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize
+
+    // Build the base query
+    let query = supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          id,
+          menu_item_name,
+          menu_item_price,
+          quantity,
+          subtotal
+        )
+      `, { count: 'exact' })
+
+    // Apply filters
+    if (status && status !== 'all') {
+      query = query.eq('status', status)
+    }
+
+    if (deliveryMethod && deliveryMethod !== 'all') {
+      query = query.eq('delivery_method', deliveryMethod)
+    }
+
+    if (searchQuery) {
+      // Search across customer name, email, and phone
+      query = query.or(`customer_name.ilike.%${searchQuery}%,customer_email.ilike.%${searchQuery}%,customer_phone.ilike.%${searchQuery}%`)
+    }
+
+    if (dateFrom) {
+      query = query.gte('created_at', dateFrom)
+    }
+
+    if (dateTo) {
+      // Add one day to include the entire end date
+      const endDate = new Date(dateTo)
+      endDate.setDate(endDate.getDate() + 1)
+      query = query.lt('created_at', endDate.toISOString())
+    }
+
+    // Apply sorting
+    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
+
+    // Apply pagination
+    query = query.range(offset, offset + pageSize - 1)
+
+    const { data, error, count } = await query
+
+    if (error) throw error
+
+    return {
+      success: true,
+      data: data || [],
+      totalCount: count || 0,
+      totalPages: Math.ceil((count || 0) / pageSize),
+      currentPage: page
+    }
+  } catch (error) {
+    console.error('Failed to fetch filtered orders:', error)
+    return {
+      success: false,
+      data: [],
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: 1,
+      error: 'Failed to fetch orders'
+    }
+  }
 }
 
 // Update order status (for admin)

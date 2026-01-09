@@ -1,11 +1,13 @@
-import { getAllOrders } from '../../actions/orders'
+import { getAllOrders, getAllMenuItems } from '../../actions/orders'
 import { OrdersTable } from './components/OrdersTable'
 import { formatPrice } from '../../constants/currency'
+import { AdminTabs } from './components/AdminTabs'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const orders = await getAllOrders()
+  const menuItems = await getAllMenuItems()
 
   const pendingOrders = orders.filter(order => order.status === 'pending')
   const confirmedOrders = orders.filter(order => order.status === 'confirmed')
@@ -20,8 +22,8 @@ export default async function AdminDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
-          <p className="text-gray-600 mt-1">Manage and track all customer orders</p>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-gray-600 mt-1">Manage orders and menu items</p>
         </div>
       </div>
 
@@ -76,20 +78,8 @@ export default async function AdminDashboard() {
         </div>
       )}
 
-      {/* Orders Table */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900">Recent Orders</h2>
-          {orders.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No orders yet</p>
-              <p className="text-gray-400 text-sm mt-2">Orders will appear here once customers place them</p>
-            </div>
-          ) : (
-            <OrdersTable orders={orders} />
-          )}
-        </div>
-      </div>
+      {/* Tabbed Interface */}
+      <AdminTabs orders={orders} menuItems={menuItems} />
     </div>
   )
 }
