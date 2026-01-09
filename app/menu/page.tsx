@@ -77,7 +77,7 @@ export default function MenuPage() {
   const cartItemCount = getItemCount()
 
   // Define category display order
-  const CATEGORY_ORDER = ['Featured', 'Mains', 'Bites', 'Snaks', 'Drinks', 'Specials']
+  const CATEGORY_ORDER = ['Featured', 'Mains', 'Bites', 'Snacks', 'Drinks', 'Specials']
   
   // Group menu items by category
   const groupedItems = menuItems.reduce((acc, item) => {

@@ -13,7 +13,7 @@ interface AddMenuItemFormProps {
 const CATEGORIES = [
   'Featured',
   'Mains',
-  'Snaks',
+  'Snacks',
   'Bites',
   'Drinks',
   'Specials'
