@@ -12,6 +12,7 @@ interface MenuItem {
   category: string
   image_url: string | null
   available: boolean
+  includes: string[] | null
 }
 
 interface MenuItemModalProps {
@@ -72,6 +73,26 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
           <p className="text-lg text-ceylon-text/70 mb-6 leading-relaxed">
             {item.description}
           </p>
+
+          {/* Includes Section */}
+          {item.includes && item.includes.length > 0 && (
+            <div className="mb-6 p-4 bg-ceylon-cream/50 rounded-lg border-2 border-ceylon-orange/20">
+              <h3 className="text-sm font-bold text-ceylon-text mb-3 uppercase tracking-wider">
+                What's Included:
+              </h3>
+              <ul className="space-y-2">
+                {item.includes.map((include, index) => (
+                  <li 
+                    key={index}
+                    className="flex items-center gap-2 text-ceylon-text/80"
+                  >
+                    <span className="text-ceylon-orange flex-shrink-0 text-lg leading-none">•</span>
+                    <span className="text-sm leading-relaxed">{include}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Price and Add Button */}
           <div className="flex items-center justify-between pt-6 border-t-2 border-ceylon-cream">

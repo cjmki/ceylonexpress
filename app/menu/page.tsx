@@ -20,6 +20,7 @@ interface MenuItem {
   category: string
   image_url: string | null
   available: boolean
+  includes: string[] | null
 }
 
 export default function MenuPage() {
