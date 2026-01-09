@@ -81,6 +81,120 @@ export async function getMenuItems() {
   return data
 }
 
+// Get all menu items including unavailable ones (for admin)
+export async function getAllMenuItems() {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .select('*')
+    .order('category', { ascending: true })
+    .order('name', { ascending: true })
+  
+  if (error) throw error
+  return data
+}
+
+// Create new menu item (for admin)
+export async function createMenuItem(menuItemData: {
+  name: string
+  description: string
+  price: number
+  category: string
+  image_url?: string
+  available: boolean
+  includes?: string[]
+}) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('menu_items')
+      .insert([{
+        name: menuItemData.name,
+        description: menuItemData.description,
+        price: menuItemData.price,
+        category: menuItemData.category,
+        image_url: menuItemData.image_url || null,
+        available: menuItemData.available,
+        includes: menuItemData.includes || null
+      }])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item created successfully:', data)
+    return { success: true, data, message: 'Menu item created successfully' }
+  } catch (error) {
+    console.error('Failed to create menu item:', error)
+    return { success: false, error: 'Failed to create menu item' }
+  }
+}
+
+// Update menu item (for admin)
+export async function updateMenuItem(id: string, menuItemData: {
+  name?: string
+  description?: string
+  price?: number
+  category?: string
+  image_url?: string
+  available?: boolean
+  includes?: string[]
+}) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('menu_items')
+      .update(menuItemData)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item updated successfully:', data)
+    return { success: true, data, message: 'Menu item updated successfully' }
+  } catch (error) {
+    console.error('Failed to update menu item:', error)
+    return { success: false, error: 'Failed to update menu item' }
+  }
+}
+
+// Delete menu item (for admin)
+export async function deleteMenuItem(id: string) {
+  'use server'
+  
+  try {
+    const serverClient = createServerSupabaseClient()
+    
+    const { error } = await serverClient
+      .from('menu_items')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Menu item deleted successfully')
+    return { success: true, message: 'Menu item deleted successfully' }
+  } catch (error) {
+    console.error('Failed to delete menu item:', error)
+    return { success: false, error: 'Failed to delete menu item' }
+  }
+}
+
 // Get a single order with its items (for admin or order confirmation)
 export async function getOrderById(orderId: string) {
   const { data: order, error: orderError } = await supabase

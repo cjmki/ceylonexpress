@@ -76,6 +76,9 @@ export default function MenuPage() {
 
   const cartItemCount = getItemCount()
 
+  // Define category display order
+  const CATEGORY_ORDER = ['Featured', 'Mains', 'Bites', 'Snaks', 'Drinks', 'Specials']
+  
   // Group menu items by category
   const groupedItems = menuItems.reduce((acc, item) => {
     if (!acc[item.category]) {
@@ -84,6 +87,18 @@ export default function MenuPage() {
     acc[item.category].push(item)
     return acc
   }, {} as Record<string, MenuItem[]>)
+
+  // Sort categories by defined order
+  const sortedCategories = Object.entries(groupedItems).sort(([categoryA], [categoryB]) => {
+    const indexA = CATEGORY_ORDER.indexOf(categoryA)
+    const indexB = CATEGORY_ORDER.indexOf(categoryB)
+    
+    // If category is not in the order list, put it at the end
+    const orderA = indexA === -1 ? 999 : indexA
+    const orderB = indexB === -1 ? 999 : indexB
+    
+    return orderA - orderB
+  })
 
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
@@ -124,7 +139,7 @@ export default function MenuPage() {
             </div>
           ) : (
             <div className="space-y-16">
-              {Object.entries(groupedItems).map(([category, items], categoryIndex) => (
+              {sortedCategories.map(([category, items], categoryIndex) => (
                 <motion.div
                   key={category}
                   initial={{ opacity: 0, y: 20 }}
