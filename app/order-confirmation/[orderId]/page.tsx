@@ -69,7 +69,7 @@ export default function OrderConfirmationPage() {
         <div className="flex-1 flex items-center justify-center pt-32">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
-            <p className="mt-4 text-ceylon-text/70">Loading order details...</p>
+            <p className="mt-4 text-body-md text-ceylon-text/70">Loading order details...</p>
           </div>
         </div>
         <Footer />
@@ -84,13 +84,13 @@ export default function OrderConfirmationPage() {
         <TestingBanner />
         <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-ceylon-text mb-4">Order Not Found</h2>
-            <p className="text-xl text-ceylon-text/70 mb-8">
+            <h2 className="text-heading-xl text-ceylon-text mb-4">Order Not Found</h2>
+            <p className="text-body-xl text-ceylon-text/70 mb-8">
               We couldn&apos;t find the order you&apos;re looking for.
             </p>
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
+              className="btn btn-lg btn-primary"
             >
               Back to Menu
             </Link>
@@ -117,10 +117,10 @@ export default function OrderConfirmationPage() {
             <div className="inline-block mb-6">
               <CheckCircle className="h-24 w-24 text-green-600" />
             </div>
-            <h1 className="text-5xl font-bold text-ceylon-text mb-4">
+            <h1 className="text-display-sm text-ceylon-text mb-4">
               Order Confirmed!
             </h1>
-            <p className="text-xl text-ceylon-text/70">
+            <p className="text-body-xl text-ceylon-text/70">
               Thank you for your order, {order.customer_name}!
             </p>
           </motion.div>
@@ -132,11 +132,11 @@ export default function OrderConfirmationPage() {
             className="bg-white p-8 shadow-lg mb-8 rounded-2xl"
           >
             <div className="border-b-2 border-ceylon-orange pb-4 mb-6">
-              <h2 className="text-2xl font-bold text-ceylon-text">Order Details</h2>
-              <p className="text-sm text-ceylon-text/70 mt-1">
+              <h2 className="text-heading-md text-ceylon-text">Order Details</h2>
+              <p className="text-body-sm text-ceylon-text/70 mt-1">
                 Order ID: {order.id}
               </p>
-              <p className="text-sm text-ceylon-text/70">
+              <p className="text-body-sm text-ceylon-text/70">
                 Placed on: {new Date(order.created_at).toLocaleString('sv-SE')}
               </p>
             </div>
@@ -145,34 +145,34 @@ export default function OrderConfirmationPage() {
               <div className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
-                  <p className="font-bold text-ceylon-text">Email</p>
-                  <p className="text-ceylon-text/70">{order.customer_email}</p>
+                  <p className="text-body-md font-bold text-ceylon-text">Email</p>
+                  <p className="text-body-md text-ceylon-text/70">{order.customer_email}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <Phone className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
-                  <p className="font-bold text-ceylon-text">Phone</p>
-                  <p className="text-ceylon-text/70">{order.customer_phone}</p>
+                  <p className="text-body-md font-bold text-ceylon-text">Phone</p>
+                  <p className="text-body-md text-ceylon-text/70">{order.customer_phone}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
-                  <p className="font-bold text-ceylon-text">
+                  <p className="text-body-md font-bold text-ceylon-text">
                     {order.delivery_method === 'pickup' ? 'Pickup Location' : 'Delivery Address'}
                   </p>
                   {order.delivery_method === 'pickup' ? (
                     <div>
-                      <p className="text-ceylon-text/70">Bondhagsvägen, Upplands-Bro</p>
-                      <p className="text-xs text-ceylon-text/50 mt-1">
+                      <p className="text-body-md text-ceylon-text/70">Bondhagsvägen, Upplands-Bro</p>
+                      <p className="text-body-xs text-ceylon-text/50 mt-1">
                         We&apos;ll send exact address and instructions via email
                       </p>
                     </div>
                   ) : (
-                    <p className="text-ceylon-text/70">{order.delivery_address}</p>
+                    <p className="text-body-md text-ceylon-text/70">{order.delivery_address}</p>
                   )}
                 </div>
               </div>
@@ -180,10 +180,10 @@ export default function OrderConfirmationPage() {
               <div className="flex items-start gap-3">
                 <Calendar className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
-                  <p className="font-bold text-ceylon-text">
+                  <p className="text-body-md font-bold text-ceylon-text">
                     Preferred {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Date
                   </p>
-                  <p className="text-ceylon-text/70">
+                  <p className="text-body-md text-ceylon-text/70">
                     {formatDateReadable(order.delivery_date)}
                   </p>
                 </div>
@@ -192,10 +192,10 @@ export default function OrderConfirmationPage() {
               <div className="flex items-start gap-3">
                 <Clock className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
-                  <p className="font-bold text-ceylon-text">
+                  <p className="text-body-md font-bold text-ceylon-text">
                     {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Time
                   </p>
-                  <p className="text-ceylon-text/70 capitalize">
+                  <p className="text-body-md text-ceylon-text/70 capitalize">
                     {order.delivery_time === 'breakfast' && 'Breakfast (8:00 AM - 10:00 AM)'}
                     {order.delivery_time === 'lunch' && 'Lunch (12:00 PM - 2:00 PM)'}
                     {order.delivery_time === 'dinner' && 'Dinner (6:00 PM - 8:00 PM)'}
@@ -207,25 +207,25 @@ export default function OrderConfirmationPage() {
                 <div className="flex items-start gap-3">
                   <Package className="h-5 w-5 text-ceylon-orange mt-1" />
                   <div>
-                    <p className="font-bold text-ceylon-text">Special Instructions</p>
-                    <p className="text-ceylon-text/70">{order.notes}</p>
+                    <p className="text-body-md font-bold text-ceylon-text">Special Instructions</p>
+                    <p className="text-body-md text-ceylon-text/70">{order.notes}</p>
                   </div>
                 </div>
               )}
             </div>
 
             <div className="border-t pt-6">
-              <h3 className="text-xl font-bold text-ceylon-text mb-4">Order Items</h3>
+              <h3 className="text-heading-sm text-ceylon-text mb-4">Order Items</h3>
               <div className="space-y-3">
                 {order.order_items.map((item) => (
                   <div key={item.id} className="flex justify-between items-center py-2">
                     <div className="flex-1">
-                      <p className="font-bold text-ceylon-text">{item.menu_item_name}</p>
-                      <p className="text-sm text-ceylon-text/70">
+                      <p className="text-body-md font-bold text-ceylon-text">{item.menu_item_name}</p>
+                      <p className="text-body-sm text-ceylon-text/70">
                         {item.quantity} × {formatPrice(item.menu_item_price)}
                       </p>
                     </div>
-                    <p className="font-bold text-ceylon-orange">
+                    <p className="text-price text-ceylon-orange">
                       {formatPrice(item.subtotal)}
                     </p>
                   </div>
@@ -234,8 +234,8 @@ export default function OrderConfirmationPage() {
 
               <div className="border-t-2 border-ceylon-orange mt-6 pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-ceylon-text">Total</span>
-                  <span className="text-3xl font-bold text-ceylon-orange">
+                  <span className="text-heading-md text-ceylon-text">Total</span>
+                  <span className="text-heading-xl text-ceylon-orange">
                     {formatPrice(order.total_amount)}
                   </span>
                 </div>
@@ -249,8 +249,8 @@ export default function OrderConfirmationPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="bg-ceylon-orange/10 border-2 border-ceylon-orange p-8 mb-8 rounded-2xl"
           >
-            <h3 className="text-xl font-bold text-ceylon-text mb-4">What&apos;s Next?</h3>
-            <div className="space-y-3 text-ceylon-text/80">
+            <h3 className="text-heading-sm text-ceylon-text mb-4">What&apos;s Next?</h3>
+            <div className="space-y-3 text-body-md text-ceylon-text/80">
               <p className="flex items-start gap-2">
                 <span className="font-bold text-ceylon-orange">1.</span>
                 <span>We&apos;ll review your order and check the availability of all items.</span>
@@ -278,7 +278,7 @@ export default function OrderConfirmationPage() {
           >
             <Link
               href="/menu"
-              className="inline-block bg-ceylon-orange text-white px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
+              className="btn btn-lg btn-primary"
             >
               Order More
             </Link>
@@ -286,7 +286,7 @@ export default function OrderConfirmationPage() {
             <div className="text-center">
               <Link
                 href="/"
-                className="text-ceylon-text/70 hover:text-ceylon-text underline"
+                className="text-body-md text-ceylon-text/70 hover:text-ceylon-text underline"
               >
                 Back to Home
               </Link>

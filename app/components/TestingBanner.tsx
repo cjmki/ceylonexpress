@@ -13,7 +13,7 @@ export default function TestingBanner() {
     >
       <div className="container mx-auto flex items-center justify-center gap-3 text-center flex-wrap">
         <AlertCircle className="h-5 w-5 flex-shrink-0" />
-        <p className="text-sm md:text-base font-medium">
+        <p className="text-body-sm md:text-body-md font-medium">
           We&apos;re currently testing our booking system.
           <a
             href="https://www.instagram.com/ceylonexpress.se/"

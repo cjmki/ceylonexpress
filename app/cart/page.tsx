@@ -97,16 +97,16 @@ export default function CartPage() {
             className="text-center"
           >
             <ShoppingBag className="h-24 w-24 text-ceylon-orange/30 mx-auto mb-6" />
-            <h2 className="text-4xl font-bold text-ceylon-text mb-4">Your cart is empty</h2>
-            <p className="text-xl text-ceylon-text/70 mb-8">
+            <h2 className="text-display-sm text-ceylon-text mb-4">Your cart is empty</h2>
+            <p className="text-body-xl text-ceylon-text/70 mb-8">
               Add some delicious Sri Lankan dishes to get started!
             </p>
             <Link
               href="/menu"
-              className="inline-flex items-center gap-2 bg-ceylon-orange text-white px-8 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text transition-colors rounded-lg"
+              className="btn btn-lg btn-primary"
             >
               <ArrowLeft className="h-5 w-5" />
-              Browse Menu
+              <span>Browse Menu</span>
             </Link>
           </motion.div>
         </div>
@@ -135,12 +135,12 @@ export default function CartPage() {
               >
                 <ArrowLeft className="h-5 w-5 md:h-6 md:w-6" />
               </Link>
-              <h1 className="text-3xl md:text-5xl font-bold text-ceylon-text">Your Order</h1>
+              <h1 className="text-heading-xl md:text-display-sm text-ceylon-text">Your Order</h1>
             </div>
 
             {/* Cart Items */}
             <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8 rounded-2xl">
-              <h2 className="text-xl md:text-2xl font-bold text-ceylon-text mb-4 md:mb-6">Order Items</h2>
+              <h2 className="text-heading-sm md:text-heading-md text-ceylon-text mb-4 md:mb-6">Order Items</h2>
               
               {cart.map((item) => (
                 <div key={item.id} className="border-b border-ceylon-cream py-6 last:border-b-0">
@@ -155,8 +155,8 @@ export default function CartPage() {
                         />
                       )}
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-ceylon-text mb-1">{item.name}</h3>
-                        <p className="text-ceylon-orange font-bold text-sm">{formatPrice(item.price)} each</p>
+                        <h3 className="text-heading-sm text-ceylon-text mb-1">{item.name}</h3>
+                        <p className="text-body-sm text-ceylon-orange font-bold">{formatPrice(item.price)} each</p>
                       </div>
                     </div>
                     
@@ -170,7 +170,7 @@ export default function CartPage() {
                           <Minus className="h-4 w-4" />
                         </button>
                         
-                        <span className="text-lg font-bold text-ceylon-text min-w-[2.5rem] text-center">
+                        <span className="text-heading-sm text-ceylon-text min-w-[2.5rem] text-center">
                           {item.quantity}
                         </span>
                         
@@ -184,7 +184,7 @@ export default function CartPage() {
                       </div>
                       
                       <div className="flex items-center gap-4">
-                        <p className="text-lg font-bold text-ceylon-text">
+                        <p className="text-heading-sm text-ceylon-text">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                         <button
@@ -209,8 +209,8 @@ export default function CartPage() {
                     )}
                     
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-ceylon-text">{item.name}</h3>
-                      <p className="text-ceylon-orange font-bold">{formatPrice(item.price)}</p>
+                      <h3 className="text-heading-sm text-ceylon-text">{item.name}</h3>
+                      <p className="text-body-md text-ceylon-orange font-bold">{formatPrice(item.price)}</p>
                     </div>
                     
                     <div className="flex items-center gap-4">
@@ -222,7 +222,7 @@ export default function CartPage() {
                         <Minus className="h-4 w-4" />
                       </button>
                       
-                      <span className="text-xl font-bold text-ceylon-text min-w-[2rem] text-center">
+                      <span className="text-heading-sm text-ceylon-text min-w-[2rem] text-center">
                         {item.quantity}
                       </span>
                       
@@ -244,7 +244,7 @@ export default function CartPage() {
                     </div>
                     
                     <div className="text-right min-w-[6rem]">
-                      <p className="text-xl font-bold text-ceylon-text">
+                      <p className="text-heading-sm text-ceylon-text">
                         {formatPrice(item.price * item.quantity)}
                       </p>
                     </div>
@@ -254,8 +254,8 @@ export default function CartPage() {
               
               <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t-2 border-ceylon-orange">
                 <div className="flex justify-between items-center">
-                  <span className="text-xl md:text-2xl font-bold text-ceylon-text">Total</span>
-                  <span className="text-2xl md:text-3xl font-bold text-ceylon-orange">
+                  <span className="text-heading-sm md:text-heading-md text-ceylon-text">Total</span>
+                  <span className="text-heading-md md:text-heading-xl text-ceylon-orange">
                     {formatPrice(getTotal())}
                   </span>
                 </div>
@@ -264,7 +264,7 @@ export default function CartPage() {
 
             {/* Checkout Form */}
             <div className="bg-white p-4 md:p-8 shadow-lg rounded-2xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
+              <h2 className="text-heading-md md:text-heading-xl text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
               
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -274,7 +274,7 @@ export default function CartPage() {
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="customerName" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="customerName" className="block text-label text-ceylon-text mb-2">
                     Full Name *
                   </label>
                   <input
@@ -290,7 +290,7 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="customerEmail" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="customerEmail" className="block text-label text-ceylon-text mb-2">
                     Email Address *
                   </label>
                   <input
@@ -306,7 +306,7 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="customerPhone" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="customerPhone" className="block text-label text-ceylon-text mb-2">
                     Phone Number *
                   </label>
                   <input
@@ -322,7 +322,7 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="deliveryMethod" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="deliveryMethod" className="block text-label text-ceylon-text mb-2">
                     Delivery Method *
                   </label>
                   <select
@@ -341,7 +341,7 @@ export default function CartPage() {
                 
                 {formData.deliveryMethod === 'delivery' && (
                   <div>
-                    <label htmlFor="deliveryAddress" className="block text-sm font-bold text-ceylon-text mb-2">
+                    <label htmlFor="deliveryAddress" className="block text-label text-ceylon-text mb-2">
                       Delivery Address *
                     </label>
                     <textarea
@@ -354,7 +354,7 @@ export default function CartPage() {
                       value={formData.deliveryAddress}
                       onChange={handleInputChange}
                     />
-                    <p className="text-xs text-ceylon-text/60 mt-1">
+                    <p className="text-body-xs text-ceylon-text/60 mt-1">
                       ⚠️ We only deliver within Stockholm area
                     </p>
                   </div>
@@ -362,16 +362,16 @@ export default function CartPage() {
                 
                 {formData.deliveryMethod === 'pickup' && (
                   <div className="bg-ceylon-cream p-4 rounded-xl border-2 border-ceylon-orange/30">
-                    <p className="font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
-                    <p className="text-ceylon-text">{pickupAddress}</p>
-                    <p className="text-xs text-ceylon-text/60 mt-2">
+                    <p className="text-body-md font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
+                    <p className="text-body-md text-ceylon-text">{pickupAddress}</p>
+                    <p className="text-body-xs text-ceylon-text/60 mt-2">
                       We&apos;ll send you the exact address and instructions after confirming your order
                     </p>
                   </div>
                 )}
                 
                 <div>
-                  <label htmlFor="deliveryDate" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="deliveryDate" className="block text-label text-ceylon-text mb-2">
                     Preferred Delivery Date *
                   </label>
                   <input
@@ -385,13 +385,13 @@ export default function CartPage() {
                     value={formData.deliveryDate}
                     onChange={handleInputChange}
                   />
-                  <p className="text-xs text-ceylon-text/60 mt-1">
+                  <p className="text-body-xs text-ceylon-text/60 mt-1">
                     Select a date between tomorrow and {new Date(getMaxDate()).toLocaleDateString('sv-SE')}
                   </p>
                 </div>
                 
                 <div>
-                  <label htmlFor="deliveryTime" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="deliveryTime" className="block text-label text-ceylon-text mb-2">
                     Delivery Time *
                   </label>
                   <select
@@ -407,13 +407,13 @@ export default function CartPage() {
                     <option value="lunch">Lunch (12:00 PM - 2:00 PM)</option>
                     <option value="dinner" disabled>Dinner (6:00 PM - 8:00 PM) - Coming Soon</option>
                   </select>
-                  <p className="text-xs text-ceylon-text/60 mt-1">
+                  <p className="text-body-xs text-ceylon-text/60 mt-1">
                     Currently only offering lunch delivery
                   </p>
                 </div>
                 
                 <div>
-                  <label htmlFor="notes" className="block text-sm font-bold text-ceylon-text mb-2">
+                  <label htmlFor="notes" className="block text-label text-ceylon-text mb-2">
                     Special Instructions (Optional)
                   </label>
                   <textarea
@@ -428,7 +428,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="bg-ceylon-cream p-6 rounded-xl">
-                  <p className="text-sm text-ceylon-text/70 leading-relaxed">
+                  <p className="text-body-sm text-ceylon-text/70 leading-relaxed">
                     <strong>Note:</strong> We will review the availability of your items and contact you 
                     via email or phone to confirm your order. Payment will be collected upon delivery.
                   </p>
@@ -437,7 +437,7 @@ export default function CartPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-ceylon-orange text-white py-4 text-lg font-bold uppercase tracking-wider hover:bg-ceylon-text transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg"
+                  className="btn btn-lg btn-primary w-full"
                 >
                   {isSubmitting ? 'Placing Order...' : 'Place Order'}
                 </button>

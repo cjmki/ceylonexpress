@@ -8,19 +8,19 @@ export default function MenuFooter() {
     <footer className="py-8 px-6 border-t border-ceylon-text/10">
       <div className="container mx-auto max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-ceylon-text/50">
+          <div className="text-body-sm text-ceylon-text/50">
             © {new Date().getFullYear()} Ceylon Express. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="text-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
+              className="text-body-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
             >
               Home
             </Link>
             <Link
               href="/#about"
-              className="text-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
+              className="text-body-sm text-ceylon-text/70 hover:text-ceylon-orange transition-colors"
             >
               About
             </Link>

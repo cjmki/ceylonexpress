@@ -51,12 +51,12 @@ export default function LocationSection() {
           ></motion.div>
 
           <h2 
-            className="text-5xl md:text-6xl font-bold text-ceylon-text mb-4"
+            className="text-display-sm md:text-display-md text-ceylon-text mb-4"
             style={{ fontFamily: 'Georgia, serif' }}
           >
             Find Us Soon
           </h2>
-          <p className="text-xl text-ceylon-text/70 max-w-2xl mx-auto">
+          <p className="text-body-xl text-ceylon-text/70 max-w-2xl mx-auto">
             Follow our journey as we prepare to bring authentic Sri Lankan flavors to Stockholm
           </p>
         </motion.div>
@@ -78,7 +78,7 @@ export default function LocationSection() {
                   <Icon className="h-10 w-10 text-ceylon-orange" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-ceylon-text mb-2">
+                <h3 className="text-heading-sm text-ceylon-text mb-2">
                   {item.title}
                 </h3>
                 
@@ -104,7 +104,7 @@ export default function LocationSection() {
                     </a>
                   </div>
                 ) : (
-                  <p className="text-ceylon-text/70 text-lg">{item.description}</p>
+                  <p className="text-body-lg text-ceylon-text/70">{item.description}</p>
                 )}
               </motion.div>
             )
@@ -121,13 +121,13 @@ export default function LocationSection() {
         >
           <div className="max-w-2xl mx-auto">
             <h3 
-              className="text-3xl md:text-4xl font-bold text-ceylon-text mb-6"
+              className="text-heading-xl md:text-display-sm text-ceylon-text mb-6"
               style={{ fontFamily: 'Georgia, serif' }}
             >
               Stay Updated on Our Launch
             </h3>
             
-            <p className="text-lg text-ceylon-text/70 mb-10 leading-relaxed">
+            <p className="text-body-lg text-ceylon-text/70 mb-10">
               Be the first to know when we launch, discover exclusive menu previews, 
               and follow our journey bringing authentic Sri Lankan cuisine to Stockholm.
             </p>
@@ -137,25 +137,24 @@ export default function LocationSection() {
                 href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden bg-ceylon-orange text-white px-10 py-5 font-bold uppercase text-sm tracking-wider transition-all duration-300 hover:shadow-xl inline-flex items-center justify-center gap-3 rounded-lg"
+                className="btn btn-lg btn-primary"
               >
-                <Instagram className="h-5 w-5 relative z-10" />
-                <span className="relative z-10">Follow on Instagram</span>
-                <div className="absolute inset-0 bg-ceylon-text transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                <Instagram className="h-5 w-5" />
+                <span>Follow on Instagram</span>
               </a>
 
               <a
                 href="https://www.facebook.com/ceylonexpressse"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group border-2 border-ceylon-orange text-ceylon-orange px-10 py-5 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-orange hover:text-white transition-all duration-300 inline-flex items-center justify-center gap-3 rounded-lg"
+                className="btn btn-lg btn-outline"
               >
                 <Facebook className="h-5 w-5" />
                 <span>Follow on Facebook</span>
               </a>
             </div>
 
-            <p className="mt-8 text-sm text-ceylon-text/50 italic">
+            <p className="mt-8 text-body-sm text-ceylon-text/50 italic">
               Join our growing community of food lovers
             </p>
           </div>
