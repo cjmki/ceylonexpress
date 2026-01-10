@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { X, Plus, Minus } from 'lucide-react'
 import { updateMenuItem } from '../../../actions/orders'
 import { formatPrice } from '../../../constants/currency'
-import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, MenuCategory } from '../../../constants/enums'
+import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, MenuCategory, isMenuCategory } from '../../../constants/enums'
 
 interface MenuItem {
   id: string
@@ -26,11 +26,15 @@ interface EditMenuItemFormProps {
 export function EditMenuItemForm({ item, onSuccess, onClose }: EditMenuItemFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // Ensure category is always a valid MenuCategory value
+  const validCategory = isMenuCategory(item.category) ? item.category : MenuCategory.MAINS
+  
   const [formData, setFormData] = useState({
     name: item.name,
     description: item.description,
     price: item.price.toString(),
-    category: item.category,
+    category: validCategory,
     image_url: item.image_url || '',
     available: item.available
   })
@@ -197,7 +201,7 @@ export function EditMenuItemForm({ item, onSuccess, onClose }: EditMenuItemFormP
                   id="category"
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value as MenuCategory })}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white cursor-pointer font-medium text-gray-900 hover:border-gray-400 transition-colors"
                 >
                   {MENU_CATEGORIES.map(cat => (

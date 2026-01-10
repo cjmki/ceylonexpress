@@ -2,17 +2,26 @@
 
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
+import { signInSchema, safeValidate } from '@/lib/validations'
 
 export async function signIn(email: string, password: string) {
+  // Validate input
+  const validation = safeValidate(signInSchema, { email, password })
+  
+  if (!validation.success) {
+    return { error: validation.error }
+  }
+
   const supabase = createServerSupabaseClient()
   
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
+    email: validation.data.email,
+    password: validation.data.password,
   })
 
   if (error) {
-    return { error: error.message }
+    // Generic error message to prevent user enumeration
+    return { error: 'Invalid email or password' }
   }
 
   redirect('/admin')

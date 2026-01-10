@@ -2,6 +2,17 @@
 
 import { supabase, createServerSupabaseClient } from '@/lib/supabase'
 import { OrderStatus } from '../constants/enums'
+import {
+  safeValidate,
+  createOrderSchema,
+  createMenuItemSchema,
+  updateMenuItemSchema,
+  deleteMenuItemSchema,
+  getOrderByIdSchema,
+  getFilteredOrdersSchema,
+  updateOrderStatusSchema,
+} from '@/lib/validations'
+import { requireAuth } from '@/lib/auth/middleware'
 
 interface CartItem {
   id: string
@@ -25,19 +36,28 @@ interface OrderFormData {
 
 export async function createOrder(formData: OrderFormData) {
   try {
+    // Validate input
+    const validation = safeValidate(createOrderSchema, formData)
+    
+    if (!validation.success) {
+      return { success: false, error: validation.error }
+    }
+
+    const validatedData = validation.data
+
     // Step 1: Create the main order
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert([{
-        customer_name: formData.customerName,
-        customer_email: formData.customerEmail,
-        customer_phone: formData.customerPhone,
-        delivery_method: formData.deliveryMethod,
-        delivery_address: formData.deliveryAddress,
-        delivery_date: formData.deliveryDate,
-        delivery_time: formData.deliveryTime,
-        total_amount: formData.totalAmount,
-        notes: formData.notes,
+        customer_name: validatedData.customerName,
+        customer_email: validatedData.customerEmail,
+        customer_phone: validatedData.customerPhone,
+        delivery_method: validatedData.deliveryMethod,
+        delivery_address: validatedData.deliveryAddress,
+        delivery_date: validatedData.deliveryDate,
+        delivery_time: validatedData.deliveryTime,
+        total_amount: validatedData.totalAmount,
+        notes: validatedData.notes,
         status: OrderStatus.PENDING
       }])
       .select()
@@ -46,7 +66,7 @@ export async function createOrder(formData: OrderFormData) {
     if (orderError) throw orderError
 
     // Step 2: Create order items (line items)
-    const orderItemsData = formData.orderItems.map(item => ({
+    const orderItemsData = validatedData.orderItems.map(item => ({
       order_id: order.id,
       menu_item_id: item.id,
       menu_item_name: item.name,
@@ -62,7 +82,7 @@ export async function createOrder(formData: OrderFormData) {
     if (itemsError) throw itemsError
 
     // Optional: Send email notification here
-    // await sendOrderConfirmation(formData.customerEmail, order)
+    // await sendOrderConfirmation(validatedData.customerEmail, order)
 
     return { success: true, orderId: order.id }
   } catch (error) {
@@ -84,14 +104,28 @@ export async function getMenuItems() {
 
 // Get all menu items including unavailable ones (for admin)
 export async function getAllMenuItems() {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .order('category', { ascending: true })
-    .order('name', { ascending: true })
-  
-  if (error) throw error
-  return data
+  try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .order('category', { ascending: true })
+      .order('name', { ascending: true })
+    
+    if (error) throw error
+    return data
+  } catch (error) {
+    console.error('Failed to fetch menu items:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      throw new Error('Authentication required. Please log in.')
+    }
+    
+    throw error
+  }
 }
 
 // Create new menu item (for admin)
@@ -107,18 +141,29 @@ export async function createMenuItem(menuItemData: {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    // Validate input
+    const validation = safeValidate(createMenuItemSchema, menuItemData)
+    
+    if (!validation.success) {
+      return { success: false, error: validation.error }
+    }
+
+    const validatedData = validation.data
     const serverClient = createServerSupabaseClient()
     
     const { data, error } = await serverClient
       .from('menu_items')
       .insert([{
-        name: menuItemData.name,
-        description: menuItemData.description,
-        price: menuItemData.price,
-        category: menuItemData.category,
-        image_url: menuItemData.image_url || null,
-        available: menuItemData.available,
-        includes: menuItemData.includes || null
+        name: validatedData.name,
+        description: validatedData.description,
+        price: validatedData.price,
+        category: validatedData.category,
+        image_url: validatedData.image_url || null,
+        available: validatedData.available,
+        includes: validatedData.includes || null
       }])
       .select()
       .single()
@@ -132,6 +177,12 @@ export async function createMenuItem(menuItemData: {
     return { success: true, data, message: 'Menu item created successfully' }
   } catch (error) {
     console.error('Failed to create menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to create menu item' }
   }
 }
@@ -149,12 +200,23 @@ export async function updateMenuItem(id: string, menuItemData: {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    // Validate input
+    const validation = safeValidate(updateMenuItemSchema, { id, data: menuItemData })
+    
+    if (!validation.success) {
+      return { success: false, error: validation.error }
+    }
+
+    const { id: validatedId, data: validatedData } = validation.data
     const serverClient = createServerSupabaseClient()
     
     const { data, error } = await serverClient
       .from('menu_items')
-      .update(menuItemData)
-      .eq('id', id)
+      .update(validatedData)
+      .eq('id', validatedId)
       .select()
       .single()
 
@@ -163,10 +225,15 @@ export async function updateMenuItem(id: string, menuItemData: {
       throw error
     }
     
-    console.log('Menu item updated successfully:', data)
     return { success: true, data, message: 'Menu item updated successfully' }
   } catch (error) {
     console.error('Failed to update menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to update menu item' }
   }
 }
@@ -176,12 +243,23 @@ export async function deleteMenuItem(id: string) {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    // Validate input
+    const validation = safeValidate(deleteMenuItemSchema, { id })
+    
+    if (!validation.success) {
+      return { success: false, error: validation.error }
+    }
+
+    const { id: validatedId } = validation.data
     const serverClient = createServerSupabaseClient()
     
     const { error } = await serverClient
       .from('menu_items')
       .delete()
-      .eq('id', id)
+      .eq('id', validatedId)
 
     if (error) {
       console.error('Supabase error:', error)
@@ -192,12 +270,27 @@ export async function deleteMenuItem(id: string) {
     return { success: true, message: 'Menu item deleted successfully' }
   } catch (error) {
     console.error('Failed to delete menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to delete menu item' }
   }
 }
 
 // Get a single order with its items (for admin or order confirmation)
 export async function getOrderById(orderId: string) {
+  // Validate input
+  const validation = safeValidate(getOrderByIdSchema, { orderId })
+  
+  if (!validation.success) {
+    throw new Error(validation.error)
+  }
+
+  const { orderId: validatedOrderId } = validation.data
+
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .select(`
@@ -210,7 +303,7 @@ export async function getOrderById(orderId: string) {
         subtotal
       )
     `)
-    .eq('id', orderId)
+    .eq('id', validatedOrderId)
     .single()
 
   if (orderError) throw orderError
@@ -219,22 +312,38 @@ export async function getOrderById(orderId: string) {
 
 // Get all orders (for admin dashboard)
 export async function getAllOrders() {
-  const { data, error } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      order_items (
-        id,
-        menu_item_name,
-        menu_item_price,
-        quantity,
-        subtotal
-      )
-    `)
-    .order('created_at', { ascending: false })
+  try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          id,
+          menu_item_name,
+          menu_item_price,
+          quantity,
+          subtotal
+        )
+      `)
+      .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return data
+    if (error) throw error
+    return data
+  } catch (error) {
+    console.error('Failed to fetch orders:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      throw new Error('Authentication required. Please log in.')
+    }
+    
+    throw error
+  }
 }
 
 // Get orders with pagination and filters (for admin dashboard)
@@ -262,11 +371,41 @@ export async function getFilteredOrders({
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    // Validate input
+    const validation = safeValidate(getFilteredOrdersSchema, {
+      page,
+      pageSize,
+      status,
+      deliveryMethod,
+      searchQuery,
+      dateFrom,
+      dateTo,
+      sortBy,
+      sortOrder,
+    })
+    
+    if (!validation.success) {
+      return {
+        success: false,
+        data: [],
+        totalCount: 0,
+        totalPages: 0,
+        currentPage: 1,
+        error: validation.error,
+      }
+    }
+
+    const validatedData = validation.data
+
     // Calculate offset for pagination
-    const offset = (page - 1) * pageSize
+    const offset = ((validatedData.page || 1) - 1) * (validatedData.pageSize || 10)
 
     // Build the base query
-    let query = supabase
+    const serverClient = createServerSupabaseClient()
+    let query = serverClient
       .from('orders')
       .select(`
         *,
@@ -280,35 +419,37 @@ export async function getFilteredOrders({
       `, { count: 'exact' })
 
     // Apply filters
-    if (status && status !== 'all') {
-      query = query.eq('status', status)
+    if (validatedData.status && validatedData.status !== 'all') {
+      query = query.eq('status', validatedData.status)
     }
 
-    if (deliveryMethod && deliveryMethod !== 'all') {
-      query = query.eq('delivery_method', deliveryMethod)
+    if (validatedData.deliveryMethod && validatedData.deliveryMethod !== 'all') {
+      query = query.eq('delivery_method', validatedData.deliveryMethod)
     }
 
-    if (searchQuery) {
+    if (validatedData.searchQuery) {
       // Search across customer name, email, and phone
-      query = query.or(`customer_name.ilike.%${searchQuery}%,customer_email.ilike.%${searchQuery}%,customer_phone.ilike.%${searchQuery}%`)
+      query = query.or(`customer_name.ilike.%${validatedData.searchQuery}%,customer_email.ilike.%${validatedData.searchQuery}%,customer_phone.ilike.%${validatedData.searchQuery}%`)
     }
 
-    if (dateFrom) {
-      query = query.gte('created_at', dateFrom)
+    if (validatedData.dateFrom) {
+      query = query.gte('created_at', validatedData.dateFrom)
     }
 
-    if (dateTo) {
+    if (validatedData.dateTo) {
       // Add one day to include the entire end date
-      const endDate = new Date(dateTo)
+      const endDate = new Date(validatedData.dateTo)
       endDate.setDate(endDate.getDate() + 1)
       query = query.lt('created_at', endDate.toISOString())
     }
 
     // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' })
+    query = query.order(validatedData.sortBy || 'created_at', { 
+      ascending: validatedData.sortOrder === 'asc' 
+    })
 
     // Apply pagination
-    query = query.range(offset, offset + pageSize - 1)
+    query = query.range(offset, offset + (validatedData.pageSize || 10) - 1)
 
     const { data, error, count } = await query
 
@@ -318,11 +459,24 @@ export async function getFilteredOrders({
       success: true,
       data: data || [],
       totalCount: count || 0,
-      totalPages: Math.ceil((count || 0) / pageSize),
-      currentPage: page
+      totalPages: Math.ceil((count || 0) / (validatedData.pageSize || 10)),
+      currentPage: validatedData.page || 1
     }
   } catch (error) {
     console.error('Failed to fetch filtered orders:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return {
+        success: false,
+        data: [],
+        totalCount: 0,
+        totalPages: 0,
+        currentPage: 1,
+        error: 'Authentication required. Please log in.'
+      }
+    }
+    
     return {
       success: false,
       data: [],
@@ -339,15 +493,26 @@ export async function updateOrderStatus(orderId: string, status: string) {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    // Validate input
+    const validation = safeValidate(updateOrderStatusSchema, { orderId, status })
+    
+    if (!validation.success) {
+      return { success: false, error: validation.error }
+    }
+
+    const { orderId: validatedOrderId, status: validatedStatus } = validation.data
     const serverClient = createServerSupabaseClient()
     
     const { data, error } = await serverClient
       .from('orders')
       .update({ 
-        status,
+        status: validatedStatus,
         updated_at: new Date().toISOString()
       })
-      .eq('id', orderId)
+      .eq('id', validatedOrderId)
       .select()
 
     if (error) {
@@ -356,9 +521,15 @@ export async function updateOrderStatus(orderId: string, status: string) {
     }
     
     console.log('Order updated successfully:', data)
-    return { success: true, message: `Order status updated to ${status}` }
+    return { success: true, message: `Order status updated to ${validatedStatus}` }
   } catch (error) {
     console.error('Failed to update order status:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to update order status' }
   }
 }

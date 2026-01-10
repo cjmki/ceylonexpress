@@ -19,7 +19,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "supabase": "^2.71.0",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.15.4",

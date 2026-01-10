@@ -8,6 +8,8 @@ This skill guides creation of distinctive, production-grade frontend interfaces 
 
 The user provides frontend requirements: a component, page, application, or interface to build. They may include context about the purpose, audience, or technical constraints.
 
+**IMPORTANT**: Do NOT create summary markdown files, documentation files, or README files unless explicitly requested by the user.
+
 ## Project Context
 
 **Ceylon Express** is a Sri Lankan restaurant bringing authentic island flavors to Stockholm, Sweden.
