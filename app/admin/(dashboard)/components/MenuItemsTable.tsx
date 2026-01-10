@@ -6,6 +6,7 @@ import { formatPrice } from '../../../constants/currency'
 import { deleteMenuItem, updateMenuItem } from '../../../actions/orders'
 import { ConfirmModal } from './ConfirmModal'
 import { EditMenuItemForm } from './EditMenuItemForm'
+import { getMenuCategoryDisplay } from '../../../constants/enums'
 
 interface MenuItem {
   id: string
@@ -79,7 +80,7 @@ export function MenuItemsTable({ items, onUpdate }: MenuItemsTableProps) {
         {Object.entries(groupedItems).map(([category, categoryItems]) => (
           <div key={category} className="border-2 border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-50 px-6 py-3 border-b-2 border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900">{category}</h3>
+              <h3 className="text-lg font-bold text-gray-900">{getMenuCategoryDisplay(category)}</h3>
               <p className="text-sm text-gray-600">{categoryItems.length} item{categoryItems.length !== 1 ? 's' : ''}</p>
             </div>
             

@@ -3,6 +3,7 @@
 import { X, User, Mail, Phone, MapPin, Calendar, Clock, Package } from 'lucide-react'
 import { formatPrice } from '../../../constants/currency'
 import { formatDateReadable } from '../../../constants/dateUtils'
+import { OrderStatus, DeliveryMethod, getOrderStatusDisplay, getDeliveryMethodDisplay, getDeliveryTimeDisplay } from '../../../constants/enums'
 
 interface OrderItem {
   id: string
@@ -39,15 +40,15 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      confirmed: 'bg-green-100 text-green-800 border-green-300',
-      completed: 'bg-gray-100 text-gray-800 border-gray-300',
-      cancelled: 'bg-red-100 text-red-800 border-red-300',
+      [OrderStatus.PENDING]: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      [OrderStatus.CONFIRMED]: 'bg-green-100 text-green-800 border-green-300',
+      [OrderStatus.COMPLETED]: 'bg-gray-100 text-gray-800 border-gray-300',
+      [OrderStatus.CANCELLED]: 'bg-red-100 text-red-800 border-red-300',
     }
     
     return (
-      <span className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${styles[status as keyof typeof styles] || styles.pending}`}>
-        {status.toUpperCase()}
+      <span className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${styles[status as keyof typeof styles] || styles[OrderStatus.PENDING]}`}>
+        {getOrderStatusDisplay(status).toUpperCase()}
       </span>
     )
   }
@@ -124,11 +125,11 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
                 <div>
                   <p className="text-xs text-gray-600">Method</p>
                   <p className="font-semibold text-gray-900">
-                    {order.delivery_method === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}
+                    {getDeliveryMethodDisplay(order.delivery_method, true)}
                   </p>
                 </div>
               </div>
-              {order.delivery_method === 'delivery' && order.delivery_address && (
+              {order.delivery_method === DeliveryMethod.DELIVERY && order.delivery_address && (
                 <div className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-orange-600 mt-1" />
                   <div>
@@ -148,7 +149,7 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
                 <Clock className="h-4 w-4 text-orange-600 mt-1" />
                 <div>
                   <p className="text-xs text-gray-600">Time</p>
-                  <p className="font-semibold text-gray-900">{order.delivery_time}</p>
+                  <p className="font-semibold text-gray-900">{getDeliveryTimeDisplay(order.delivery_time, true)}</p>
                 </div>
               </div>
             </div>

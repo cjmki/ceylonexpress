@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Search, Filter, X, Calendar } from 'lucide-react'
+import { ORDER_STATUSES, ORDER_STATUS_DISPLAY_WITH_EMOJI, DeliveryMethod, DELIVERY_METHOD_DISPLAY_WITH_EMOJI } from '../../../constants/enums'
 
 interface OrdersFiltersProps {
   onFilterChange: (filters: OrderFilters) => void
@@ -103,10 +104,9 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
             `}
           >
             <option value="all">All Status</option>
-            <option value="pending">⏳ Pending</option>
-            <option value="confirmed">✅ Confirmed</option>
-            <option value="completed">🎉 Completed</option>
-            <option value="cancelled">❌ Cancelled</option>
+            {ORDER_STATUSES.map(status => (
+              <option key={status} value={status}>{ORDER_STATUS_DISPLAY_WITH_EMOJI[status]}</option>
+            ))}
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -165,8 +165,8 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white cursor-pointer"
               >
                 <option value="all">All Methods</option>
-                <option value="delivery">🚚 Delivery</option>
-                <option value="pickup">🏪 Pickup</option>
+                <option value={DeliveryMethod.DELIVERY}>{DELIVERY_METHOD_DISPLAY_WITH_EMOJI[DeliveryMethod.DELIVERY]}</option>
+                <option value={DeliveryMethod.PICKUP}>{DELIVERY_METHOD_DISPLAY_WITH_EMOJI[DeliveryMethod.PICKUP]}</option>
               </select>
             </div>
 

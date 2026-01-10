@@ -3,7 +3,7 @@
   "short_name": "Ceylon Express",
   "icons": [
     {
-      "src": "/logo_transparent.png",
+      "src": "/images/logo_transparent.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

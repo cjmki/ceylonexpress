@@ -11,6 +11,7 @@ import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
 import { formatPrice } from '../../constants/currency'
 import { formatDateReadable } from '../../constants/dateUtils'
+import { DeliveryMethod, getDeliveryTimeDisplay } from '../../constants/enums'
 
 interface OrderItem {
   id: string
@@ -162,9 +163,9 @@ export default function OrderConfirmationPage() {
                 <MapPin className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
                   <p className="text-body-md font-bold text-ceylon-text">
-                    {order.delivery_method === 'pickup' ? 'Pickup Location' : 'Delivery Address'}
+                    {order.delivery_method === DeliveryMethod.PICKUP ? 'Pickup Location' : 'Delivery Address'}
                   </p>
-                  {order.delivery_method === 'pickup' ? (
+                  {order.delivery_method === DeliveryMethod.PICKUP ? (
                     <div>
                       <p className="text-body-md text-ceylon-text/70">Bondhagsvägen, Upplands-Bro</p>
                       <p className="text-body-xs text-ceylon-text/50 mt-1">
@@ -181,7 +182,7 @@ export default function OrderConfirmationPage() {
                 <Calendar className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
                   <p className="text-body-md font-bold text-ceylon-text">
-                    Preferred {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Date
+                    Preferred {order.delivery_method === DeliveryMethod.PICKUP ? 'Pickup' : 'Delivery'} Date
                   </p>
                   <p className="text-body-md text-ceylon-text/70">
                     {formatDateReadable(order.delivery_date)}
@@ -193,12 +194,10 @@ export default function OrderConfirmationPage() {
                 <Clock className="h-5 w-5 text-ceylon-orange mt-1" />
                 <div>
                   <p className="text-body-md font-bold text-ceylon-text">
-                    {order.delivery_method === 'pickup' ? 'Pickup' : 'Delivery'} Time
+                    {order.delivery_method === DeliveryMethod.PICKUP ? 'Pickup' : 'Delivery'} Time
                   </p>
                   <p className="text-body-md text-ceylon-text/70 capitalize">
-                    {order.delivery_time === 'breakfast' && 'Breakfast (8:00 AM - 10:00 AM)'}
-                    {order.delivery_time === 'lunch' && 'Lunch (12:00 PM - 2:00 PM)'}
-                    {order.delivery_time === 'dinner' && 'Dinner (6:00 PM - 8:00 PM)'}
+                    {getDeliveryTimeDisplay(order.delivery_time, true)}
                   </p>
                 </div>
               </div>

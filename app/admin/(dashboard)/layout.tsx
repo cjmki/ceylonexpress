@@ -23,9 +23,10 @@ export default async function DashboardLayout({
               <Image 
                 src="/images/logo_transparent.png" 
                 alt="Ceylon Express" 
-                width={40} 
-                height={40}
+                width={60} 
+                height={45}
                 className="object-contain"
+                style={{ width: 'auto', height: '40px' }}
               />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Ceylon Express</h1>

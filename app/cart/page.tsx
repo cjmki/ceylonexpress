@@ -11,6 +11,7 @@ import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
 import { formatPrice, CURRENCY } from '../constants/currency'
+import { DeliveryMethod, DeliveryTime, DELIVERY_TIMES, getDeliveryTimeDisplay } from '../constants/enums'
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart()
@@ -334,12 +335,12 @@ export default function CartPage() {
                     onChange={handleInputChange}
                   >
                     <option value="">Select delivery method</option>
-                    <option value="delivery">Delivery (Stockholm area only)</option>
-                    <option value="pickup">Pick up from {pickupAddress}</option>
+                    <option value={DeliveryMethod.DELIVERY}>Delivery (Stockholm area only)</option>
+                    <option value={DeliveryMethod.PICKUP}>Pick up from {pickupAddress}</option>
                   </select>
                 </div>
                 
-                {formData.deliveryMethod === 'delivery' && (
+                {formData.deliveryMethod === DeliveryMethod.DELIVERY && (
                   <div>
                     <label htmlFor="deliveryAddress" className="block text-label text-ceylon-text mb-2">
                       Delivery Address *
@@ -360,7 +361,7 @@ export default function CartPage() {
                   </div>
                 )}
                 
-                {formData.deliveryMethod === 'pickup' && (
+                {formData.deliveryMethod === DeliveryMethod.PICKUP && (
                   <div className="bg-ceylon-cream p-4 rounded-xl border-2 border-ceylon-orange/30">
                     <p className="text-body-md font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
                     <p className="text-body-md text-ceylon-text">{pickupAddress}</p>
@@ -403,9 +404,9 @@ export default function CartPage() {
                     onChange={handleInputChange}
                   >
                     <option value="">Select a time slot</option>
-                    <option value="breakfast" disabled>Breakfast (8:00 AM - 10:00 AM) - Coming Soon</option>
-                    <option value="lunch">Lunch (12:00 PM - 2:00 PM)</option>
-                    <option value="dinner" disabled>Dinner (6:00 PM - 8:00 PM) - Coming Soon</option>
+                    <option value={DeliveryTime.BREAKFAST} disabled>{getDeliveryTimeDisplay(DeliveryTime.BREAKFAST, true)} - Coming Soon</option>
+                    <option value={DeliveryTime.LUNCH}>{getDeliveryTimeDisplay(DeliveryTime.LUNCH, true)}</option>
+                    <option value={DeliveryTime.DINNER} disabled>{getDeliveryTimeDisplay(DeliveryTime.DINNER, true)} - Coming Soon</option>
                   </select>
                   <p className="text-body-xs text-ceylon-text/60 mt-1">
                     Currently only offering lunch delivery

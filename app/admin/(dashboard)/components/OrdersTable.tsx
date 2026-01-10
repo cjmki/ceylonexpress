@@ -8,6 +8,7 @@ import { formatDateWithDay } from '../../../constants/dateUtils'
 import { ConfirmModal } from './ConfirmModal'
 import { OrderDetailsModal } from './OrderDetailsModal'
 import { ChevronUp, ChevronDown } from 'lucide-react'
+import { OrderStatus, getOrderStatusDisplay, getDeliveryMethodDisplay, getDeliveryTimeDisplay } from '../../../constants/enums'
 
 type SortField = 'created_at' | 'customer_name' | 'delivery_date' | 'total_amount' | 'status'
 type SortDirection = 'asc' | 'desc'
@@ -124,25 +125,25 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
       : <ChevronDown className="h-4 w-4 text-blue-600" />
   }
 
-  const openConfirmModal = (orderId: string, newStatus: string, orderDetails: string) => {
+  const openConfirmModal = (orderId: string, newStatus: OrderStatus, orderDetails: string) => {
     const statusTitles = {
-      confirmed: 'Confirm Order',
-      completed: 'Complete Order',
-      cancelled: 'Cancel Order'
+      [OrderStatus.CONFIRMED]: 'Confirm Order',
+      [OrderStatus.COMPLETED]: 'Complete Order',
+      [OrderStatus.CANCELLED]: 'Cancel Order'
     }
     
     const statusMessages = {
-      confirmed: 'Are you sure you want to confirm this order?\n\nThis will notify the customer that their order has been accepted.',
-      completed: 'Are you sure you want to mark this order as completed?\n\nThis indicates the order has been delivered/picked up.',
-      cancelled: 'Are you sure you want to cancel this order?\n\nThis action should only be done after contacting the customer.'
+      [OrderStatus.CONFIRMED]: 'Are you sure you want to confirm this order?\n\nThis will notify the customer that their order has been accepted.',
+      [OrderStatus.COMPLETED]: 'Are you sure you want to mark this order as completed?\n\nThis indicates the order has been delivered/picked up.',
+      [OrderStatus.CANCELLED]: 'Are you sure you want to cancel this order?\n\nThis action should only be done after contacting the customer.'
     }
     
     setConfirmModal({
       isOpen: true,
       orderId,
       newStatus,
-      title: statusTitles[newStatus as keyof typeof statusTitles],
-      message: `${statusMessages[newStatus as keyof typeof statusMessages]}\n\nOrder Details:\n${orderDetails}`
+      title: statusTitles[newStatus as keyof typeof statusTitles] || 'Update Order',
+      message: `${statusMessages[newStatus as keyof typeof statusMessages] || 'Update order status?'}\n\nOrder Details:\n${orderDetails}`
     })
   }
 
@@ -174,15 +175,15 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      confirmed: 'bg-green-100 text-green-800 border-green-300',
-      completed: 'bg-gray-100 text-gray-800 border-gray-300',
-      cancelled: 'bg-red-100 text-red-800 border-red-300',
+      [OrderStatus.PENDING]: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      [OrderStatus.CONFIRMED]: 'bg-green-100 text-green-800 border-green-300',
+      [OrderStatus.COMPLETED]: 'bg-gray-100 text-gray-800 border-gray-300',
+      [OrderStatus.CANCELLED]: 'bg-red-100 text-red-800 border-red-300',
     }
     
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${styles[status as keyof typeof styles] || styles.pending}`}>
-        {status.toUpperCase()}
+      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${styles[status as keyof typeof styles] || styles[OrderStatus.PENDING]}`}>
+        {getOrderStatusDisplay(status).toUpperCase()}
       </span>
     )
   }
@@ -297,10 +298,10 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
               </td>
               <td className="px-6 py-4">
                 <div className="text-sm text-gray-900">
-                  {order.delivery_method === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}
+                  {getDeliveryMethodDisplay(order.delivery_method, true)}
                 </div>
                 <div className="text-sm text-gray-600">{formatDateWithDay(order.delivery_date)}</div>
-                <div className="text-xs text-gray-500">{order.delivery_time}</div>
+                <div className="text-xs text-gray-500">{getDeliveryTimeDisplay(order.delivery_time, true)}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-semibold text-gray-900">
@@ -312,11 +313,11 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm space-y-2">
                 <div className="flex flex-col space-y-1">
-                  {order.status === 'pending' && (
+                  {order.status === OrderStatus.PENDING && (
                     <button
                       onClick={() => openConfirmModal(
                         order.id, 
-                        'confirmed',
+                        OrderStatus.CONFIRMED,
                         `${order.customer_name} - ${formatPrice(order.total_amount)}`
                       )}
                       disabled={updatingStatus === order.id}
@@ -325,11 +326,11 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                       {updatingStatus === order.id ? '⏳ Confirming...' : '✓ Confirm'}
                     </button>
                   )}
-                  {order.status === 'confirmed' && (
+                  {order.status === OrderStatus.CONFIRMED && (
                     <button
                       onClick={() => openConfirmModal(
                         order.id, 
-                        'completed',
+                        OrderStatus.COMPLETED,
                         `${order.customer_name} - ${formatPrice(order.total_amount)}`
                       )}
                       disabled={updatingStatus === order.id}
@@ -361,7 +362,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
         cancelText="Cancel"
         onConfirm={handleConfirmAction}
         onCancel={() => setConfirmModal({ ...confirmModal, isOpen: false })}
-        type={confirmModal.newStatus === 'cancelled' ? 'danger' : 'confirm'}
+        type={confirmModal.newStatus === OrderStatus.CANCELLED ? 'danger' : 'confirm'}
       />
 
       {/* Order Details Modal */}

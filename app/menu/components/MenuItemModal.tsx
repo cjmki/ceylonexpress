@@ -3,6 +3,7 @@
 import { X, Plus, Check } from 'lucide-react'
 import { useState } from 'react'
 import { formatPrice } from '../../constants/currency'
+import { getMenuCategoryDisplay } from '../../constants/enums'
 
 interface MenuItem {
   id: string
@@ -60,7 +61,7 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
           {/* Category Badge */}
           <div className="mb-3">
             <span className="inline-block px-3 py-1 bg-ceylon-orange/10 text-ceylon-orange text-sm font-semibold rounded-full">
-              {item.category}
+              {getMenuCategoryDisplay(item.category)}
             </span>
           </div>
 

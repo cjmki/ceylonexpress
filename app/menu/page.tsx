@@ -11,6 +11,7 @@ import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
 import { formatPrice } from '../constants/currency'
 import { MenuItemModal } from './components/MenuItemModal'
+import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, getMenuCategoryDisplay } from '../constants/enums'
 
 interface MenuItem {
   id: string
@@ -76,9 +77,6 @@ export default function MenuPage() {
 
   const cartItemCount = getItemCount()
 
-  // Define category display order
-  const CATEGORY_ORDER = ['Featured', 'Mains', 'Bites', 'Snacks', 'Drinks', 'Specials']
-  
   // Group menu items by category
   const groupedItems = menuItems.reduce((acc, item) => {
     if (!acc[item.category]) {
@@ -90,8 +88,8 @@ export default function MenuPage() {
 
   // Sort categories by defined order
   const sortedCategories = Object.entries(groupedItems).sort(([categoryA], [categoryB]) => {
-    const indexA = CATEGORY_ORDER.indexOf(categoryA)
-    const indexB = CATEGORY_ORDER.indexOf(categoryB)
+    const indexA = MENU_CATEGORIES.indexOf(categoryA as any)
+    const indexB = MENU_CATEGORIES.indexOf(categoryB as any)
     
     // If category is not in the order list, put it at the end
     const orderA = indexA === -1 ? 999 : indexA
@@ -147,7 +145,7 @@ export default function MenuPage() {
                   transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
                 >
                   <h2 className="text-heading-xl text-ceylon-text mb-8 border-b-2 border-ceylon-orange pb-2 inline-block">
-                    {category}
+                    {getMenuCategoryDisplay(category)}
                   </h2>
                   
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
