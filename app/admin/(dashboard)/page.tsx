@@ -2,6 +2,7 @@ import { getAllOrders, getAllMenuItems } from '../../actions/orders'
 import { OrdersTable } from './components/OrdersTable'
 import { formatPrice } from '../../constants/currency'
 import { AdminTabs } from './components/AdminTabs'
+import { OrderStatus } from '../../constants/enums'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,13 +10,13 @@ export default async function AdminDashboard() {
   const orders = await getAllOrders()
   const menuItems = await getAllMenuItems()
 
-  const pendingOrders = orders.filter(order => order.status === 'pending')
-  const confirmedOrders = orders.filter(order => order.status === 'confirmed')
-  const completedOrders = orders.filter(order => order.status === 'completed')
-  const cancelledOrders = orders.filter(order => order.status === 'cancelled')
+  const pendingOrders = orders.filter(order => order.status === OrderStatus.PENDING)
+  const confirmedOrders = orders.filter(order => order.status === OrderStatus.CONFIRMED)
+  const completedOrders = orders.filter(order => order.status === OrderStatus.COMPLETED)
+  const cancelledOrders = orders.filter(order => order.status === OrderStatus.CANCELLED)
 
   const totalRevenue = orders
-    .filter(order => order.status !== 'cancelled')
+    .filter(order => order.status !== OrderStatus.CANCELLED)
     .reduce((sum, order) => sum + order.total_amount, 0)
 
   return (

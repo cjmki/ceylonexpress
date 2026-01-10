@@ -31,9 +31,10 @@ export default function AdminLoginPage() {
             <Image 
               src="/images/logo_transparent.png" 
               alt="Ceylon Express" 
-              width={80} 
-              height={80}
+              width={120} 
+              height={90}
               className="object-contain"
+              style={{ width: 'auto', height: '80px' }}
             />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>

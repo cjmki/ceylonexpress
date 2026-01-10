@@ -1,6 +1,7 @@
 'use server'
 
 import { supabase, createServerSupabaseClient } from '@/lib/supabase'
+import { OrderStatus } from '../constants/enums'
 
 interface CartItem {
   id: string
@@ -37,7 +38,7 @@ export async function createOrder(formData: OrderFormData) {
         delivery_time: formData.deliveryTime,
         total_amount: formData.totalAmount,
         notes: formData.notes,
-        status: 'pending'
+        status: OrderStatus.PENDING
       }])
       .select()
       .single()

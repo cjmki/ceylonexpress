@@ -4,29 +4,28 @@ import { useState } from 'react'
 import { X, Plus, Minus } from 'lucide-react'
 import { createMenuItem } from '../../../actions/orders'
 import { formatPrice } from '../../../constants/currency'
+import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, MenuCategory } from '../../../constants/enums'
 
 interface AddMenuItemFormProps {
   onSuccess: () => void
   onClose: () => void
 }
 
-const CATEGORIES = [
-  'Featured',
-  'Mains',
-  'Snacks',
-  'Bites',
-  'Drinks',
-  'Specials'
-]
-
 export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string
+    description: string
+    price: string
+    category: MenuCategory
+    image_url: string
+    available: boolean
+  }>({
     name: '',
     description: '',
     price: '',
-    category: CATEGORIES[0],
+    category: MENU_CATEGORIES[0],
     image_url: '',
     available: true
   })
@@ -191,11 +190,11 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
                   id="category"
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value as MenuCategory })}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white cursor-pointer font-medium text-gray-900 hover:border-gray-400 transition-colors"
                 >
-                  {CATEGORIES.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {MENU_CATEGORIES.map(cat => (
+                    <option key={cat} value={cat}>{MENU_CATEGORY_DISPLAY[cat]}</option>
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
