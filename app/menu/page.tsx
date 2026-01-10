@@ -22,6 +22,10 @@ interface MenuItem {
   image_url: string | null
   available: boolean
   includes: string[] | null
+  has_limited_availability?: boolean
+  pre_orders_only?: boolean
+  next_available_date?: string
+  available_slots?: number
 }
 
 export default function MenuPage() {
@@ -32,18 +36,42 @@ export default function MenuPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { addToCart, getItemCount } = useCart()
 
+  // Function to fetch menu data (now includes availability)
+  const fetchMenuData = async () => {
+    try {
+      const items = await getMenuItems()
+      setMenuItems(items || [])
+    } catch (error) {
+      console.error('Failed to load menu:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Initial load
   useEffect(() => {
-    async function fetchMenu() {
-      try {
-        const items = await getMenuItems()
-        setMenuItems(items || [])
-      } catch (error) {
-        console.error('Failed to load menu:', error)
-      } finally {
-        setLoading(false)
+    fetchMenuData()
+  }, [])
+
+  // Refresh availability data every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchMenuData()
+    }, 30000) // 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Also refresh when page becomes visible (user comes back to tab)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchMenuData()
       }
     }
-    fetchMenu()
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
 
   const handleAddToCart = (item: MenuItem) => {
@@ -185,6 +213,46 @@ export default function MenuPage() {
                           <p className="text-xs text-ceylon-text/60 mb-2 line-clamp-2">
                             {item.description}
                           </p>
+
+                          {/* Availability Badge */}
+                          {item.has_limited_availability && (
+                            <div className="mb-2">
+                              {item.available_slots !== undefined && item.available_slots > 0 ? (
+                                <div 
+                                  className="text-xs font-semibold cursor-help"
+                                  title="More dates may be available at checkout"
+                                >
+                                  <span className="text-ceylon-orange">
+                                    {item.available_slots} {item.available_slots === 1 ? 'spot' : 'spots'} left
+                                  </span>
+                                  {item.next_available_date && (
+                                    <span className="text-ceylon-text/60 ml-1">
+                                      ({new Date(item.next_available_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})
+                                    </span>
+                                  )}
+                                  {item.pre_orders_only && (
+                                    <span className="ml-1 text-ceylon-text/50 block mt-0.5">• Pre-order only</span>
+                                  )}
+                                </div>
+                              ) : item.available_slots === 0 ? (
+                                <div 
+                                  className="text-xs font-semibold text-red-600 cursor-help"
+                                  title="Check other dates at checkout"
+                                >
+                                  Sold out
+                                  {item.next_available_date && (
+                                    <span className="text-ceylon-text/50 ml-1">
+                                      ({new Date(item.next_available_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className="text-xs font-semibold text-ceylon-text/50">
+                                  📅 Limited availability
+                                </div>
+                              )}
+                            </div>
+                          )}
                           
                           <div className="flex items-center justify-between mt-auto pt-2 border-t border-ceylon-cream">
                             <span className="text-base font-bold text-ceylon-orange">

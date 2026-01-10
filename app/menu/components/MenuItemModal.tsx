@@ -14,6 +14,10 @@ interface MenuItem {
   image_url: string | null
   available: boolean
   includes: string[] | null
+  has_limited_availability?: boolean
+  pre_orders_only?: boolean
+  next_available_date?: string
+  available_slots?: number
 }
 
 interface MenuItemModalProps {
@@ -74,6 +78,64 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
           <p className="text-lg text-ceylon-text/70 mb-6 leading-relaxed">
             {item.description}
           </p>
+
+          {/* Availability Info */}
+          {item.has_limited_availability && (
+            <div className="mb-6 p-4 bg-orange-50 border-2 border-orange-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">📅</span>
+                <h3 className="text-sm font-bold text-ceylon-text uppercase tracking-wider">
+                  Limited Availability
+                </h3>
+              </div>
+              {item.available_slots !== undefined && item.available_slots > 0 ? (
+                <div className="space-y-1">
+                  <p className="text-ceylon-orange font-bold text-lg">
+                    {item.available_slots} {item.available_slots === 1 ? 'spot' : 'spots'} remaining
+                    {item.next_available_date && (
+                      <span className="text-ceylon-text/60 font-normal text-base ml-2">
+                        ({new Date(item.next_available_date).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })})
+                      </span>
+                    )}
+                  </p>
+                  {item.pre_orders_only && (
+                    <p className="text-sm text-ceylon-text/70">
+                      ⏰ Pre-orders only - Order in advance
+                    </p>
+                  )}
+                  <p className="text-xs text-ceylon-text/60 mt-2 italic">
+                    💡 More dates may be available at checkout
+                  </p>
+                </div>
+              ) : item.available_slots === 0 ? (
+                <div>
+                  <p className="text-red-600 font-bold mb-1">
+                    😔 Sold out
+                    {item.next_available_date && (
+                      <span className="text-ceylon-text/60 font-normal ml-2">
+                        ({new Date(item.next_available_date).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })})
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-xs text-ceylon-text/60 italic">
+                    💡 Other dates may be available at checkout
+                  </p>
+                </div>
+              ) : (
+                <p className="text-ceylon-text/70">
+                  Check availability at checkout
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Includes Section */}
           {item.includes && item.includes.length > 0 && (
