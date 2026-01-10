@@ -12,6 +12,7 @@ import {
   getFilteredOrdersSchema,
   updateOrderStatusSchema,
 } from '@/lib/validations'
+import { requireAuth } from '@/lib/auth/middleware'
 
 interface CartItem {
   id: string
@@ -103,14 +104,28 @@ export async function getMenuItems() {
 
 // Get all menu items including unavailable ones (for admin)
 export async function getAllMenuItems() {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*')
-    .order('category', { ascending: true })
-    .order('name', { ascending: true })
-  
-  if (error) throw error
-  return data
+  try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .order('category', { ascending: true })
+      .order('name', { ascending: true })
+    
+    if (error) throw error
+    return data
+  } catch (error) {
+    console.error('Failed to fetch menu items:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      throw new Error('Authentication required. Please log in.')
+    }
+    
+    throw error
+  }
 }
 
 // Create new menu item (for admin)
@@ -126,6 +141,9 @@ export async function createMenuItem(menuItemData: {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
     // Validate input
     const validation = safeValidate(createMenuItemSchema, menuItemData)
     
@@ -159,6 +177,12 @@ export async function createMenuItem(menuItemData: {
     return { success: true, data, message: 'Menu item created successfully' }
   } catch (error) {
     console.error('Failed to create menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to create menu item' }
   }
 }
@@ -176,6 +200,9 @@ export async function updateMenuItem(id: string, menuItemData: {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
     // Validate input
     const validation = safeValidate(updateMenuItemSchema, { id, data: menuItemData })
     
@@ -201,6 +228,12 @@ export async function updateMenuItem(id: string, menuItemData: {
     return { success: true, data, message: 'Menu item updated successfully' }
   } catch (error) {
     console.error('Failed to update menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to update menu item' }
   }
 }
@@ -210,6 +243,9 @@ export async function deleteMenuItem(id: string) {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
     // Validate input
     const validation = safeValidate(deleteMenuItemSchema, { id })
     
@@ -234,6 +270,12 @@ export async function deleteMenuItem(id: string) {
     return { success: true, message: 'Menu item deleted successfully' }
   } catch (error) {
     console.error('Failed to delete menu item:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to delete menu item' }
   }
 }
@@ -270,24 +312,38 @@ export async function getOrderById(orderId: string) {
 
 // Get all orders (for admin dashboard)
 export async function getAllOrders() {
-  const serverClient = createServerSupabaseClient()
-  
-  const { data, error } = await serverClient
-    .from('orders')
-    .select(`
-      *,
-      order_items (
-        id,
-        menu_item_name,
-        menu_item_price,
-        quantity,
-        subtotal
-      )
-    `)
-    .order('created_at', { ascending: false })
+  try {
+    // Require authentication - admin only
+    await requireAuth()
+    
+    const serverClient = createServerSupabaseClient()
+    
+    const { data, error } = await serverClient
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          id,
+          menu_item_name,
+          menu_item_price,
+          quantity,
+          subtotal
+        )
+      `)
+      .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return data
+    if (error) throw error
+    return data
+  } catch (error) {
+    console.error('Failed to fetch orders:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      throw new Error('Authentication required. Please log in.')
+    }
+    
+    throw error
+  }
 }
 
 // Get orders with pagination and filters (for admin dashboard)
@@ -315,6 +371,9 @@ export async function getFilteredOrders({
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
     // Validate input
     const validation = safeValidate(getFilteredOrdersSchema, {
       page,
@@ -405,6 +464,19 @@ export async function getFilteredOrders({
     }
   } catch (error) {
     console.error('Failed to fetch filtered orders:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return {
+        success: false,
+        data: [],
+        totalCount: 0,
+        totalPages: 0,
+        currentPage: 1,
+        error: 'Authentication required. Please log in.'
+      }
+    }
+    
     return {
       success: false,
       data: [],
@@ -421,6 +493,9 @@ export async function updateOrderStatus(orderId: string, status: string) {
   'use server'
   
   try {
+    // Require authentication - admin only
+    await requireAuth()
+    
     // Validate input
     const validation = safeValidate(updateOrderStatusSchema, { orderId, status })
     
@@ -449,6 +524,12 @@ export async function updateOrderStatus(orderId: string, status: string) {
     return { success: true, message: `Order status updated to ${validatedStatus}` }
   } catch (error) {
     console.error('Failed to update order status:', error)
+    
+    // Handle authentication errors specifically
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.' }
+    }
+    
     return { success: false, error: 'Failed to update order status' }
   }
 }

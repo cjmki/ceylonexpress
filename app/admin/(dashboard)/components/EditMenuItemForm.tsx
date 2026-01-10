@@ -201,7 +201,7 @@ export function EditMenuItemForm({ item, onSuccess, onClose }: EditMenuItemFormP
                   id="category"
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value as MenuCategory })}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white cursor-pointer font-medium text-gray-900 hover:border-gray-400 transition-colors"
                 >
                   {MENU_CATEGORIES.map(cat => (
