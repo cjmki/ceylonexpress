@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Minus, Plus, Trash2, ArrowLeft, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { useCart } from '../contexts/CartContext'
-import { createOrder } from '../actions/orders'
+import { createOrder, checkOrderAvailability, getAvailableDatesForCart } from '../actions/orders'
+import { formatDateForDisplay } from '@/lib/utils'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
@@ -18,6 +19,10 @@ export default function CartPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [availableDates, setAvailableDates] = useState<string[]>([])
+  const [hasLimitedItems, setHasLimitedItems] = useState(false)
+  const [loadingDates, setLoadingDates] = useState(false)
+  const [availabilityWarning, setAvailabilityWarning] = useState<string[]>([])
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -32,6 +37,73 @@ export default function CartPage() {
 
   const pickupAddress = 'Bondhagsvägen, Upplands-Bro'
 
+  // Fetch available dates when cart changes
+  useEffect(() => {
+    async function fetchAvailableDates() {
+      if (cart.length === 0) {
+        setAvailableDates([])
+        setHasLimitedItems(false)
+        return
+      }
+
+      setLoadingDates(true)
+      try {
+        const cartItems = cart.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+        }))
+
+        const result = await getAvailableDatesForCart(cartItems)
+        
+        if (result.success) {
+          if (result.hasLimitedItems) {
+            setAvailableDates(result.dates || [])
+            setHasLimitedItems(true)
+          } else {
+            // No limited items, all dates available
+            setHasLimitedItems(false)
+            setAvailableDates([])
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch available dates:', err)
+      } finally {
+        setLoadingDates(false)
+      }
+    }
+
+    fetchAvailableDates()
+  }, [cart])
+
+  // Check availability when date changes
+  useEffect(() => {
+    async function checkAvailability() {
+      if (!formData.deliveryDate || cart.length === 0) {
+        setAvailabilityWarning([])
+        return
+      }
+
+      try {
+        const cartItems = cart.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+        }))
+
+        const result = await checkOrderAvailability(cartItems, formData.deliveryDate)
+        
+        if (result.success && !result.available) {
+          setAvailabilityWarning(result.unavailableItems || [])
+        } else {
+          setAvailabilityWarning([])
+        }
+      } catch (err) {
+        console.error('Failed to check availability:', err)
+      }
+    }
+
+    checkAvailability()
+  }, [formData.deliveryDate, cart])
+
   // Calculate minimum date (tomorrow)
   const getMinDate = () => {
     const tomorrow = new Date()
@@ -44,6 +116,12 @@ export default function CartPage() {
     const maxDate = new Date()
     maxDate.setDate(maxDate.getDate() + 30)
     return maxDate.toISOString().split('T')[0]
+  }
+
+  // Check if a date is available
+  const isDateAvailable = (date: string) => {
+    if (!hasLimitedItems) return true // No restrictions
+    return availableDates.includes(date)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,10 +156,14 @@ export default function CartPage() {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     })
+    
+    // Clear error when user starts typing
+    if (error) setError('')
   }
 
   if (cart.length === 0 && !isSubmitting) {
@@ -375,6 +457,54 @@ export default function CartPage() {
                   <label htmlFor="deliveryDate" className="block text-label text-ceylon-text mb-2">
                     Preferred Delivery Date *
                   </label>
+                  
+                  {loadingDates && (
+                    <div className="mb-2 text-sm text-ceylon-text/60 flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-ceylon-orange"></div>
+                      Checking availability...
+                    </div>
+                  )}
+
+                  {hasLimitedItems && availableDates.length > 0 && (
+                    <div className="mb-3 p-3 bg-ceylon-yellow/30 border border-ceylon-orange/30 rounded-lg">
+                      <p className="text-sm font-semibold text-ceylon-text mb-2">
+                        📅 Available dates for your items:
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {availableDates.slice(0, 5).map(date => (
+                          <button
+                            key={date}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, deliveryDate: date })}
+                            className={`px-3 py-2 text-sm rounded-lg border-2 transition-all ${
+                              formData.deliveryDate === date
+                                ? 'border-ceylon-orange bg-ceylon-orange text-white font-bold'
+                                : 'border-ceylon-text/20 bg-white text-ceylon-text hover:border-ceylon-orange'
+                            }`}
+                          >
+                            {formatDateForDisplay(date)}
+                          </button>
+                        ))}
+                        {availableDates.length > 5 && (
+                          <span className="text-sm text-ceylon-text/60 self-center">
+                            +{availableDates.length - 5} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {hasLimitedItems && availableDates.length === 0 && !loadingDates && (
+                    <div className="mb-3 p-3 bg-red-50 border border-red-300 rounded-lg">
+                      <p className="text-sm font-semibold text-red-700">
+                        ⚠️ No availability found for your items
+                      </p>
+                      <p className="text-sm text-red-600 mt-1">
+                        Please contact us or adjust your cart items.
+                      </p>
+                    </div>
+                  )}
+
                   <input
                     id="deliveryDate"
                     name="deliveryDate"
@@ -386,9 +516,33 @@ export default function CartPage() {
                     value={formData.deliveryDate}
                     onChange={handleInputChange}
                   />
-                  <p className="text-body-xs text-ceylon-text/60 mt-1">
-                    Select a date between tomorrow and {new Date(getMaxDate()).toLocaleDateString('sv-SE')}
-                  </p>
+                  
+                  {hasLimitedItems ? (
+                    <p className="text-body-xs text-ceylon-text/60 mt-1">
+                      ℹ️ Your cart contains items with limited availability. Please select from available dates above.
+                    </p>
+                  ) : (
+                    <p className="text-body-xs text-ceylon-text/60 mt-1">
+                      Select a date between tomorrow and {new Date(getMaxDate()).toLocaleDateString('sv-SE')}
+                    </p>
+                  )}
+
+                  {/* Availability Warning */}
+                  {availabilityWarning.length > 0 && (
+                    <div className="mt-3 p-3 bg-red-50 border-2 border-red-300 rounded-lg">
+                      <p className="text-red-800 font-semibold mb-2 text-sm">
+                        ⚠️ Some items are not available for this date:
+                      </p>
+                      <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                        {availabilityWarning.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                      <p className="text-sm text-red-700 mt-2">
+                        Please select a different date or remove these items from your cart.
+                      </p>
+                    </div>
+                  )}
                 </div>
                 
                 <div>
@@ -437,11 +591,18 @@ export default function CartPage() {
                 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="btn btn-lg btn-primary w-full"
+                  disabled={isSubmitting || availabilityWarning.length > 0}
+                  className="btn btn-lg btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={availabilityWarning.length > 0 ? 'Please resolve availability issues first' : ''}
                 >
                   {isSubmitting ? 'Placing Order...' : 'Place Order'}
                 </button>
+                
+                {availabilityWarning.length > 0 && (
+                  <p className="text-sm text-red-600 text-center">
+                    Please select a date when all items are available
+                  </p>
+                )}
               </form>
             </div>
           </motion.div>

@@ -21,13 +21,17 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
     category: MenuCategory
     image_url: string
     available: boolean
+    has_limited_availability: boolean
+    pre_orders_only: boolean
   }>({
     name: '',
     description: '',
     price: '',
     category: MENU_CATEGORIES[0],
     image_url: '',
-    available: true
+    available: true,
+    has_limited_availability: false,
+    pre_orders_only: false
   })
   const [includes, setIncludes] = useState<string[]>([''])
 
@@ -61,7 +65,9 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
         category: formData.category,
         image_url: formData.image_url || undefined,
         available: formData.available,
-        includes: filteredIncludes.length > 0 ? filteredIncludes : undefined
+        includes: filteredIncludes.length > 0 ? filteredIncludes : undefined,
+        has_limited_availability: formData.has_limited_availability,
+        pre_orders_only: formData.pre_orders_only
       })
 
       if (result.success) {
@@ -274,17 +280,51 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
           </div>
 
           {/* Available Toggle */}
-          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-            <input
-              type="checkbox"
-              id="available"
-              checked={formData.available}
-              onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
-              className="w-5 h-5 text-orange-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
-            />
-            <label htmlFor="available" className="text-sm font-semibold text-gray-900">
-              Available for ordering
-            </label>
+          <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="available"
+                checked={formData.available}
+                onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
+                className="w-5 h-5 text-orange-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
+              />
+              <label htmlFor="available" className="text-sm font-semibold text-gray-900">
+                Available for ordering
+              </label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="has_limited_availability"
+                checked={formData.has_limited_availability}
+                onChange={(e) => setFormData({ ...formData, has_limited_availability: e.target.checked })}
+                className="w-5 h-5 text-orange-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
+              />
+              <label htmlFor="has_limited_availability" className="text-sm font-semibold text-gray-900">
+                Has limited availability (capacity limits per date)
+              </label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="pre_orders_only"
+                checked={formData.pre_orders_only}
+                onChange={(e) => setFormData({ ...formData, pre_orders_only: e.target.checked })}
+                className="w-5 h-5 text-orange-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
+              />
+              <label htmlFor="pre_orders_only" className="text-sm font-semibold text-gray-900">
+                Pre-orders only (no same-day orders)
+              </label>
+            </div>
+
+            {formData.has_limited_availability && (
+              <p className="text-xs text-gray-600 mt-2 pl-8">
+                💡 After creating, use the Edit form to set up availability schedules for specific dates
+              </p>
+            )}
           </div>
 
           {/* Submit Buttons */}
