@@ -262,14 +262,19 @@ export default function MenuPage() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleAddToCart(item)
+                                if (item.available_slots !== 0) {
+                                  handleAddToCart(item)
+                                }
                               }}
+                              disabled={item.available_slots === 0}
                               className={`p-2 rounded-lg transition-all ${
-                                addedItems.has(item.id)
+                                item.available_slots === 0
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : addedItems.has(item.id)
                                   ? 'bg-green-600 text-white'
                                   : 'bg-ceylon-orange text-white hover:bg-ceylon-text'
                               }`}
-                              title="Add to cart"
+                              title={item.available_slots === 0 ? 'Sold out' : 'Add to cart'}
                             >
                               {addedItems.has(item.id) ? (
                                 <Check className="h-4 w-4" />

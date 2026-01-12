@@ -11,7 +11,7 @@ import { formatDateForDisplay } from '@/lib/utils'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import TestingBanner from '../components/TestingBanner'
-import { formatPrice, CURRENCY } from '../constants/currency'
+import { formatPrice, CURRENCY, DELIVERY_FEE } from '../constants/currency'
 import { DeliveryMethod, DeliveryTime, DELIVERY_TIMES, getDeliveryTimeDisplay } from '../constants/enums'
 
 export default function CartPage() {
@@ -36,6 +36,15 @@ export default function CartPage() {
   })
 
   const pickupAddress = 'Bondhagsvägen, Upplands-Bro'
+
+  // Calculate totals
+  const getSubtotal = () => getTotal()
+  const getDeliveryFee = () => {
+    return formData.deliveryMethod === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
+  }
+  const getFinalTotal = () => {
+    return getSubtotal() + getDeliveryFee()
+  }
 
   // Fetch available dates when cart changes
   useEffect(() => {
@@ -133,7 +142,7 @@ export default function CartPage() {
       const result = await createOrder({
         ...formData,
         orderItems: cart,
-        totalAmount: getTotal()
+        totalAmount: getFinalTotal()
       })
 
       if (result.success) {
@@ -218,144 +227,21 @@ export default function CartPage() {
               >
                 <ArrowLeft className="h-5 w-5 md:h-6 md:w-6" />
               </Link>
-              <h1 className="text-heading-xl md:text-display-sm text-ceylon-text">Your Order</h1>
+              <h1 className="text-heading-xl md:text-display-sm text-ceylon-text">Checkout</h1>
             </div>
 
-            {/* Cart Items */}
-            <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8 rounded-2xl">
-              <h2 className="text-heading-sm md:text-heading-md text-ceylon-text mb-4 md:mb-6">Order Items</h2>
-              
-              {cart.map((item) => (
-                <div key={item.id} className="border-b border-ceylon-cream py-6 last:border-b-0">
-                  {/* Mobile Layout */}
-                  <div className="md:hidden space-y-4">
-                    <div className="flex gap-4">
-                      {item.image_url && (
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
-                        />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-heading-sm text-ceylon-text mb-1">{item.name}</h3>
-                        <p className="text-body-sm text-ceylon-orange font-bold">{formatPrice(item.price)} each</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        
-                        <span className="text-heading-sm text-ceylon-text min-w-[2.5rem] text-center">
-                          {item.quantity}
-                        </span>
-                        
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
-                          aria-label="Increase quantity"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
-                      </div>
-                      
-                      <div className="flex items-center gap-4">
-                        <p className="text-heading-sm text-ceylon-text">
-                          {formatPrice(item.price * item.quantity)}
-                        </p>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
-                          aria-label="Remove item"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
+            <form onSubmit={handleSubmit}>
+              {/* Delivery Details Form */}
+              <div className="bg-white p-4 md:p-8 shadow-lg mb-6 md:mb-8 rounded-2xl">
+                <h2 className="text-heading-md md:text-heading-xl text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
+                
+                {error && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+                    {error}
                   </div>
-
-                  {/* Desktop Layout */}
-                  <div className="hidden md:flex items-center gap-6">
-                    {item.image_url && (
-                      <img
-                        src={item.image_url}
-                        alt={item.name}
-                        className="w-20 h-20 object-cover rounded-xl"
-                      />
-                    )}
-                    
-                    <div className="flex-1">
-                      <h3 className="text-heading-sm text-ceylon-text">{item.name}</h3>
-                      <p className="text-body-md text-ceylon-orange font-bold">{formatPrice(item.price)}</p>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
-                        aria-label="Decrease quantity"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </button>
-                      
-                      <span className="text-heading-sm text-ceylon-text min-w-[2rem] text-center">
-                        {item.quantity}
-                      </span>
-                      
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
-                        aria-label="Increase quantity"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-                      
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="ml-4 text-red-600 hover:text-red-800 transition-colors"
-                        aria-label="Remove item"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
-                    </div>
-                    
-                    <div className="text-right min-w-[6rem]">
-                      <p className="text-heading-sm text-ceylon-text">
-                        {formatPrice(item.price * item.quantity)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              
-              <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t-2 border-ceylon-orange">
-                <div className="flex justify-between items-center">
-                  <span className="text-heading-sm md:text-heading-md text-ceylon-text">Total</span>
-                  <span className="text-heading-md md:text-heading-xl text-ceylon-orange">
-                    {formatPrice(getTotal())}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Checkout Form */}
-            <div className="bg-white p-4 md:p-8 shadow-lg rounded-2xl">
-              <h2 className="text-heading-md md:text-heading-xl text-ceylon-text mb-4 md:mb-6">Delivery Details</h2>
-              
-              {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
-                  {error}
-                </div>
-              )}
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
+                )}
+                
+                <div className="space-y-4">
                 <div>
                   <label htmlFor="customerName" className="block text-label text-ceylon-text mb-2">
                     Full Name *
@@ -581,30 +467,186 @@ export default function CartPage() {
                     onChange={handleInputChange}
                   />
                 </div>
+              </div>
+              </div>
 
-                <div className="bg-ceylon-cream p-6 rounded-xl">
-                  <p className="text-body-sm text-ceylon-text/70 leading-relaxed">
-                    <strong>Note:</strong> We will review the availability of your items and contact you 
-                    via email or phone to confirm your order. Payment will be collected upon delivery.
-                  </p>
+              {/* Order Items */}
+              <div className="bg-white p-4 md:p-8 shadow-lg rounded-2xl">
+              <h2 className="text-heading-sm md:text-heading-md text-ceylon-text mb-4 md:mb-6">Your Order</h2>
+              
+              {cart.map((item) => (
+                <div key={item.id} className="border-b border-ceylon-cream py-6 last:border-b-0">
+                  {/* Mobile Layout */}
+                  <div className="md:hidden space-y-4">
+                    <div className="flex gap-4">
+                      {item.image_url && (
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-heading-sm text-ceylon-text mb-1">{item.name}</h3>
+                        <p className="text-body-sm text-ceylon-orange font-bold">{formatPrice(item.price)} each</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        
+                        <span className="text-heading-sm text-ceylon-text min-w-[2.5rem] text-center">
+                          {item.quantity}
+                        </span>
+                        
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <p className="text-heading-sm text-ceylon-text">
+                          {formatPrice(item.price * item.quantity)}
+                        </p>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          aria-label="Remove item"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden md:flex items-center gap-6">
+                    {item.image_url && (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded-xl"
+                      />
+                    )}
+                    
+                    <div className="flex-1">
+                      <h3 className="text-heading-sm text-ceylon-text">{item.name}</h3>
+                      <p className="text-body-md text-ceylon-orange font-bold">{formatPrice(item.price)}</p>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      
+                      <span className="text-heading-sm text-ceylon-text min-w-[2rem] text-center">
+                        {item.quantity}
+                      </span>
+                      
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                      
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="ml-4 text-red-600 hover:text-red-800 transition-colors"
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                    
+                    <div className="text-right min-w-[6rem]">
+                      <p className="text-heading-sm text-ceylon-text">
+                        {formatPrice(item.price * item.quantity)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t-2 border-ceylon-cream space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-body-lg text-ceylon-text">Subtotal</span>
+                  <span className="text-body-lg text-ceylon-text">
+                    {formatPrice(getSubtotal())}
+                  </span>
                 </div>
                 
-                <button
-                  type="submit"
-                  disabled={isSubmitting || availabilityWarning.length > 0}
-                  className="btn btn-lg btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={availabilityWarning.length > 0 ? 'Please resolve availability issues first' : ''}
-                >
-                  {isSubmitting ? 'Placing Order...' : 'Place Order'}
-                </button>
-                
-                {availabilityWarning.length > 0 && (
-                  <p className="text-sm text-red-600 text-center">
-                    Please select a date when all items are available
-                  </p>
+                {formData.deliveryMethod && (
+                  <>
+                    {formData.deliveryMethod === DeliveryMethod.DELIVERY && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
+                        <span className="text-body-lg text-ceylon-text">
+                          {formatPrice(getDeliveryFee())}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {formData.deliveryMethod === DeliveryMethod.PICKUP && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
+                        <span className="text-body-lg text-green-700">
+                          {formatPrice(0)}
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )}
-              </form>
+                
+                <div className={`${formData.deliveryMethod ? 'pt-4 border-t-2 border-ceylon-orange' : ''}`}>
+                  <div className="flex justify-between items-center">
+                    <span className="text-heading-sm md:text-heading-md text-ceylon-text font-bold">Total</span>
+                    <span className="text-heading-md md:text-heading-xl text-ceylon-orange font-bold">
+                      {formatPrice(getFinalTotal())}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-ceylon-cream p-6 rounded-xl mb-6">
+                <p className="text-body-sm text-ceylon-text/70 leading-relaxed">
+                  <strong>Note:</strong> We will review the availability of your items and contact you 
+                  via email or phone to confirm your order. Payment will be collected upon delivery.
+                </p>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={isSubmitting || availabilityWarning.length > 0}
+                className="btn btn-lg btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                title={availabilityWarning.length > 0 ? 'Please resolve availability issues first' : ''}
+              >
+                {isSubmitting ? 'Placing Order...' : 'Place Order'}
+              </button>
+              
+              {availabilityWarning.length > 0 && (
+                <p className="text-sm text-red-600 text-center mt-4">
+                  Please select a date when all items are available
+                </p>
+              )}
             </div>
+            </form>
           </motion.div>
         </div>
       </section>

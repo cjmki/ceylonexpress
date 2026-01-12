@@ -1,6 +1,7 @@
 // Currency configuration for the entire application
 export const CURRENCY = 'SEK'
 export const CURRENCY_SYMBOL = 'kr' // Optional: Swedish Krona symbol
+export const DELIVERY_FEE = 50 // Delivery fee in SEK
 
 /**
  * Format a price with the configured currency

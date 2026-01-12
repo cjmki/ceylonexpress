@@ -125,7 +125,41 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
       : <ChevronDown className="h-4 w-4 text-blue-600" />
   }
 
-  const openConfirmModal = (orderId: string, newStatus: OrderStatus, orderDetails: string) => {
+  const formatOrderDetailsForModal = (order: Order) => {
+    const itemsList = order.order_items
+      .map(item => `  • ${item.menu_item_name} x${item.quantity} - ${formatPrice(item.subtotal)}`)
+      .join('\n')
+    
+    const detailsParts = [
+      `Customer: ${order.customer_name}`,
+      `Email: ${order.customer_email}`,
+      `Phone: ${order.customer_phone}`,
+      '',
+      `Delivery: ${getDeliveryMethodDisplay(order.delivery_method)}`,
+    ]
+    
+    if (order.delivery_method === 'delivery') {
+      detailsParts.push(`Address: ${order.delivery_address}`)
+    }
+    
+    detailsParts.push(
+      `Date: ${formatDateWithDay(order.delivery_date)}`,
+      `Time: ${getDeliveryTimeDisplay(order.delivery_time, true)}`,
+      '',
+      'Items:',
+      itemsList,
+      '',
+      `Total: ${formatPrice(order.total_amount)}`
+    )
+    
+    if (order.notes) {
+      detailsParts.push('', `Notes: ${order.notes}`)
+    }
+    
+    return detailsParts.join('\n')
+  }
+
+  const openConfirmModal = (order: Order, newStatus: OrderStatus) => {
     const statusTitles = {
       [OrderStatus.CONFIRMED]: 'Confirm Order',
       [OrderStatus.COMPLETED]: 'Complete Order',
@@ -138,12 +172,14 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
       [OrderStatus.CANCELLED]: 'Are you sure you want to cancel this order?\n\nThis action should only be done after contacting the customer.'
     }
     
+    const orderDetails = formatOrderDetailsForModal(order)
+    
     setConfirmModal({
       isOpen: true,
-      orderId,
+      orderId: order.id,
       newStatus,
       title: statusTitles[newStatus as keyof typeof statusTitles] || 'Update Order',
-      message: `${statusMessages[newStatus as keyof typeof statusMessages] || 'Update order status?'}\n\nOrder Details:\n${orderDetails}`
+      message: `${statusMessages[newStatus as keyof typeof statusMessages] || 'Update order status?'}\n\n━━━━━━━━━━━━━━━━━━━━━━\nORDER DETAILS\n━━━━━━━━━━━━━━━━━━━━━━\n\n${orderDetails}`
     })
   }
 
@@ -315,11 +351,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                 <div className="flex flex-col space-y-1">
                   {order.status === OrderStatus.PENDING && (
                     <button
-                      onClick={() => openConfirmModal(
-                        order.id, 
-                        OrderStatus.CONFIRMED,
-                        `${order.customer_name} - ${formatPrice(order.total_amount)}`
-                      )}
+                      onClick={() => openConfirmModal(order, OrderStatus.CONFIRMED)}
                       disabled={updatingStatus === order.id}
                       className="bg-green-600 text-white px-3 py-1.5 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs font-medium"
                     >
@@ -328,15 +360,20 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
                   )}
                   {order.status === OrderStatus.CONFIRMED && (
                     <button
-                      onClick={() => openConfirmModal(
-                        order.id, 
-                        OrderStatus.COMPLETED,
-                        `${order.customer_name} - ${formatPrice(order.total_amount)}`
-                      )}
+                      onClick={() => openConfirmModal(order, OrderStatus.COMPLETED)}
                       disabled={updatingStatus === order.id}
                       className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs font-medium"
                     >
                       {updatingStatus === order.id ? '⏳ Completing...' : '✓ Complete'}
+                    </button>
+                  )}
+                  {(order.status === OrderStatus.PENDING || order.status === OrderStatus.CONFIRMED) && (
+                    <button
+                      onClick={() => openConfirmModal(order, OrderStatus.CANCELLED)}
+                      disabled={updatingStatus === order.id}
+                      className="bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs font-medium"
+                    >
+                      {updatingStatus === order.id ? '⏳ Cancelling...' : '✗ Cancel Order'}
                     </button>
                   )}
                   <button
