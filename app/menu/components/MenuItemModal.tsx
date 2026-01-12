@@ -167,14 +167,26 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
             </div>
             
             <button
-              onClick={() => onAddToCart(item)}
+              onClick={() => {
+                if (item.available_slots !== 0) {
+                  onAddToCart(item)
+                }
+              }}
+              disabled={item.available_slots === 0}
               className={`flex items-center gap-3 px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all rounded-xl shadow-lg ${
-                isAdded
+                item.available_slots === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : isAdded
                   ? 'bg-green-600 text-white'
                   : 'bg-ceylon-orange text-white hover:bg-ceylon-text hover:shadow-xl transform hover:scale-105'
               }`}
             >
-              {isAdded ? (
+              {item.available_slots === 0 ? (
+                <>
+                  <X className="h-5 w-5" />
+                  Sold Out
+                </>
+              ) : isAdded ? (
                 <>
                   <Check className="h-5 w-5" />
                   Added to Cart
