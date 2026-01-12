@@ -20,6 +20,7 @@ import {
   DeliveryMethod,
   DeliveryTime,
 } from '../../../app/constants/enums'
+import { DELIVERY_FEE } from '../../../app/constants/currency'
 
 /**
  * Order item validation (cart item)
@@ -62,16 +63,21 @@ export const createOrderSchema = z.object({
   }
 ).refine(
   data => {
-    // Validate total amount matches sum of items
-    const calculatedTotal = data.orderItems.reduce(
+    // Validate total amount matches sum of items (plus delivery fee if applicable)
+    const itemsSubtotal = data.orderItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     )
+    
+    // Add delivery fee if delivery method is 'delivery'
+    const deliveryFee = data.deliveryMethod === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
+    const calculatedTotal = itemsSubtotal + deliveryFee
+    
     // Allow small floating point differences (within 1 cent)
     return Math.abs(calculatedTotal - data.totalAmount) < 0.01
   },
   {
-    message: 'Total amount does not match cart items',
+    message: 'Total amount does not match cart items and delivery fee',
     path: ['totalAmount'],
   }
 )

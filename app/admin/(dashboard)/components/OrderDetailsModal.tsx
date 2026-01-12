@@ -1,7 +1,7 @@
 'use client'
 
 import { X, User, Mail, Phone, MapPin, Calendar, Clock, Package } from 'lucide-react'
-import { formatPrice } from '../../../constants/currency'
+import { formatPrice, DELIVERY_FEE } from '../../../constants/currency'
 import { formatDateReadable } from '../../../constants/dateUtils'
 import { OrderStatus, DeliveryMethod, getOrderStatusDisplay, getDeliveryMethodDisplay, getDeliveryTimeDisplay } from '../../../constants/enums'
 
@@ -178,8 +178,34 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
             </div>
 
             {/* Total */}
-            <div className="mt-4 pt-4 border-t-2 border-green-300">
+            <div className="mt-4 pt-4 border-t-2 border-green-300 space-y-2">
+              {/* Subtotal */}
               <div className="flex justify-between items-center">
+                <span className="text-base font-semibold text-gray-700">Subtotal</span>
+                <span className="text-base font-semibold text-gray-900">
+                  {formatPrice(order.order_items.reduce((sum, item) => sum + item.subtotal, 0))}
+                </span>
+              </div>
+              
+              {/* Delivery Fee */}
+              {order.delivery_method === DeliveryMethod.DELIVERY ? (
+                <div className="flex justify-between items-center">
+                  <span className="text-base font-semibold text-gray-700">Delivery Fee</span>
+                  <span className="text-base font-semibold text-gray-900">
+                    {formatPrice(DELIVERY_FEE)}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center">
+                  <span className="text-base font-semibold text-green-700">Pickup (No delivery fee)</span>
+                  <span className="text-base font-semibold text-green-700">
+                    {formatPrice(0)}
+                  </span>
+                </div>
+              )}
+              
+              {/* Total */}
+              <div className="flex justify-between items-center pt-2 border-t border-green-300">
                 <span className="text-xl font-bold text-gray-900">Total</span>
                 <span className="text-2xl font-bold text-green-700">
                   {formatPrice(order.total_amount)}
