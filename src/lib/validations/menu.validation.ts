@@ -87,7 +87,7 @@ export const updateMenuItemSchema = z.object({
         z
           .string()
           .min(1, 'Include item cannot be empty')
-          .max(100, 'Include item is too long')
+          .max(200, 'Include item is too long')
           .trim()
       )
       .max(20, 'Too many include items')
