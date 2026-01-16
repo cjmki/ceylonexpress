@@ -10,9 +10,10 @@ import { createOrder, checkOrderAvailability, getAvailableDatesForCart } from '.
 import { formatDateForDisplay } from '@/lib/utils'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
-import TestingBanner from '../components/TestingBanner'
+import OrderConfirmationModal from '../components/OrderConfirmationModal'
 import { formatPrice, CURRENCY, DELIVERY_FEE } from '../constants/currency'
 import { DeliveryMethod, DeliveryTime, DELIVERY_TIMES, getDeliveryTimeDisplay } from '../constants/enums'
+import CustomSelect from '../components/CustomSelect'
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart()
@@ -23,6 +24,7 @@ export default function CartPage() {
   const [hasLimitedItems, setHasLimitedItems] = useState(false)
   const [loadingDates, setLoadingDates] = useState(false)
   const [availabilityWarning, setAvailabilityWarning] = useState<string[]>([])
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -113,28 +115,31 @@ export default function CartPage() {
     checkAvailability()
   }, [formData.deliveryDate, cart])
 
-  // Calculate minimum date (tomorrow)
-  const getMinDate = () => {
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    return tomorrow.toISOString().split('T')[0]
-  }
-
-  // Calculate maximum date (30 days from now)
-  const getMaxDate = () => {
-    const maxDate = new Date()
-    maxDate.setDate(maxDate.getDate() + 30)
-    return maxDate.toISOString().split('T')[0]
-  }
-
-  // Check if a date is available
-  const isDateAvailable = (date: string) => {
-    if (!hasLimitedItems) return true // No restrictions
-    return availableDates.includes(date)
+  // Generate available dates based on restrictions
+  const getSelectableDates = () => {
+    if (hasLimitedItems) {
+      // If items have limited availability, return only those available dates
+      // If no dates available, return empty array (will disable dropdown)
+      return availableDates
+    } else {
+      // No restrictions - generate next 30 days starting from tomorrow
+      const dates: string[] = []
+      for (let i = 1; i <= 30; i++) {
+        const date = new Date()
+        date.setDate(date.getDate() + i)
+        dates.push(date.toISOString().split('T')[0])
+      }
+      return dates
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+    setShowConfirmModal(true)
+  }
+
+  const handleConfirmOrder = async () => {
     setIsSubmitting(true)
     setError('')
 
@@ -155,11 +160,13 @@ export default function CartPage() {
       } else {
         setError(result.error || 'Failed to place order. Please try again.')
         setIsSubmitting(false)
+        setShowConfirmModal(false)
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.')
       console.error(err)
       setIsSubmitting(false)
+      setShowConfirmModal(false)
     }
     // Don't set isSubmitting to false on success - keep loading state during redirect
   }
@@ -175,11 +182,21 @@ export default function CartPage() {
     if (error) setError('')
   }
 
+  const handleSelectChange = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+    
+    // Clear error when user starts typing
+    if (error) setError('')
+  }
+
   if (cart.length === 0 && !isSubmitting) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
-        <TestingBanner />
         
         <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <motion.div
@@ -211,7 +228,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <Navigation />
-      <TestingBanner />
       
       <section className="flex-1 pt-36 pb-12 md:pt-40 md:pb-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
@@ -243,7 +259,7 @@ export default function CartPage() {
                 
                 <div className="space-y-4">
                 <div>
-                  <label htmlFor="customerName" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="customerName" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Full Name *
                   </label>
                   <input
@@ -251,7 +267,7 @@ export default function CartPage() {
                     name="customerName"
                     type="text"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
+                    className="w-full p-4 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none focus:ring-4 focus:ring-ceylon-orange/20 transition-all duration-300 hover:border-ceylon-orange/40 rounded-xl shadow-md hover:shadow-lg text-body-lg font-medium"
                     placeholder="Enter your full name"
                     value={formData.customerName}
                     onChange={handleInputChange}
@@ -259,7 +275,7 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="customerEmail" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="customerEmail" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Email Address *
                   </label>
                   <input
@@ -267,7 +283,7 @@ export default function CartPage() {
                     name="customerEmail"
                     type="email"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
+                    className="w-full p-4 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none focus:ring-4 focus:ring-ceylon-orange/20 transition-all duration-300 hover:border-ceylon-orange/40 rounded-xl shadow-md hover:shadow-lg text-body-lg font-medium"
                     placeholder="your.email@example.com"
                     value={formData.customerEmail}
                     onChange={handleInputChange}
@@ -275,7 +291,7 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="customerPhone" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="customerPhone" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Phone Number *
                   </label>
                   <input
@@ -283,7 +299,7 @@ export default function CartPage() {
                     name="customerPhone"
                     type="tel"
                     required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
+                    className="w-full p-4 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none focus:ring-4 focus:ring-ceylon-orange/20 transition-all duration-300 hover:border-ceylon-orange/40 rounded-xl shadow-md hover:shadow-lg text-body-lg font-medium"
                     placeholder="+46 70 123 4567"
                     value={formData.customerPhone}
                     onChange={handleInputChange}
@@ -291,26 +307,26 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="deliveryMethod" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="deliveryMethod" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Delivery Method *
                   </label>
-                  <select
+                  <CustomSelect
                     id="deliveryMethod"
                     name="deliveryMethod"
-                    required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white rounded-lg"
                     value={formData.deliveryMethod}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Select delivery method</option>
-                    <option value={DeliveryMethod.DELIVERY}>Delivery (Stockholm area only)</option>
-                    <option value={DeliveryMethod.PICKUP}>Pick up from {pickupAddress}</option>
-                  </select>
+                    onChange={handleSelectChange}
+                    required
+                    placeholder="Select delivery method"
+                    options={[
+                      { value: DeliveryMethod.DELIVERY, label: 'Delivery (Stockholm area only)' },
+                      { value: DeliveryMethod.PICKUP, label: `Pick up from ${pickupAddress}` }
+                    ]}
+                  />
                 </div>
                 
                 {formData.deliveryMethod === DeliveryMethod.DELIVERY && (
                   <div>
-                    <label htmlFor="deliveryAddress" className="block text-label text-ceylon-text mb-2">
+                    <label htmlFor="deliveryAddress" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                       Delivery Address *
                     </label>
                     <textarea
@@ -318,113 +334,94 @@ export default function CartPage() {
                       name="deliveryAddress"
                       required
                       rows={3}
-                      className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
+                      className="w-full p-4 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none focus:ring-4 focus:ring-ceylon-orange/20 transition-all duration-300 hover:border-ceylon-orange/40 rounded-xl shadow-md hover:shadow-lg text-body-lg font-medium resize-none"
                       placeholder="Street address, city, postal code (Stockholm area only)"
                       value={formData.deliveryAddress}
                       onChange={handleInputChange}
                     />
-                    <p className="text-body-xs text-ceylon-text/60 mt-1">
-                      ⚠️ We only deliver within Stockholm area
+                    <p className="text-body-xs text-ceylon-text/70 mt-2 flex items-center gap-1.5">
+                      <span className="text-ceylon-orange">📍</span>
+                      <span>We only deliver within Stockholm area</span>
                     </p>
                   </div>
                 )}
                 
                 {formData.deliveryMethod === DeliveryMethod.PICKUP && (
-                  <div className="bg-ceylon-cream p-4 rounded-xl border-2 border-ceylon-orange/30">
-                    <p className="text-body-md font-bold text-ceylon-text mb-2">📍 Pickup Location:</p>
-                    <p className="text-body-md text-ceylon-text">{pickupAddress}</p>
-                    <p className="text-body-xs text-ceylon-text/60 mt-2">
+                  <div className="bg-gradient-to-br from-ceylon-yellow/30 to-ceylon-cream/50 p-5 rounded-xl border-2 border-ceylon-orange/40 shadow-md">
+                    <p className="text-body-lg font-bold text-ceylon-text mb-2 flex items-center gap-2">
+                      <span className="text-2xl">📍</span>
+                      <span>Pickup Location:</span>
+                    </p>
+                    <p className="text-body-lg text-ceylon-text font-medium ml-8">{pickupAddress}</p>
+                    <p className="text-body-sm text-ceylon-text/70 mt-3 ml-8">
                       We&apos;ll send you the exact address and instructions after confirming your order
                     </p>
                   </div>
                 )}
                 
                 <div>
-                  <label htmlFor="deliveryDate" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="deliveryDate" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Preferred Delivery Date *
                   </label>
                   
                   {loadingDates && (
-                    <div className="mb-2 text-sm text-ceylon-text/60 flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-ceylon-orange"></div>
-                      Checking availability...
-                    </div>
-                  )}
-
-                  {hasLimitedItems && availableDates.length > 0 && (
-                    <div className="mb-3 p-3 bg-ceylon-yellow/30 border border-ceylon-orange/30 rounded-lg">
-                      <p className="text-sm font-semibold text-ceylon-text mb-2">
-                        📅 Available dates for your items:
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {availableDates.slice(0, 5).map(date => (
-                          <button
-                            key={date}
-                            type="button"
-                            onClick={() => setFormData({ ...formData, deliveryDate: date })}
-                            className={`px-3 py-2 text-sm rounded-lg border-2 transition-all ${
-                              formData.deliveryDate === date
-                                ? 'border-ceylon-orange bg-ceylon-orange text-white font-bold'
-                                : 'border-ceylon-text/20 bg-white text-ceylon-text hover:border-ceylon-orange'
-                            }`}
-                          >
-                            {formatDateForDisplay(date)}
-                          </button>
-                        ))}
-                        {availableDates.length > 5 && (
-                          <span className="text-sm text-ceylon-text/60 self-center">
-                            +{availableDates.length - 5} more
-                          </span>
-                        )}
-                      </div>
+                    <div className="mb-3 p-3 bg-ceylon-yellow/20 border-2 border-ceylon-orange/30 rounded-xl flex items-center gap-2 shadow-sm">
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-ceylon-orange border-t-transparent"></div>
+                      <span className="text-sm font-medium text-ceylon-text">Checking availability...</span>
                     </div>
                   )}
 
                   {hasLimitedItems && availableDates.length === 0 && !loadingDates && (
-                    <div className="mb-3 p-3 bg-red-50 border border-red-300 rounded-lg">
-                      <p className="text-sm font-semibold text-red-700">
-                        ⚠️ No availability found for your items
+                    <div className="mb-3 p-4 bg-red-50 border-2 border-red-400 rounded-xl shadow-md">
+                      <p className="text-sm font-bold text-red-700 flex items-center gap-2">
+                        <span className="text-xl">⚠️</span>
+                        No availability found for your items
                       </p>
-                      <p className="text-sm text-red-600 mt-1">
+                      <p className="text-sm text-red-600 mt-2">
                         Please contact us or adjust your cart items.
                       </p>
                     </div>
                   )}
 
-                  <input
+                  <CustomSelect
                     id="deliveryDate"
                     name="deliveryDate"
-                    type="date"
-                    required
-                    min={getMinDate()}
-                    max={getMaxDate()}
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
                     value={formData.deliveryDate}
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
+                    required
+                    disabled={loadingDates || (hasLimitedItems && availableDates.length === 0)}
+                    placeholder="Select a date"
+                    options={getSelectableDates().map(date => ({
+                      value: date,
+                      label: formatDateForDisplay(date)
+                    }))}
                   />
                   
                   {hasLimitedItems ? (
-                    <p className="text-body-xs text-ceylon-text/60 mt-1">
-                      ℹ️ Your cart contains items with limited availability. Please select from available dates above.
+                    <p className="text-body-xs text-ceylon-text/70 mt-2 flex items-center gap-1.5">
+                      <span className="text-ceylon-orange">ℹ️</span>
+                      <span>Your cart contains items with limited availability. Only available dates are shown.</span>
                     </p>
                   ) : (
-                    <p className="text-body-xs text-ceylon-text/60 mt-1">
-                      Select a date between tomorrow and {new Date(getMaxDate()).toLocaleDateString('sv-SE')}
+                    <p className="text-body-xs text-ceylon-text/70 mt-2 flex items-center gap-1.5">
+                      <span className="text-ceylon-orange">📅</span>
+                      <span>Select a date for delivery (up to 30 days in advance)</span>
                     </p>
                   )}
 
                   {/* Availability Warning */}
                   {availabilityWarning.length > 0 && (
-                    <div className="mt-3 p-3 bg-red-50 border-2 border-red-300 rounded-lg">
-                      <p className="text-red-800 font-semibold mb-2 text-sm">
-                        ⚠️ Some items are not available for this date:
+                    <div className="mt-3 p-4 bg-red-50 border-2 border-red-400 rounded-xl shadow-md">
+                      <p className="text-red-800 font-bold mb-2 text-sm flex items-center gap-2">
+                        <span className="text-xl">⚠️</span>
+                        Some items are not available for this date:
                       </p>
-                      <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                      <ul className="list-disc list-inside text-sm text-red-700 space-y-1 ml-2">
                         {availabilityWarning.map((item, idx) => (
                           <li key={idx}>{item}</li>
                         ))}
                       </ul>
-                      <p className="text-sm text-red-700 mt-2">
+                      <p className="text-sm text-red-700 mt-3 font-medium">
                         Please select a different date or remove these items from your cart.
                       </p>
                     </div>
@@ -432,36 +429,48 @@ export default function CartPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="deliveryTime" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="deliveryTime" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Delivery Time *
                   </label>
-                  <select
+                  <CustomSelect
                     id="deliveryTime"
                     name="deliveryTime"
-                    required
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors bg-white rounded-lg"
                     value={formData.deliveryTime}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Select a time slot</option>
-                    <option value={DeliveryTime.BREAKFAST} disabled>{getDeliveryTimeDisplay(DeliveryTime.BREAKFAST, true)} - Coming Soon</option>
-                    <option value={DeliveryTime.LUNCH}>{getDeliveryTimeDisplay(DeliveryTime.LUNCH, true)}</option>
-                    <option value={DeliveryTime.DINNER} disabled>{getDeliveryTimeDisplay(DeliveryTime.DINNER, true)} - Coming Soon</option>
-                  </select>
-                  <p className="text-body-xs text-ceylon-text/60 mt-1">
-                    Currently only offering lunch delivery
+                    onChange={handleSelectChange}
+                    required
+                    placeholder="Select a time slot"
+                    options={[
+                      { 
+                        value: DeliveryTime.BREAKFAST, 
+                        label: `${getDeliveryTimeDisplay(DeliveryTime.BREAKFAST, true)} - Coming Soon`,
+                        disabled: true 
+                      },
+                      { 
+                        value: DeliveryTime.LUNCH, 
+                        label: getDeliveryTimeDisplay(DeliveryTime.LUNCH, true)
+                      },
+                      { 
+                        value: DeliveryTime.DINNER, 
+                        label: `${getDeliveryTimeDisplay(DeliveryTime.DINNER, true)} - Coming Soon`,
+                        disabled: true 
+                      }
+                    ]}
+                  />
+                  <p className="text-body-xs text-ceylon-text/70 mt-2 flex items-center gap-1.5">
+                    <span className="text-ceylon-orange">🕐</span>
+                    <span>Currently only offering lunch delivery</span>
                   </p>
                 </div>
                 
                 <div>
-                  <label htmlFor="notes" className="block text-label text-ceylon-text mb-2">
+                  <label htmlFor="notes" className="block text-label text-ceylon-text mb-2 font-bold tracking-wide">
                     Special Instructions (Optional)
                   </label>
                   <textarea
                     id="notes"
                     name="notes"
-                    rows={2}
-                    className="w-full p-3 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none transition-colors rounded-lg"
+                    rows={3}
+                    className="w-full p-4 border-2 border-ceylon-text/20 focus:border-ceylon-orange focus:outline-none focus:ring-4 focus:ring-ceylon-orange/20 transition-all duration-300 hover:border-ceylon-orange/40 rounded-xl shadow-md hover:shadow-lg text-body-lg font-medium resize-none"
                     placeholder="Any allergies, preferences, or delivery instructions"
                     value={formData.notes}
                     onChange={handleInputChange}
@@ -624,18 +633,28 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div className="bg-ceylon-cream p-6 rounded-xl mb-6">
-                <p className="text-body-sm text-ceylon-text/70 leading-relaxed">
-                  <strong>Note:</strong> We will review the availability of your items and contact you 
-                  via email or phone to confirm your order. Payment will be collected upon delivery.
+              <div className="bg-gradient-to-br from-ceylon-yellow/20 to-ceylon-cream/40 p-6 rounded-xl mb-6 border-2 border-ceylon-orange/20 shadow-md">
+                <p className="text-body-md text-ceylon-text leading-relaxed">
+                  <span className="font-bold text-ceylon-orange">📝 Note:</span> We will review the availability of your items and contact you 
+                  via email or phone to confirm your order. Payment will be collected upon delivery (we prefer swish or bank transfer).
                 </p>
               </div>
               
               <button
                 type="submit"
-                disabled={isSubmitting || availabilityWarning.length > 0}
+                disabled={
+                  isSubmitting || 
+                  availabilityWarning.length > 0 || 
+                  (hasLimitedItems && availableDates.length === 0)
+                }
                 className="btn btn-lg btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                title={availabilityWarning.length > 0 ? 'Please resolve availability issues first' : ''}
+                title={
+                  availabilityWarning.length > 0 
+                    ? 'Please resolve availability issues first' 
+                    : (hasLimitedItems && availableDates.length === 0)
+                    ? 'No available dates for your items'
+                    : ''
+                }
               >
                 {isSubmitting ? 'Placing Order...' : 'Place Order'}
               </button>
@@ -645,6 +664,12 @@ export default function CartPage() {
                   Please select a date when all items are available
                 </p>
               )}
+              
+              {hasLimitedItems && availableDates.length === 0 && !loadingDates && (
+                <p className="text-sm text-red-600 text-center mt-4">
+                  Cannot place order - no available dates for your items. Please contact us or adjust your cart.
+                </p>
+              )}
             </div>
             </form>
           </motion.div>
@@ -652,6 +677,20 @@ export default function CartPage() {
       </section>
 
       <Footer />
+
+      {/* Order Confirmation Modal */}
+      <OrderConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmOrder}
+        items={cart}
+        customerName={formData.customerName}
+        deliveryMethod={formData.deliveryMethod}
+        deliveryDate={formData.deliveryDate}
+        deliveryTime={formData.deliveryTime}
+        totalAmount={getFinalTotal()}
+        isSubmitting={isSubmitting}
+      />
     </div>
   )
 }
