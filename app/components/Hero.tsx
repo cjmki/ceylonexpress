@@ -32,7 +32,7 @@ export default function Hero() {
             >
               <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-ceylon-orange" />
               <span className="text-ceylon-orange font-bold tracking-wider text-xs md:text-sm uppercase">
-                ශ්‍රී ලංකන් Inspired
+                Authentic Sri Lankan Food
               </span>
             </motion.div>
 
@@ -44,9 +44,9 @@ export default function Hero() {
               className="text-4xl md:text-6xl lg:text-7xl font-bold text-ceylon-text leading-[1.1]"
               style={{ fontFamily: 'Georgia, serif' }}
             >
-              Authentic Flavors{' '}
+              A Taste of{' '}
               <span className="text-ceylon-orange relative inline-block">
-                From The Island
+                Home in Stockholm
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -63,8 +63,7 @@ export default function Hero() {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="text-base md:text-lg lg:text-xl text-ceylon-text/70 max-w-xl leading-relaxed"
             >
-              Bringing the warmth of home-cooked Sri Lankan cuisine to Stockholm. 
-              Every dish tells a story of tradition, spice, and love.
+              Missing the flavors of Sri Lanka? We bring you authentic home-cooked meals that remind you of family gatherings and Sunday lunches back home.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -102,7 +101,7 @@ export default function Hero() {
             >
               <ChefHat className="h-5 w-5 text-ceylon-orange" />
               <p className="text-xs md:text-sm text-ceylon-text font-semibold">
-                Coming Soon to Stockholm
+                Cloud Kitchen & Catering Services
               </p>
             </motion.div>
           </motion.div>
@@ -149,7 +148,7 @@ export default function Hero() {
                 className="absolute -bottom-4 -left-4 bg-white px-4 md:px-6 py-2 md:py-3 rounded-full shadow-xl border-3 border-ceylon-blue hidden sm:block"
               >
                 <p className="text-xs md:text-sm font-bold text-ceylon-text">
-                  🌶️ Authentic Spices
+                🇱🇰 Authentic Spices
                 </p>
               </motion.div>
 
@@ -165,37 +164,6 @@ export default function Hero() {
             </div>
           </motion.div>
         </div>
-
-        {/* Stats Section - Editorial Style */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="mt-16 md:mt-24 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
-        >
-          {[
-            { label: 'Traditional Recipes', value: '20+', icon: '🍛' },
-            { label: 'Authentic Spices', value: '15+', icon: '🌶️' },
-            { label: 'Happy Customers', value: '500+', icon: '❤️' },
-            { label: 'Years Experience', value: '10+', icon: '⭐' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 + index * 0.1, duration: 0.6 }}
-              className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border-3 border-ceylon-text/5 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center"
-            >
-              <div className="text-2xl md:text-3xl mb-2">{stat.icon}</div>
-              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-ceylon-orange mb-1 md:mb-2" style={{ fontFamily: 'Georgia, serif' }}>
-                {stat.value}
-              </div>
-              <div className="text-xs md:text-sm text-ceylon-text/60 font-semibold uppercase tracking-wide">
-                {stat.label}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   )

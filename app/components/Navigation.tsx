@@ -35,6 +35,7 @@ export default function Navigation() {
     { href: '/menu', label: 'Menu' },
     { href: '/#about', label: 'About' },
     { href: '/#location', label: 'Location' },
+    { href: '/contact', label: 'Contact' },
   ]
 
   const containerVariants = {

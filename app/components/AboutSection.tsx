@@ -23,8 +23,8 @@ const staggerContainer = {
 const values = [
   {
     icon: Flame,
-    title: 'Traditional Spices',
-    description: 'Authentic recipes using time-honored spice blends from the island',
+    title: 'Traditional Recipes',
+    description: 'Authentic family recipes passed down through generations',
     cardBg: 'bg-ceylon-yellow/10',
     cardBorder: 'border-ceylon-orange/30 hover:border-ceylon-orange',
     iconBg: 'bg-ceylon-orange/10',
@@ -34,8 +34,8 @@ const values = [
   },
   {
     icon: Heart,
-    title: 'Made with Love',
-    description: 'Every dish prepared with the warmth of home-cooked meals',
+    title: 'Home-Cooked Quality',
+    description: 'Every dish prepared with care, just like your amma would make',
     cardBg: 'bg-ceylon-cream/30',
     cardBorder: 'border-ceylon-orange/30 hover:border-ceylon-orange',
     iconBg: 'bg-ceylon-orange/10',
@@ -45,8 +45,8 @@ const values = [
   },
   {
     icon: Users,
-    title: 'Community Spirit',
-    description: 'Bringing people together through the joy of shared flavors',
+    title: 'Catering Available',
+    description: 'Perfect for events, parties, and family gatherings',
     cardBg: 'bg-ceylon-blue/10',
     cardBorder: 'border-ceylon-blue/30 hover:border-ceylon-blue',
     iconBg: 'bg-ceylon-blue/10',
@@ -86,9 +86,9 @@ export default function AboutSection() {
             className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
             style={{ fontFamily: 'Georgia, serif' }}
           >
-            A Taste of{' '}
+            Authentic{' '}
             <span className="text-ceylon-orange relative inline-block">
-              Ceylon
+              Sri Lankan Food
               <motion.div
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
@@ -100,7 +100,7 @@ export default function AboutSection() {
           </h2>
 
           <p className="text-base md:text-lg text-ceylon-text/60 max-w-2xl mx-auto">
-            Bringing authentic Sri Lankan flavors to Stockholm, one dish at a time
+            Real Sri Lankan food made by Sri Lankans, for Sri Lankans in Stockholm
           </p>
         </motion.div>
 
@@ -124,23 +124,21 @@ export default function AboutSection() {
             {/* Story paragraphs */}
             <div className="space-y-4 md:space-y-6 text-sm md:text-base lg:text-lg text-ceylon-text/80 leading-relaxed">
               <p>
-                Ceylon Express brings the vibrant, soul-warming flavors of Sri Lanka 
-                to Sweden. We&apos;re more than a food truck — we&apos;re a bridge between 
-                cultures, a reminder of home for expats, and an invitation to discover 
-                the rich culinary heritage of the island.
+                We know what it&apos;s like to miss home. Ceylon Express brings you the 
+                real flavors of Sri Lanka right here in Stockholm. Whether you&apos;re 
+                craving a proper rice and curry or planning a family event, we&apos;ve got you covered.
               </p>
 
               <p>
-                Our dishes are crafted using traditional methods passed down through 
-                generations. From the aromatic blend of cinnamon, cardamom, and curry 
-                leaves to the perfect balance of heat and flavor, every bite tells a 
-                story of our heritage.
+                Our food is made the traditional way, using recipes we grew up with. 
+                We use real Sri Lankan spices and ingredients to give you that authentic 
+                taste you remember from home.
               </p>
 
               <div className="bg-white p-4 md:p-6 rounded-2xl border-3 border-ceylon-orange shadow-lg">
                 <p className="font-bold text-ceylon-text text-base md:text-lg">
-                  We celebrate the spices, the traditions, and the warmth that makes 
-                  Sri Lankan cuisine unforgettable.
+                  Order from our cloud kitchen or book us for your next event. 
+                  We serve fresh, home-cooked meals and cater for parties and gatherings.
                 </p>
               </div>
             </div>
@@ -167,8 +165,8 @@ export default function AboutSection() {
                 
                 {/* Quote text */}
                 <p className="text-lg md:text-xl lg:text-2xl text-ceylon-text font-medium italic mb-6 md:mb-8 leading-relaxed">
-                  Food is not just about taste — it&apos;s about memories, 
-                  connection, and the stories we share.
+                  Good food brings people together. We make the food that reminds 
+                  you of family, celebrations, and home.
                 </p>
                 
                 {/* Attribution */}

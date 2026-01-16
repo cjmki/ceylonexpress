@@ -125,8 +125,8 @@ function getContentSecurityPolicy(): string {
     // Fonts: Allow same origin + data URIs
     "font-src 'self' data:",
     
-    // Connect (API calls): Allow same origin + Supabase
-    `connect-src 'self' https://*.supabase.co wss://*.supabase.co`,
+    // Connect (API calls): Allow same origin + Supabase + Web3Forms
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.web3forms.com`,
     
     // Frames: Disallow all iframes (prevent clickjacking)
     "frame-src 'none'",
@@ -140,8 +140,8 @@ function getContentSecurityPolicy(): string {
     // Base URI: Restrict base tag to same origin
     "base-uri 'self'",
     
-    // Form actions: Only allow forms to submit to same origin
-    "form-action 'self'",
+    // Form actions: Allow forms to submit to same origin + Web3Forms
+    "form-action 'self' https://api.web3forms.com",
     
     // Upgrade insecure requests (HTTP → HTTPS) in production
     ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),

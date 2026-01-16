@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MapPin, Clock, Instagram, Facebook, Sparkles, TruckIcon } from 'lucide-react'
+import { MapPin, Clock, Instagram, Facebook, Sparkles, Users } from 'lucide-react'
 
 const locationInfo = [
   {
@@ -16,19 +16,19 @@ const locationInfo = [
   },
   {
     icon: Clock,
-    title: 'Hours',
-    description: 'Coming Soon',
-    emoji: '⏰',
+    title: 'Service',
+    description: 'Cloud Kitchen',
+    emoji: '🍛',
     cardBg: 'bg-ceylon-cream/30',
     cardBorder: 'border-ceylon-cream/50',
     dashedBorder: 'border-ceylon-cream/50',
     delay: 0.1,
   },
   {
-    icon: TruckIcon,
-    title: 'Food Truck',
-    description: 'Mobile Service',
-    emoji: '🚚',
+    icon: Users,
+    title: 'Catering',
+    description: 'Events & Parties',
+    emoji: '🎉',
     cardBg: 'bg-ceylon-blue/20',
     cardBorder: 'border-ceylon-blue/40',
     dashedBorder: 'border-ceylon-blue/40',
@@ -63,7 +63,7 @@ export default function LocationSection() {
           >
             <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-ceylon-orange" />
             <span className="text-ceylon-orange font-bold text-xs md:text-sm uppercase tracking-wider">
-              Coming Soon
+              Now Serving
             </span>
           </motion.div>
 
@@ -71,9 +71,9 @@ export default function LocationSection() {
             className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
             style={{ fontFamily: 'Georgia, serif' }}
           >
-            Find Us{' '}
+            How to{' '}
             <span className="text-ceylon-orange relative inline-block">
-              Soon
+              Order
               <motion.div
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
@@ -85,7 +85,7 @@ export default function LocationSection() {
           </h2>
           
           <p className="text-base md:text-lg lg:text-xl text-ceylon-text/70 max-w-2xl mx-auto">
-            Follow our journey as we prepare to bring authentic Sri Lankan flavors to Stockholm
+            Order online for delivery or pickup. We also cater for events and parties.
           </p>
         </motion.div>
 
@@ -150,7 +150,7 @@ export default function LocationSection() {
               </h3>
               
               <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 mb-6 md:mb-8">
-                Stay connected and be the first to know about our launch, menu updates, and special offers
+                Stay connected for menu updates, special offers, and catering availability
               </p>
 
               {/* Social Buttons */}
@@ -203,22 +203,23 @@ export default function LocationSection() {
                 className="text-2xl md:text-3xl lg:text-4xl font-bold text-ceylon-text mb-4 md:mb-6"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
-                Stay Updated on{' '}
-                <span className="text-ceylon-orange">Our Launch</span>
+                Need Catering for{' '}
+                <span className="text-ceylon-orange">Your Event?</span>
               </h3>
               
               {/* Description */}
               <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 mb-6 md:mb-8 leading-relaxed">
-                Be the first to know when we launch, discover exclusive menu previews, 
-                and follow our journey bringing authentic Sri Lankan cuisine to Stockholm.
+                We cater for birthdays, office events, family gatherings, and parties. 
+                Get in touch through Instagram or Facebook to discuss your event.
               </p>
 
-              {/* Email placeholder or social prompt */}
-              <div className="inline-flex items-center gap-2 bg-ceylon-cream px-4 md:px-6 py-3 md:py-4 rounded-full border-2 border-dashed border-ceylon-orange/40">
-                <span className="text-xs md:text-sm text-ceylon-text/60 font-medium italic">
-                  Join our growing community of food lovers 🍛
-                </span>
-              </div>
+              {/* Catering inquiry CTA button */}
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-sm md:text-base uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                <span>Message us for catering inquiries 🍛</span>
+              </a>
 
               {/* Accent dots */}
               <div className="absolute top-4 right-4 w-3 h-3 md:w-4 md:h-4 rounded-full bg-ceylon-yellow shadow-lg"></div>

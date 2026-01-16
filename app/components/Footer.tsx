@@ -52,12 +52,15 @@ export default function Footer() {
                 </div>
                 <span>Stockholm, Sweden</span>
               </div>
-              <div className="flex items-center gap-3 text-white/70 text-sm">
+              <a 
+                href="mailto:cvljayawardana@gmail.com"
+                className="flex items-center gap-3 text-white/70 hover:text-ceylon-yellow text-sm transition-colors"
+              >
                 <div className="bg-ceylon-orange/20 p-2 rounded-lg">
                   <Mail className="h-4 w-4 text-ceylon-yellow" />
                 </div>
-                <span>Coming Soon</span>
-              </div>
+                <span>cvljayawardana@gmail.com</span>
+              </a>
             </div>
           </div>
 
@@ -72,6 +75,7 @@ export default function Footer() {
                 { href: '#about', label: 'About Us' },
                 { href: '#location', label: 'Location' },
                 { href: '/menu', label: 'Menu' },
+                { href: '/contact', label: 'Contact' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
