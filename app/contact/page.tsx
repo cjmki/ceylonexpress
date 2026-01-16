@@ -185,13 +185,6 @@ Submitted from Ceylon Express Catering Form`,
             transition={{ duration: 0.6 }}
             className="mb-8"
           >
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 text-ceylon-orange hover:text-ceylon-text transition-colors font-semibold"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Home</span>
-            </a>
           </motion.div>
 
           {/* Header */}

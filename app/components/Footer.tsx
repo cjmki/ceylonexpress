@@ -52,15 +52,6 @@ export default function Footer() {
                 </div>
                 <span>Stockholm, Sweden</span>
               </div>
-              <a 
-                href="mailto:cvljayawardana@gmail.com"
-                className="flex items-center gap-3 text-white/70 hover:text-ceylon-yellow text-sm transition-colors"
-              >
-                <div className="bg-ceylon-orange/20 p-2 rounded-lg">
-                  <Mail className="h-4 w-4 text-ceylon-yellow" />
-                </div>
-                <span>cvljayawardana@gmail.com</span>
-              </a>
             </div>
           </div>
 
@@ -96,7 +87,7 @@ export default function Footer() {
               Connect
             </h4>
             <p className="text-xs md:text-sm text-white/80 mb-4 leading-relaxed">
-              Follow our journey and stay updated on our launch
+              Follow our journey and stay updated
             </p>
             <div className="flex flex-col gap-3">
               <a

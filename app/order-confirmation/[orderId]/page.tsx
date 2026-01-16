@@ -7,7 +7,6 @@ import { CheckCircle, Mail, Phone, MapPin, Package, Calendar, Clock } from 'luci
 import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
-import TestingBanner from '../../components/TestingBanner'
 import { getOrderById } from '../../actions/orders'
 import { formatPrice } from '../../constants/currency'
 import { formatDateReadable } from '../../constants/dateUtils'
@@ -66,7 +65,6 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
-        <TestingBanner />
         <div className="flex-1 flex items-center justify-center pt-32">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
@@ -82,7 +80,6 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
-        <TestingBanner />
         <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <div className="text-center">
             <h2 className="text-heading-xl text-ceylon-text mb-4">Order Not Found</h2>
@@ -105,7 +102,6 @@ export default function OrderConfirmationPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <Navigation />
-      <TestingBanner />
       
       <section className="flex-1 pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-4xl">

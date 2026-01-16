@@ -143,7 +143,7 @@ export default function LocationSection() {
         >
           <div className="relative bg-white p-6 md:p-10 lg:p-12 rounded-2xl md:rounded-3xl shadow-lg border-3 border-ceylon-orange/20">
             <div className="text-center max-w-xl mx-auto">
-              <div className="text-4xl md:text-5xl mb-4 md:mb-6">📱</div>
+              <div className="text-4xl md:text-5xl mb-4 md:mb-6">💌</div>
               
               <h3 className="text-2xl md:text-3xl font-bold text-ceylon-text mb-3 md:mb-4">
                 Follow Our Journey
@@ -218,7 +218,7 @@ export default function LocationSection() {
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-sm md:text-base uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
               >
-                <span>Message us for catering inquiries 🍛</span>
+                <span>Message us for catering inquiries </span>
               </a>
 
               {/* Accent dots */}

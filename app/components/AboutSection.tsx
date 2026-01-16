@@ -172,7 +172,6 @@ export default function AboutSection() {
                 {/* Attribution */}
                 <div className="flex items-center justify-between pt-4 md:pt-6 border-t-2 border-ceylon-orange/20">
                   <div>
-                    <p className="text-sm md:text-base lg:text-lg font-bold text-ceylon-orange">Ceylon Express Team</p>
                     <p className="text-xs md:text-sm text-ceylon-text/60">Stockholm, Sweden</p>
                   </div>
                   <div className="text-3xl md:text-4xl">🇱🇰</div>

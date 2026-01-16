@@ -10,7 +10,6 @@ import { createOrder, checkOrderAvailability, getAvailableDatesForCart } from '.
 import { formatDateForDisplay } from '@/lib/utils'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
-import TestingBanner from '../components/TestingBanner'
 import OrderConfirmationModal from '../components/OrderConfirmationModal'
 import { formatPrice, CURRENCY, DELIVERY_FEE } from '../constants/currency'
 import { DeliveryMethod, DeliveryTime, DELIVERY_TIMES, getDeliveryTimeDisplay } from '../constants/enums'
@@ -187,7 +186,6 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
-        <TestingBanner />
         
         <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <motion.div
@@ -219,7 +217,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-ceylon-cream flex flex-col">
       <Navigation />
-      <TestingBanner />
       
       <section className="flex-1 pt-36 pb-12 md:pt-40 md:pb-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
