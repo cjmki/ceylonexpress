@@ -132,39 +132,66 @@ export default function MenuPage() {
       <TestingBanner />
 
       {/* Menu Content */}
-      <section className="flex-1 pt-40 pb-20 px-6">
-        <div className="container mx-auto max-w-6xl">
+      <section className="flex-1 pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-6">
+        <div className="container mx-auto max-w-7xl">
+          {/* Header with Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-16 text-center"
+            className="mb-12 md:mb-16 text-center"
           >
-            <h1 className="text-display-md md:text-display-lg text-ceylon-text mb-4">
-              Our Menu
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.6, type: "spring", delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-white px-4 md:px-6 py-2 md:py-3 rounded-full border-3 border-ceylon-orange/30 mb-6 md:mb-8 shadow-lg"
+            >
+              <span className="text-lg md:text-xl">🍛</span>
+              <span className="text-ceylon-orange font-bold text-xs md:text-sm uppercase tracking-wider">
+                Our Menu
+              </span>
+            </motion.div>
+
+            <h1 
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              Authentic Sri Lankan{' '}
+              <span className="text-ceylon-orange relative inline-block">
+                Flavors
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  className="absolute -bottom-1 md:-bottom-2 left-0 right-0 h-1 md:h-2 bg-ceylon-yellow rounded-full"
+                />
+              </span>
             </h1>
-            <p className="text-body-xl text-ceylon-text/70 max-w-2xl mx-auto">
-              Authentic Sri Lankan dishes made fresh with traditional recipes
+
+            <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 max-w-2xl mx-auto">
+              Traditional recipes made fresh with love and authentic spices
             </p>
           </motion.div>
 
           {loading ? (
             <div className="text-center py-20">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-ceylon-orange"></div>
-              <p className="mt-4 text-ceylon-text/70">Loading menu...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ceylon-orange/20 border-t-ceylon-orange"></div>
+              <p className="mt-4 text-ceylon-text/70 font-medium">Loading delicious dishes...</p>
             </div>
           ) : menuItems.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-xl text-ceylon-text/70">No menu items available at the moment.</p>
+              <div className="text-6xl mb-6">🍽️</div>
+              <p className="text-lg md:text-xl text-ceylon-text/70 mb-8">No menu items available at the moment.</p>
               <Link
                 href="/"
-                className="inline-block mt-8 border-2 border-ceylon-text text-ceylon-text px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-ceylon-text hover:text-ceylon-cream transition-colors rounded-lg"
+                className="inline-flex items-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-8 py-4 font-bold uppercase text-sm tracking-wider transition-all duration-300 rounded-full shadow-lg hover:scale-105"
               >
                 Back to Home
               </Link>
             </div>
           ) : (
-            <div className="space-y-16">
+            <div className="space-y-12 md:space-y-16">
               {sortedCategories.map(([category, items], categoryIndex) => (
                 <motion.div
                   key={category}
@@ -172,45 +199,51 @@ export default function MenuPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
                 >
-                  <h2 className="text-heading-xl text-ceylon-text mb-8 border-b-2 border-ceylon-orange pb-2 inline-block">
-                    {getMenuCategoryDisplay(category)}
-                  </h2>
+                  {/* Category Header */}
+                  <div className="relative inline-block mb-6 md:mb-8">
+                    <h2 className="text-2xl md:text-3xl font-bold text-ceylon-text px-6 py-3 bg-white rounded-2xl border-3 border-ceylon-orange shadow-md">
+                      {getMenuCategoryDisplay(category)}
+                    </h2>
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-ceylon-orange rounded-full"></div>
+                  </div>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                     {items.map((item, index) => (
                       <motion.div
                         key={item.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.05 }}
-                        className="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all rounded-xl flex flex-col group cursor-pointer"
+                        className="bg-white border-3 border-ceylon-text/5 hover:border-ceylon-orange shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 rounded-2xl md:rounded-3xl flex flex-col group cursor-pointer hover:scale-105"
                         onClick={() => openModal(item)}
                       >
                         {/* Image */}
                         {item.image_url ? (
-                          <div className="w-full h-32 bg-ceylon-cream/30 overflow-hidden relative">
+                          <div className="w-full h-28 md:h-36 bg-ceylon-cream/30 overflow-hidden relative rounded-t-2xl md:rounded-t-3xl">
                             <img 
                               src={item.image_url} 
                               alt={item.name}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                              <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <div className="bg-white/90 p-2 rounded-full">
+                                <Eye className="h-4 w-4 md:h-5 md:w-5 text-ceylon-orange" />
+                              </div>
                             </div>
                           </div>
                         ) : (
-                          <div className="w-full h-32 bg-gradient-to-br from-ceylon-orange/20 to-ceylon-cream flex items-center justify-center">
-                            <span className="text-4xl">🍛</span>
+                          <div className="w-full h-28 md:h-36 bg-gradient-to-br from-ceylon-yellow/30 via-ceylon-cream/50 to-ceylon-orange/20 flex items-center justify-center rounded-t-2xl md:rounded-t-3xl">
+                            <span className="text-3xl md:text-4xl">🍛</span>
                           </div>
                         )}
                         
                         {/* Content */}
-                        <div className="p-3 flex flex-col flex-grow">
-                          <h3 className="text-sm font-bold text-ceylon-text mb-1 line-clamp-2 min-h-[2.5rem]">
+                        <div className="p-3 md:p-4 flex flex-col flex-grow">
+                          <h3 className="text-xs md:text-sm font-bold text-ceylon-text mb-1 line-clamp-2 min-h-[2rem] md:min-h-[2.5rem]">
                             {item.name}
                           </h3>
                           
-                          <p className="text-xs text-ceylon-text/60 mb-2 line-clamp-2">
+                          <p className="text-[10px] md:text-xs text-ceylon-text/60 mb-2 line-clamp-2 leading-relaxed">
                             {item.description}
                           </p>
 
@@ -219,7 +252,7 @@ export default function MenuPage() {
                             <div className="mb-2">
                               {item.available_slots !== undefined && item.available_slots > 0 ? (
                                 <div 
-                                  className="text-xs font-semibold cursor-help"
+                                  className="text-[10px] md:text-xs font-bold cursor-help bg-ceylon-orange/10 px-2 py-1 rounded-lg"
                                   title="More dates may be available at checkout"
                                 >
                                   <span className="text-ceylon-orange">
@@ -231,12 +264,12 @@ export default function MenuPage() {
                                     </span>
                                   )}
                                   {item.pre_orders_only && (
-                                    <span className="ml-1 text-ceylon-text/50 block mt-0.5">• Pre-order only</span>
+                                    <span className="ml-1 text-ceylon-text/50 block mt-0.5">• Pre-order</span>
                                   )}
                                 </div>
                               ) : item.available_slots === 0 ? (
                                 <div 
-                                  className="text-xs font-semibold text-red-600 cursor-help"
+                                  className="text-[10px] md:text-xs font-bold text-red-600 cursor-help bg-red-50 px-2 py-1 rounded-lg"
                                   title="Check other dates at checkout"
                                 >
                                   Sold out
@@ -247,15 +280,15 @@ export default function MenuPage() {
                                   )}
                                 </div>
                               ) : (
-                                <div className="text-xs font-semibold text-ceylon-text/50">
-                                  📅 Limited availability
+                                <div className="text-[10px] md:text-xs font-semibold text-ceylon-text/50 bg-ceylon-cream/50 px-2 py-1 rounded-lg">
+                                  📅 Limited
                                 </div>
                               )}
                             </div>
                           )}
                           
-                          <div className="flex items-center justify-between mt-auto pt-2 border-t border-ceylon-cream">
-                            <span className="text-base font-bold text-ceylon-orange">
+                          <div className="flex items-center justify-between mt-auto pt-2 border-t-2 border-ceylon-cream">
+                            <span className="text-sm md:text-base font-bold text-ceylon-orange">
                               {formatPrice(item.price)}
                             </span>
                             
@@ -267,19 +300,19 @@ export default function MenuPage() {
                                 }
                               }}
                               disabled={item.available_slots === 0}
-                              className={`p-2 rounded-lg transition-all ${
+                              className={`p-2 md:p-2.5 rounded-xl border-2 transition-all duration-300 ${
                                 item.available_slots === 0
-                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  ? 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed'
                                   : addedItems.has(item.id)
-                                  ? 'bg-green-600 text-white'
-                                  : 'bg-ceylon-orange text-white hover:bg-ceylon-text'
+                                  ? 'bg-green-600 border-green-600 text-white scale-110'
+                                  : 'bg-ceylon-orange border-ceylon-orange text-white hover:bg-ceylon-text hover:border-ceylon-text hover:scale-110'
                               }`}
                               title={item.available_slots === 0 ? 'Sold out' : 'Add to cart'}
                             >
                               {addedItems.has(item.id) ? (
-                                <Check className="h-4 w-4" />
+                                <Check className="h-3 w-3 md:h-4 md:w-4" />
                               ) : (
-                                <Plus className="h-4 w-4" />
+                                <Plus className="h-3 w-3 md:h-4 md:w-4" />
                               )}
                             </button>
                           </div>
