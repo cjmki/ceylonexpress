@@ -260,7 +260,7 @@ export default function OrderConfirmationPage() {
               </p>
               <p className="flex items-start gap-2">
                 <span className="font-bold text-ceylon-orange">4.</span>
-                <span>Payment will be collected upon delivery (cash or card).</span>
+                <span>Payment will be collected upon delivery (we prefer swish or bank transfer).</span>
               </p>
             </div>
           </motion.div>

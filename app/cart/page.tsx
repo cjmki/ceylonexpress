@@ -182,6 +182,17 @@ export default function CartPage() {
     if (error) setError('')
   }
 
+  const handleSelectChange = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+    
+    // Clear error when user starts typing
+    if (error) setError('')
+  }
+
   if (cart.length === 0 && !isSubmitting) {
     return (
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
@@ -303,7 +314,7 @@ export default function CartPage() {
                     id="deliveryMethod"
                     name="deliveryMethod"
                     value={formData.deliveryMethod}
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
                     required
                     placeholder="Select delivery method"
                     options={[
@@ -376,7 +387,7 @@ export default function CartPage() {
                     id="deliveryDate"
                     name="deliveryDate"
                     value={formData.deliveryDate}
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
                     required
                     disabled={loadingDates || (hasLimitedItems && availableDates.length === 0)}
                     placeholder="Select a date"
@@ -425,7 +436,7 @@ export default function CartPage() {
                     id="deliveryTime"
                     name="deliveryTime"
                     value={formData.deliveryTime}
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
                     required
                     placeholder="Select a time slot"
                     options={[
@@ -625,7 +636,7 @@ export default function CartPage() {
               <div className="bg-gradient-to-br from-ceylon-yellow/20 to-ceylon-cream/40 p-6 rounded-xl mb-6 border-2 border-ceylon-orange/20 shadow-md">
                 <p className="text-body-md text-ceylon-text leading-relaxed">
                   <span className="font-bold text-ceylon-orange">📝 Note:</span> We will review the availability of your items and contact you 
-                  via email or phone to confirm your order. Payment will be collected upon delivery.
+                  via email or phone to confirm your order. Payment will be collected upon delivery (we prefer swish or bank transfer).
                 </p>
               </div>
               
