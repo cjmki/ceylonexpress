@@ -139,18 +139,6 @@ export default function MenuPage() {
             transition={{ duration: 0.6 }}
             className="mb-12 md:mb-16 text-center"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.6, type: "spring", delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white px-4 md:px-6 py-2 md:py-3 rounded-full border-3 border-ceylon-orange/30 mb-6 md:mb-8 shadow-lg"
-            >
-              <span className="text-lg md:text-xl">🍛</span>
-              <span className="text-ceylon-orange font-bold text-xs md:text-sm uppercase tracking-wider">
-                Our Menu
-              </span>
-            </motion.div>
-
             <h1 
               className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
               style={{ fontFamily: 'Georgia, serif' }}

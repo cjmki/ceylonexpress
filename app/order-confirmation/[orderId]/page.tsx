@@ -8,7 +8,7 @@ import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import { getOrderById } from '../../actions/orders'
-import { formatPrice } from '../../constants/currency'
+import { formatPrice, DELIVERY_FEE } from '../../constants/currency'
 import { formatDateReadable } from '../../constants/dateUtils'
 import { DeliveryMethod, getDeliveryTimeDisplay } from '../../constants/enums'
 
@@ -42,6 +42,17 @@ export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  // Calculate order breakdown
+  const getOrderSubtotal = () => {
+    if (!order) return 0
+    return order.order_items.reduce((sum, item) => sum + item.subtotal, 0)
+  }
+
+  const getOrderDeliveryFee = () => {
+    if (!order) return 0
+    return order.delivery_method === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
+  }
 
   useEffect(() => {
     async function fetchOrder() {
@@ -227,12 +238,40 @@ export default function OrderConfirmationPage() {
                 ))}
               </div>
 
-              <div className="border-t-2 border-ceylon-orange mt-6 pt-4">
+              <div className="border-t mt-6 pt-4 space-y-3">
+                {/* Subtotal */}
                 <div className="flex justify-between items-center">
-                  <span className="text-heading-md text-ceylon-text">Total</span>
-                  <span className="text-heading-xl text-ceylon-orange">
-                    {formatPrice(order.total_amount)}
+                  <span className="text-body-lg text-ceylon-text">Subtotal</span>
+                  <span className="text-body-lg text-ceylon-text font-semibold">
+                    {formatPrice(getOrderSubtotal())}
                   </span>
+                </div>
+
+                {/* Delivery Fee */}
+                {order.delivery_method === DeliveryMethod.DELIVERY ? (
+                  <div className="flex justify-between items-center">
+                    <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
+                    <span className="text-body-lg text-ceylon-text font-semibold">
+                      {formatPrice(getOrderDeliveryFee())}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
+                    <span className="text-body-lg text-green-700 font-semibold">
+                      {formatPrice(0)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Total with separator */}
+                <div className="border-t-2 border-ceylon-orange pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-heading-md text-ceylon-text font-bold">Total</span>
+                    <span className="text-heading-xl text-ceylon-orange font-bold">
+                      {formatPrice(order.total_amount)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
