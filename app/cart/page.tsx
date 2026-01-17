@@ -688,6 +688,8 @@ export default function CartPage() {
         deliveryMethod={formData.deliveryMethod}
         deliveryDate={formData.deliveryDate}
         deliveryTime={formData.deliveryTime}
+        subtotal={getSubtotal()}
+        deliveryFee={getDeliveryFee()}
         totalAmount={getFinalTotal()}
         isSubmitting={isSubmitting}
       />

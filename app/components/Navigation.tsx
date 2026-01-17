@@ -134,6 +134,14 @@ export default function Navigation() {
                 <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
               </a>
 
+              {/* Join Us Link - Desktop only, slightly smaller */}
+              <Link
+                href="/careers"
+                className="hidden md:flex items-center text-ceylon-text hover:text-white hover:bg-ceylon-orange transition-all duration-300 text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-full border-2 border-transparent hover:border-ceylon-orange hover:scale-105"
+              >
+                Join Us
+              </Link>
+
               {/* Hamburger Menu Button - Mobile Only */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

@@ -17,20 +17,20 @@ export enum MenuCategory {
 export const MENU_CATEGORY_DISPLAY: Record<MenuCategory, string> = {
   [MenuCategory.FEATURED]: 'Featured',
   [MenuCategory.MAINS]: 'Mains',
-  [MenuCategory.BITES]: 'Bites',
+  [MenuCategory.SPECIALS]: 'Specials',
   [MenuCategory.SNACKS]: 'Snacks',
   [MenuCategory.DRINKS]: 'Drinks',
-  [MenuCategory.SPECIALS]: 'Specials'
+  [MenuCategory.BITES]: 'Bites'
 }
 
 // Array of all menu categories in display order
 export const MENU_CATEGORIES = [
   MenuCategory.FEATURED,
+  MenuCategory.SPECIALS,
   MenuCategory.MAINS,
-  MenuCategory.BITES,
   MenuCategory.SNACKS,
   MenuCategory.DRINKS,
-  MenuCategory.SPECIALS
+  MenuCategory.BITES,
 ] as const
 
 // ==================== Order Status ====================

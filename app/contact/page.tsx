@@ -89,6 +89,18 @@ export default function ContactPage() {
     setSubmitStatus(null)
 
     try {
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
+      
+      if (!accessKey) {
+        console.error('Web3Forms access key not configured')
+        setSubmitStatus({
+          success: false,
+          message: 'Something went wrong on our end.',
+        })
+        setIsSubmitting(false)
+        return
+      }
+
       // Submit directly to Web3Forms from client-side (bypasses Cloudflare protection)
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -97,7 +109,7 @@ export default function ContactPage() {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+          access_key: accessKey,
           subject: `Catering Inquiry from ${formData.name}`,
           name: formData.name,
           email: formData.email,
@@ -133,16 +145,18 @@ Submitted from Ceylon Express Catering Form`,
         setErrors({})
         setTouched({})
       } else {
+        // Don't show API error messages to users
+        console.error('Form submission failed:', result.message || 'Unknown error')
         setSubmitStatus({
           success: false,
-          message: result.message || 'Failed to send message. Please try again.',
+          message: 'Something went wrong. Please try again or contact us directly at cvljayawardana@gmail.com',
         })
       }
     } catch (error) {
       console.error('Form submission error:', error)
       setSubmitStatus({
         success: false,
-        message: 'An error occurred. Please contact us directly at cvljayawardana@gmail.com',
+        message: 'Something went wrong. Please try again or contact us directly at cvljayawardana@gmail.com',
       })
     } finally {
       setIsSubmitting(false)

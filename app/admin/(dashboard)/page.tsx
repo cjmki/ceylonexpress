@@ -16,7 +16,7 @@ export default async function AdminDashboard() {
   const cancelledOrders = orders.filter(order => order.status === OrderStatus.CANCELLED)
 
   const totalRevenue = orders
-    .filter(order => order.status !== OrderStatus.CANCELLED)
+    .filter(order => order.status === OrderStatus.COMPLETED)
     .reduce((sum, order) => sum + order.total_amount, 0)
 
   return (

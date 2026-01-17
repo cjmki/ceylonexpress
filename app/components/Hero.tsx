@@ -158,7 +158,7 @@ export default function Hero() {
                 className="absolute -top-4 -right-4 bg-ceylon-orange px-4 md:px-6 py-2 md:py-3 rounded-full shadow-xl border-3 border-white hidden sm:block"
               >
                 <p className="text-xs md:text-sm font-bold text-white">
-                  🍛 Home-Cooked
+                  🍛 Cloud  Kitchen
                 </p>
               </motion.div>
             </div>

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, AlertCircle, ShoppingBag } from 'lucide-react'
 import { formatPrice } from '../constants/currency'
+import { DeliveryMethod } from '../constants/enums'
 
 interface OrderConfirmationModalProps {
   isOpen: boolean
@@ -18,6 +19,8 @@ interface OrderConfirmationModalProps {
   deliveryMethod: string
   deliveryDate: string
   deliveryTime: string
+  subtotal: number
+  deliveryFee: number
   totalAmount: number
   isSubmitting: boolean
 }
@@ -31,6 +34,8 @@ export default function OrderConfirmationModal({
   deliveryMethod,
   deliveryDate,
   deliveryTime,
+  subtotal,
+  deliveryFee,
   totalAmount,
   isSubmitting
 }: OrderConfirmationModalProps) {
@@ -94,7 +99,7 @@ export default function OrderConfirmationModal({
                   <strong>Name:</strong> {customerName}
                 </p>
                 <p className="text-body-md text-ceylon-text">
-                  <strong>Delivery Method:</strong> {deliveryMethod === 'DELIVERY' ? 'Delivery' : 'Pickup'}
+                  <strong>Delivery Method:</strong> {deliveryMethod === DeliveryMethod.DELIVERY ? 'Delivery' : 'Pickup'}
                 </p>
                 <p className="text-body-md text-ceylon-text">
                   <strong>Date:</strong> {formatDate(deliveryDate)}
@@ -131,13 +136,43 @@ export default function OrderConfirmationModal({
 
             {/* Total */}
             <div className="bg-ceylon-orange/10 border-3 border-ceylon-orange rounded-2xl p-4">
-              <div className="flex justify-between items-center">
-                <span className="text-heading-md text-ceylon-text font-bold">Total Amount</span>
-                <span className="text-heading-xl text-ceylon-orange font-bold">
-                  {formatPrice(totalAmount)}
-                </span>
+              <div className="space-y-3">
+                {/* Subtotal */}
+                <div className="flex justify-between items-center">
+                  <span className="text-body-lg text-ceylon-text">Subtotal</span>
+                  <span className="text-body-lg text-ceylon-text font-semibold">
+                    {formatPrice(subtotal)}
+                  </span>
+                </div>
+                
+                {/* Delivery Fee */}
+                {deliveryMethod === DeliveryMethod.DELIVERY ? (
+                  <div className="flex justify-between items-center">
+                    <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
+                    <span className="text-body-lg text-ceylon-text font-semibold">
+                      {formatPrice(deliveryFee)}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
+                    <span className="text-body-lg text-green-700 font-semibold">
+                      {formatPrice(0)}
+                    </span>
+                  </div>
+                )}
+                
+                {/* Total with separator */}
+                <div className="pt-3 border-t-2 border-ceylon-orange">
+                  <div className="flex justify-between items-center">
+                    <span className="text-heading-md text-ceylon-text font-bold">Total Amount</span>
+                    <span className="text-heading-xl text-ceylon-orange font-bold">
+                      {formatPrice(totalAmount)}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <p className="text-body-sm text-ceylon-text/70 mt-2">
+              <p className="text-body-sm text-ceylon-text/70 mt-3">
                 Payment will be collected upon delivery
               </p>
             </div>
@@ -164,7 +199,7 @@ export default function OrderConfirmationModal({
               disabled={isSubmitting}
               className="flex-1 px-6 py-3 bg-ceylon-orange hover:bg-ceylon-text text-white font-bold rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
             >
-              {isSubmitting ? 'Placing Order...' : 'Confirm Order'}
+              {isSubmitting ? 'Placing Order...' : 'Submit Order'}
             </button>
           </div>
         </motion.div>

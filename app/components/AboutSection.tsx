@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Flame, Heart, Users, Sparkles } from 'lucide-react'
+import Link from 'next/link'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -117,7 +118,7 @@ export default function AboutSection() {
             {/* Highlighted intro */}
             <div className="bg-ceylon-yellow/20 p-4 md:p-6 rounded-2xl md:rounded-3xl border-3 border-ceylon-yellow/50 border-dashed">
               <p className="text-lg md:text-xl font-bold text-ceylon-orange italic">
-                From our family to yours
+                Bringing back the nostalgia of home
               </p>
             </div>
 
@@ -165,16 +166,25 @@ export default function AboutSection() {
                 
                 {/* Quote text */}
                 <p className="text-lg md:text-xl lg:text-2xl text-ceylon-text font-medium italic mb-6 md:mb-8 leading-relaxed">
-                  Good food brings people together. We make the food that reminds 
-                  you of family, celebrations, and home.
+                  We're a two-person operation with a passion for authentic Sri Lankan cuisine, 
+                  and we're looking to grow!
                 </p>
                 
-                {/* Attribution */}
-                <div className="flex items-center justify-between pt-4 md:pt-6 border-t-2 border-ceylon-orange/20">
-                  <div>
-                    <p className="text-xs md:text-sm text-ceylon-text/60">Stockholm, Sweden</p>
+                {/* Attribution and CTA */}
+                <div className="pt-4 md:pt-6 border-t-2 border-ceylon-orange/20 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs md:text-sm text-ceylon-text/60">Stockholm, Sweden</p>
+                    </div>
+                    <div className="text-3xl md:text-4xl">🇱🇰</div>
                   </div>
-                  <div className="text-3xl md:text-4xl">🇱🇰</div>
+                  <Link 
+                    href="/careers"
+                    className="inline-flex items-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  >
+                    <span>Join Our Team</span>
+                    <span>→</span>
+                  </Link>
                 </div>
 
                 {/* Decorative dots */}
