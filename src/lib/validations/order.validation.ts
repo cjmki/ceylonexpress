@@ -102,7 +102,7 @@ export const getOrderByIdSchema = z.object({
  */
 export const getFilteredOrdersSchema = z.object({
   page: z.number().int().positive().default(1).optional(),
-  pageSize: z.number().int().positive().min(1).max(100).default(10).optional(),
+  pageSize: z.number().int().positive().min(1).max(50000).default(10).optional(),
   status: z
     .nativeEnum(OrderStatus)
     .or(z.literal('all'))
@@ -142,6 +142,10 @@ export const getFilteredOrdersSchema = z.object({
     .default('created_at')
     .optional(),
   sortOrder: sortOrderSchema.optional(),
+  useCompletionDate: z
+    .boolean()
+    .optional()
+    .default(false),
 }).refine(
   data => {
     // If both dates provided, validate dateFrom is before dateTo

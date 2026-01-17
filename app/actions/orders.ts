@@ -468,7 +468,8 @@ export async function getFilteredOrders({
   dateFrom,
   dateTo,
   sortBy = 'created_at',
-  sortOrder = 'desc'
+  sortOrder = 'desc',
+  useCompletionDate = false
 }: {
   page?: number
   pageSize?: number
@@ -479,6 +480,7 @@ export async function getFilteredOrders({
   dateTo?: string
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
+  useCompletionDate?: boolean
 } = {}) {
   'use server'
   
@@ -497,6 +499,7 @@ export async function getFilteredOrders({
       dateTo,
       sortBy,
       sortOrder,
+      useCompletionDate,
     })
     
     if (!validation.success) {
@@ -544,15 +547,23 @@ export async function getFilteredOrders({
       query = query.or(`customer_name.ilike.%${validatedData.searchQuery}%,customer_email.ilike.%${validatedData.searchQuery}%,customer_phone.ilike.%${validatedData.searchQuery}%`)
     }
 
+    // Use updated_at for date filtering when status is completed AND useCompletionDate is true
+    // Also auto-use updated_at if status is completed (regardless of flag)
+    const dateFilterField = (validatedData.status === OrderStatus.COMPLETED || validatedData.useCompletionDate) 
+      ? 'updated_at' 
+      : 'created_at'
+
     if (validatedData.dateFrom) {
-      query = query.gte('created_at', validatedData.dateFrom)
+      // Convert date string to start of day in ISO format
+      const startDate = new Date(validatedData.dateFrom)
+      query = query.gte(dateFilterField, startDate.toISOString())
     }
 
     if (validatedData.dateTo) {
       // Add one day to include the entire end date
       const endDate = new Date(validatedData.dateTo)
       endDate.setDate(endDate.getDate() + 1)
-      query = query.lt('created_at', endDate.toISOString())
+      query = query.lt(dateFilterField, endDate.toISOString())
     }
 
     // Apply sorting

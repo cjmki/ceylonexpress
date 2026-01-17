@@ -5,7 +5,9 @@ import { OrdersTable } from './OrdersTable'
 import { OrdersFilters, OrderFilters } from './OrdersFilters'
 import { Pagination } from './Pagination'
 import { getFilteredOrders } from '../../../actions/orders'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Download } from 'lucide-react'
+import { OrderStatus } from '../../../constants/enums'
+import { generateOrdersExcel } from '@/lib/excelExport'
 
 interface Order {
   id: string
@@ -36,6 +38,7 @@ export function OrdersManager() {
   const [pageSize, setPageSize] = useState(10)
   const [totalCount, setTotalCount] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
+  const [isExporting, setIsExporting] = useState(false)
   const [filters, setFilters] = useState<OrderFilters>({
     status: 'all',
     deliveryMethod: 'all',
@@ -89,13 +92,68 @@ export function OrdersManager() {
     setCurrentPage(1) // Reset to first page when page size changes
   }
 
+  const handleExport = async () => {
+    try {
+      setIsExporting(true)
+
+      // Fetch all completed orders with current filters
+      const result = await getFilteredOrders({
+        page: 1,
+        pageSize: 10000,
+        status: 'completed',
+        deliveryMethod: filters.deliveryMethod !== 'all' ? filters.deliveryMethod : undefined,
+        searchQuery: filters.searchQuery || undefined,
+        dateFrom: filters.dateFrom || undefined,
+        dateTo: filters.dateTo || undefined,
+        sortBy: 'updated_at',
+        sortOrder: 'desc',
+        useCompletionDate: true
+      })
+
+      if (result.success && result.data && result.data.length > 0) {
+        const { filename, totalRevenue, orderCount } = generateOrdersExcel(result.data)
+        alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\nTotal Revenue: $${totalRevenue.toFixed(2)}`)
+      } else {
+        alert('No completed orders found with the current filters.')
+      }
+    } catch (error) {
+      console.error('Export error:', error)
+      alert('Failed to export orders. Please try again.')
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
-      {/* Filters */}
-      <OrdersFilters 
-        onFilterChange={handleFilterChange}
-        totalCount={totalCount}
-      />
+      {/* Filters and Export */}
+      <div className="space-y-4">
+        <OrdersFilters 
+          onFilterChange={handleFilterChange}
+          totalCount={totalCount}
+        />
+        
+        {/* Export Button */}
+        <div className="flex justify-end">
+          <button
+            onClick={handleExport}
+            disabled={isExporting}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            {isExporting ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Exporting...
+              </>
+            ) : (
+              <>
+                <Download className="h-5 w-5" />
+                Export Completed Orders to Excel
+              </>
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Loading State */}
       {loading && (
