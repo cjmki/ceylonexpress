@@ -117,7 +117,7 @@ export default function AboutSection() {
             {/* Highlighted intro */}
             <div className="bg-ceylon-yellow/20 p-4 md:p-6 rounded-2xl md:rounded-3xl border-3 border-ceylon-yellow/50 border-dashed">
               <p className="text-lg md:text-xl font-bold text-ceylon-orange italic">
-                From our family to yours
+                Bringing back the nostalgia of home
               </p>
             </div>
 
