@@ -176,7 +176,7 @@ export default function OrderConfirmationModal({
                 </div>
               </div>
               <p className="text-body-sm text-ceylon-text/70 mt-6">
-                Payment will be collected upon delivery
+                Payment will be collected upon delivery (we prefer swish or bank transfer).
               </p>
             </div>
 
