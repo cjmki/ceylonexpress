@@ -127,7 +127,7 @@ export default function OrderConfirmationPage() {
               <CheckCircle className="h-24 w-24 text-green-600" />
             </div>
             <h1 className="text-display-sm text-ceylon-text mb-4">
-              Order Confirmed!
+              Order Placed!
             </h1>
             <p className="text-body-xl text-ceylon-text/70">
               Thank you for your order, {order.customer_name}!
