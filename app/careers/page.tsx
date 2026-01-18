@@ -273,7 +273,7 @@ Submitted from Ceylon Express Careers Page`,
                 className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
-                Grow With{' '}
+                Join{' '}
                 <span className="text-ceylon-orange relative inline-block">
                   Ceylon Express
                   <motion.div

@@ -32,7 +32,7 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
   if (!isOpen || !item) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-ceylon-text/80 backdrop-blur-md"
@@ -40,7 +40,7 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
       />
       
       {/* Modal */}
-      <div className="relative bg-ceylon-cream rounded-3xl shadow-2xl max-w-2xl w-full my-8 animate-in fade-in zoom-in duration-200 border-4 border-white">
+      <div className="relative bg-ceylon-cream rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 border-4 border-white custom-scrollbar">
         {/* Close Button */}
         <button
           onClick={onClose}

@@ -68,6 +68,7 @@ export default function Navigation() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.6, 0.05, 0.01, 0.9] }}
         className="fixed top-0 left-0 right-0 z-50 bg-ceylon-cream/95 backdrop-blur-md border-b-3 border-ceylon-orange/20 shadow-lg"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="container mx-auto px-4 sm:px-6 py-3 md:py-4">
           <div className="flex justify-between items-center">
@@ -90,7 +91,11 @@ export default function Navigation() {
                 href="/" 
                 className="text-ceylon-text font-bold text-base sm:text-lg tracking-wider flex items-center gap-2"
               >
-                <span className="text-lg sm:text-xl">🍛</span>
+                <img 
+                  src="/favicon.svg" 
+                  alt="Ceylon Express Logo" 
+                  className="h-8 w-8 sm:h-9 sm:w-9 object-contain"
+                />
                 <span>Ceylon Express</span>
               </Link>
             </div>
@@ -212,18 +217,18 @@ export default function Navigation() {
                 damping: 30, 
                 stiffness: 300 
               }}
-              className="absolute right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white/98 backdrop-blur-xl shadow-2xl overflow-y-auto border-l-4 border-ceylon-orange"
+              className="absolute right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white/98 backdrop-blur-xl shadow-2xl overflow-y-auto border-l-4 border-ceylon-orange custom-scrollbar-thin"
             >
               <div className="flex flex-col h-full">
-                {/* Menu Header - Spacer for fixed nav */}
-                <div className="h-16" />
+                {/* Menu Header - Spacer for fixed nav with safe area support */}
+                <div className="h-20 sm:h-24" style={{ paddingTop: 'env(safe-area-inset-top)' }} />
 
                 {/* Navigation Links */}
                 <motion.nav
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  className="flex-1 px-6 py-8"
+                  className="flex-1 px-6 py-6"
                 >
                   <div className="space-y-3">
                     {menuItems.map((item, index) => (
@@ -240,7 +245,7 @@ export default function Navigation() {
                     ))}
                   </div>
 
-                  {/* Social Links in Mobile Menu */}
+                  {/* Social Links and Join Us in Mobile Menu */}
                   <motion.div 
                     variants={itemVariants}
                     className="mt-10 pt-8 border-t-2 border-dashed border-ceylon-orange/30"
@@ -269,6 +274,13 @@ export default function Navigation() {
                         <Facebook className="h-5 w-5" />
                         <span className="text-sm font-bold uppercase">Facebook</span>
                       </a>
+                      <Link
+                        href="/careers"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-6 py-4 bg-ceylon-orange/10 hover:bg-ceylon-orange hover:text-white text-ceylon-text rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-ceylon-orange/30"
+                      >
+                        <span className="text-sm font-bold uppercase">Join Us</span>
+                      </Link>
                     </div>
                   </motion.div>
                 </motion.nav>

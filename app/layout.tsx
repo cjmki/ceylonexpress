@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   keywords: ['Sri Lankan food', 'Ceylon cuisine', 'food truck', 'catering', 'authentic Sri Lankan', 'Ceylon Express'],
   authors: [{ name: 'Ceylon Express' }],
   manifest: '/site.webmanifest',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: 'cover',
+  },
   icons: {
     icon: [
       { url: '/logo_transparent.png', type: 'image/png' },

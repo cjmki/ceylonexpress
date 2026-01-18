@@ -501,39 +501,39 @@ export default function CartPage() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                          className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg flex-shrink-0"
                           aria-label="Decrease quantity"
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus className="h-3.5 w-3.5" />
                         </button>
                         
-                        <span className="text-heading-sm text-ceylon-text min-w-[2.5rem] text-center">
+                        <span className="text-body-lg text-ceylon-text min-w-[2rem] text-center font-bold">
                           {item.quantity}
                         </span>
                         
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-9 h-9 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
+                          className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg flex-shrink-0"
                           aria-label="Increase quantity"
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
                       
-                      <div className="flex items-center gap-4">
-                        <p className="text-heading-sm text-ceylon-text">
+                      <div className="flex items-center gap-3">
+                        <p className="text-body-lg font-bold text-ceylon-text">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
+                          className="text-red-600 hover:text-red-800 transition-colors flex-shrink-0"
                           aria-label="Remove item"
                         >
-                          <Trash2 className="h-5 w-5" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
@@ -630,10 +630,11 @@ export default function CartPage() {
                       {formatPrice(getFinalTotal())}
                     </span>
                   </div>
+                  <p className="text-xs italic text-gray-500 mt-1 text-right">Inc. of 12% VAT</p>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-ceylon-yellow/20 to-ceylon-cream/40 p-6 rounded-xl mb-6 border-2 border-ceylon-orange/20 shadow-md">
+              <div className="bg-gradient-to-br from-ceylon-yellow/20 to-ceylon-cream/40 p-6 rounded-xl mb-6 mt-6 border-2 border-ceylon-orange/20 shadow-md">
                 <p className="text-body-md text-ceylon-text leading-relaxed">
                   <span className="font-bold text-ceylon-orange">📝 Note:</span> We will review the availability of your items and contact you 
                   via email or phone to confirm your order. Payment will be collected upon delivery (we prefer swish or bank transfer).

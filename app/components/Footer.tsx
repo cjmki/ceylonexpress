@@ -23,7 +23,11 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex flex-col gap-3 mb-4">
               <div className="flex items-center gap-2">
-                <span className="text-3xl">🍛</span>
+                <img 
+                  src="/favicon.svg" 
+                  alt="Ceylon Express Logo" 
+                  className="h-7 w-7 md:h-8 md:w-8 object-contain"
+                />
                 <h3 
                   className="text-2xl md:text-3xl font-bold text-ceylon-yellow"
                   style={{ fontFamily: 'Georgia, serif' }}
@@ -67,6 +71,7 @@ export default function Footer() {
                 { href: '#location', label: 'Location' },
                 { href: '/menu', label: 'Menu' },
                 { href: '/contact', label: 'Contact' },
+                { href: '/careers', label: 'Join Us' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -122,16 +127,6 @@ export default function Footer() {
           <p className="text-white/60 text-xs md:text-sm">
             © {new Date().getFullYear()} Ceylon Express. All rights reserved.
           </p>
-          
-          <div className="flex items-center gap-6">
-            <p className="text-white/60 text-xs md:text-sm flex items-center gap-2">
-              Made with <Heart className="h-4 w-4 text-ceylon-orange fill-current animate-pulse" /> in Stockholm
-            </p>
-            <div className="flex items-center gap-2 bg-ceylon-orange/20 px-3 py-1.5 rounded-full border border-ceylon-orange/30">
-              <span className="text-xs font-bold text-ceylon-yellow">🇱🇰</span>
-              <span className="text-xs text-white/80">Sri Lanka</span>
-            </div>
-          </div>
         </div>
       </div>
     </footer>

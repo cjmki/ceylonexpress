@@ -235,7 +235,7 @@ export function MenuItemsTable({ items, onUpdate }: MenuItemsTableProps) {
 
       {/* View Details Modal */}
       {showViewModal && selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => {
@@ -244,7 +244,7 @@ export function MenuItemsTable({ items, onUpdate }: MenuItemsTableProps) {
             }}
           />
           
-          <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
             {selectedItem.image_url && (
               <div className="w-full h-64 bg-gray-100 overflow-hidden rounded-t-2xl">
                 <img 

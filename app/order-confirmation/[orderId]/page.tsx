@@ -272,6 +272,7 @@ export default function OrderConfirmationPage() {
                       {formatPrice(order.total_amount)}
                     </span>
                   </div>
+                  <p className="text-xs italic text-gray-500 mt-1 text-right">Inc. of 12% VAT</p>
                 </div>
               </div>
             </div>
