@@ -172,8 +172,19 @@ export default function MenuPage() {
               </span>
             </h1>
 
-            <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 max-w-2xl mx-auto">
+            <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 max-w-3xl mx-auto">
               Traditional recipes made fresh with love and authentic spices
+            </p>
+            
+            <p className="text-sm md:text-base text-ceylon-text/60 max-w-3xl mx-auto mt-3">
+              <span className="mr-1">🎉</span>
+              Planning a larger event or special occasion?{' '}
+              <Link 
+                href="/contact" 
+                className="text-ceylon-orange font-semibold hover:text-ceylon-text underline decoration-ceylon-orange/30 hover:decoration-ceylon-orange transition-all"
+              >
+                Contact us for personalized quotes
+              </Link>
             </p>
           </motion.div>
 
