@@ -3,6 +3,7 @@ export const CURRENCY = 'SEK'
 export const CURRENCY_SYMBOL = 'kr' // Optional: Swedish Krona symbol
 export const DELIVERY_FEE = 50 // Delivery fee in SEK
 export const FREE_DELIVERY_THRESHOLD = 500 // Free delivery for orders above this amount in SEK
+export const ENABLE_DELIVERY_FEE = false // Master switch to enable/disable delivery fees system-wide
 
 /**
  * Format a price with the configured currency

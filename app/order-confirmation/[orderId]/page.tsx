@@ -8,7 +8,7 @@ import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import { getOrderById } from '../../actions/orders'
-import { formatPrice, DELIVERY_FEE } from '../../constants/currency'
+import { formatPrice, DELIVERY_FEE, ENABLE_DELIVERY_FEE } from '../../constants/currency'
 import { formatDateReadable } from '../../constants/dateUtils'
 import { DeliveryMethod, getDeliveryTimeDisplay } from '../../constants/enums'
 
@@ -51,6 +51,7 @@ export default function OrderConfirmationPage() {
 
   const getOrderDeliveryFee = () => {
     if (!order) return 0
+    if (!ENABLE_DELIVERY_FEE) return 0
     return order.delivery_method === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
   }
 
@@ -248,21 +249,23 @@ export default function OrderConfirmationPage() {
                 </div>
 
                 {/* Delivery Fee */}
-                {order.delivery_method === DeliveryMethod.DELIVERY ? (
-                  <div className="flex justify-between items-center">
-                    <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
-                    <span className="text-body-lg text-ceylon-text font-semibold">
-                      {formatPrice(getOrderDeliveryFee())}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex justify-between items-center">
-                    <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
-                    <span className="text-body-lg text-green-700 font-semibold">
-                      {formatPrice(0)}
-                    </span>
-                  </div>
-                )}
+                {ENABLE_DELIVERY_FEE ? (
+                  order.delivery_method === DeliveryMethod.DELIVERY ? (
+                    <div className="flex justify-between items-center">
+                      <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
+                      <span className="text-body-lg text-ceylon-text font-semibold">
+                        {formatPrice(getOrderDeliveryFee())}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between items-center">
+                      <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
+                      <span className="text-body-lg text-green-700 font-semibold">
+                        {formatPrice(0)}
+                      </span>
+                    </div>
+                  )
+                ) : null}
 
                 {/* Total with separator */}
                 <div className="border-t-2 border-ceylon-orange pt-4">

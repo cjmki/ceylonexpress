@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, Phone, Calendar, Clock, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Send, Mail, Phone, Calendar, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import type { ContactFormData } from '@/lib/validations/contact.validation'
 import Navigation from '@/app/components/Navigation'
 import Footer from '@/app/components/Footer'
@@ -11,7 +11,6 @@ import { InquiryCart } from './components/InquiryCart'
 import { InquiryItemModal } from './components/InquiryItemModal'
 import { getMenuItems } from '../actions/orders'
 import { MENU_CATEGORIES, getMenuCategoryDisplay } from '../constants/enums'
-import { formatPrice, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from '../constants/currency'
 
 interface MenuItem {
   id: string
@@ -45,7 +44,6 @@ export default function ContactPage() {
     email: '',
     phone: '',
     eventDate: '',
-    eventTime: '',
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -217,37 +215,13 @@ export default function ContactPage() {
         return
       }
 
-      // Build items inquiry section with pricing
+      // Build items inquiry section
       let itemsSection = ''
       if (inquiryItems.length > 0) {
-        const totalCost = inquiryItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-        const isFreeDelivery = totalCost >= FREE_DELIVERY_THRESHOLD
-        const finalTotal = totalCost + (isFreeDelivery ? 0 : DELIVERY_FEE)
-        
         itemsSection = `
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ITEMS INQUIRY DETAILS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-${inquiryItems.map(item => 
-  `${item.name}
-  Quantity: ${item.quantity}
-  Price per unit: ${formatPrice(item.price)}
-  Subtotal: ${formatPrice(item.price * item.quantity)}`
-).join('\n\n')}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PRICING SUMMARY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Subtotal: ${formatPrice(totalCost)}
-Delivery Fee: ${isFreeDelivery ? 'FREE (Order over ' + formatPrice(FREE_DELIVERY_THRESHOLD) + ')' : formatPrice(DELIVERY_FEE)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ESTIMATED TOTAL: ${formatPrice(finalTotal)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Note: This is an estimated total.
+Items to Inquire About:
+${inquiryItems.map(item => `- ${item.name} (Quantity: ${item.quantity})`).join('\n')}
 `
       }
 
@@ -265,7 +239,6 @@ Note: This is an estimated total.
           email: formData.email,
           message: `Phone: ${formData.phone || 'Not provided'}
 Event Date: ${formData.eventDate || 'Not provided'}
-Event Time: ${formData.eventTime || 'Not provided'}
 ${itemsSection}
 Message:
 ${formData.message}
@@ -289,7 +262,6 @@ Submitted from Ceylon Express Catering Form`,
           email: '',
           phone: '',
           eventDate: '',
-          eventTime: '',
           message: '',
         })
         setInquiryItems([])
@@ -580,40 +552,21 @@ Submitted from Ceylon Express Catering Form`,
                   )}
                 </div>
 
-                {/* Event Date and Time Row */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="eventDate" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
-                      Event Date
-                    </label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-ceylon-orange/50" />
-                      <input
-                        type="date"
-                        id="eventDate"
-                        name="eventDate"
-                        value={formData.eventDate}
-                        onChange={handleChange}
-                        className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-ceylon-orange/30 focus:border-ceylon-orange focus:outline-none focus:ring-2 focus:ring-ceylon-orange/20 transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="eventTime" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
-                      Event Time
-                    </label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-ceylon-orange/50" />
-                      <input
-                        type="time"
-                        id="eventTime"
-                        name="eventTime"
-                        value={formData.eventTime}
-                        onChange={handleChange}
-                        className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-ceylon-orange/30 focus:border-ceylon-orange focus:outline-none focus:ring-2 focus:ring-ceylon-orange/20 transition-all"
-                      />
-                    </div>
+                {/* Event Date */}
+                <div>
+                  <label htmlFor="eventDate" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
+                    Event Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-ceylon-orange/50 pointer-events-none z-10" />
+                    <input
+                      type="date"
+                      id="eventDate"
+                      name="eventDate"
+                      value={formData.eventDate}
+                      onChange={handleChange}
+                      className="w-full pl-9 md:pl-11 pr-3 md:pr-4 py-2.5 md:py-3 rounded-xl border-2 border-ceylon-orange/30 focus:border-ceylon-orange focus:outline-none focus:ring-2 focus:ring-ceylon-orange/20 transition-all text-sm md:text-base"
+                    />
                   </div>
                 </div>
 

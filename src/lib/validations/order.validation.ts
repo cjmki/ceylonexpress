@@ -22,7 +22,7 @@ import {
   DeliveryMethod,
   DeliveryTime,
 } from '../../../app/constants/enums'
-import { DELIVERY_FEE } from '../../../app/constants/currency'
+import { DELIVERY_FEE, ENABLE_DELIVERY_FEE } from '../../../app/constants/currency'
 
 /**
  * Order item validation (cart item)
@@ -71,8 +71,8 @@ export const createOrderSchema = z.object({
       0
     )
     
-    // Add delivery fee if delivery method is 'delivery'
-    const deliveryFee = data.deliveryMethod === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
+    // Add delivery fee if delivery fee is enabled and delivery method is 'delivery'
+    const deliveryFee = ENABLE_DELIVERY_FEE && data.deliveryMethod === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
     const calculatedTotal = itemsSubtotal + deliveryFee
     
     // Allow small floating point differences (within 1 cent)
