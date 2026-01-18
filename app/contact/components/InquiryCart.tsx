@@ -1,7 +1,7 @@
 'use client'
 
 import { Minus, Plus, ShoppingBag, X } from 'lucide-react'
-import { formatPrice, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from '@/app/constants/currency'
+import { formatPrice, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD, ENABLE_DELIVERY_FEE } from '@/app/constants/currency'
 
 interface InquiryItem {
   id: string
@@ -26,6 +26,7 @@ export function InquiryCart({ items, onUpdateQuantity, onRemoveItem }: InquiryCa
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalCost = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const isFreeDelivery = totalCost >= FREE_DELIVERY_THRESHOLD
+  const deliveryFee = ENABLE_DELIVERY_FEE ? (isFreeDelivery ? 0 : DELIVERY_FEE) : 0
 
   return (
     <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border-3 border-ceylon-orange/30 shadow-lg mb-6">
@@ -111,27 +112,31 @@ export function InquiryCart({ items, onUpdateQuantity, onRemoveItem }: InquiryCa
           <span className="text-base font-bold text-ceylon-text">{formatPrice(totalCost)}</span>
         </div>
         
-        <div className="flex justify-between items-center">
-          <span className="text-sm font-semibold text-ceylon-text">Delivery Fee:</span>
-          {isFreeDelivery ? (
-            <span className="text-base font-bold text-green-600">FREE 🎉</span>
-          ) : (
-            <span className="text-base font-bold text-ceylon-text">{formatPrice(DELIVERY_FEE)}</span>
-          )}
-        </div>
+        {ENABLE_DELIVERY_FEE && (
+          <>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-semibold text-ceylon-text">Delivery Fee:</span>
+              {isFreeDelivery ? (
+                <span className="text-base font-bold text-green-600">FREE 🎉</span>
+              ) : (
+                <span className="text-base font-bold text-ceylon-text">{formatPrice(DELIVERY_FEE)}</span>
+              )}
+            </div>
 
-        {!isFreeDelivery && (
-          <div className="bg-ceylon-yellow/20 border-2 border-ceylon-yellow/40 rounded-lg p-2">
-            <p className="text-xs text-ceylon-text/80 text-center">
-              🚚 Add {formatPrice(FREE_DELIVERY_THRESHOLD - totalCost)} more for free delivery!
-            </p>
-          </div>
+            {!isFreeDelivery && (
+              <div className="bg-ceylon-yellow/20 border-2 border-ceylon-yellow/40 rounded-lg p-2">
+                <p className="text-xs text-ceylon-text/80 text-center">
+                  🚚 Add {formatPrice(FREE_DELIVERY_THRESHOLD - totalCost)} more for free delivery!
+                </p>
+              </div>
+            )}
+          </>
         )}
 
         <div className="flex justify-between items-center pt-2 border-t-2 border-ceylon-orange/20">
           <span className="text-base font-bold text-ceylon-text">Estimated Total:</span>
           <span className="text-xl font-bold text-ceylon-orange">
-            {formatPrice(totalCost + (isFreeDelivery ? 0 : DELIVERY_FEE))}
+            {formatPrice(totalCost + deliveryFee)}
           </span>
         </div>
 

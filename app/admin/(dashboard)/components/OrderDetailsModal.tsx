@@ -1,7 +1,7 @@
 'use client'
 
 import { X, User, Mail, Phone, MapPin, Calendar, Clock, Package } from 'lucide-react'
-import { formatPrice, DELIVERY_FEE } from '../../../constants/currency'
+import { formatPrice, DELIVERY_FEE, ENABLE_DELIVERY_FEE } from '../../../constants/currency'
 import { formatDateReadable } from '../../../constants/dateUtils'
 import { OrderStatus, DeliveryMethod, getOrderStatusDisplay, getDeliveryMethodDisplay, getDeliveryTimeDisplay } from '../../../constants/enums'
 
@@ -188,18 +188,27 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
               </div>
               
               {/* Delivery Fee */}
-              {order.delivery_method === DeliveryMethod.DELIVERY ? (
-                <div className="flex justify-between items-center">
-                  <span className="text-base font-semibold text-gray-700">Delivery Fee</span>
-                  <span className="text-base font-semibold text-gray-900">
-                    {formatPrice(DELIVERY_FEE)}
-                  </span>
-                </div>
+              {ENABLE_DELIVERY_FEE ? (
+                order.delivery_method === DeliveryMethod.DELIVERY ? (
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-semibold text-gray-700">Delivery Fee</span>
+                    <span className="text-base font-semibold text-gray-900">
+                      {formatPrice(DELIVERY_FEE)}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <span className="text-base font-semibold text-green-700">Pickup (No delivery fee)</span>
+                    <span className="text-base font-semibold text-green-700">
+                      {formatPrice(0)}
+                    </span>
+                  </div>
+                )
               ) : (
                 <div className="flex justify-between items-center">
-                  <span className="text-base font-semibold text-green-700">Pickup (No delivery fee)</span>
-                  <span className="text-base font-semibold text-green-700">
-                    {formatPrice(0)}
+                  <span className="text-base font-semibold text-gray-700">Delivery Fee</span>
+                  <span className="text-base font-semibold text-gray-700">
+                    Disabled
                   </span>
                 </div>
               )}

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, AlertCircle, ShoppingBag } from 'lucide-react'
-import { formatPrice } from '../constants/currency'
+import { formatPrice, ENABLE_DELIVERY_FEE } from '../constants/currency'
 import { DeliveryMethod } from '../constants/enums'
 
 interface OrderConfirmationModalProps {
@@ -146,20 +146,22 @@ export default function OrderConfirmationModal({
                 </div>
                 
                 {/* Delivery Fee */}
-                {deliveryMethod === DeliveryMethod.DELIVERY ? (
-                  <div className="flex justify-between items-center">
-                    <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
-                    <span className="text-body-lg text-ceylon-text font-semibold">
-                      {formatPrice(deliveryFee)}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex justify-between items-center">
-                    <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
-                    <span className="text-body-lg text-green-700 font-semibold">
-                      {formatPrice(0)}
-                    </span>
-                  </div>
+                {ENABLE_DELIVERY_FEE && (
+                  deliveryMethod === DeliveryMethod.DELIVERY ? (
+                    <div className="flex justify-between items-center">
+                      <span className="text-body-lg text-ceylon-text">Delivery Fee</span>
+                      <span className="text-body-lg text-ceylon-text font-semibold">
+                        {formatPrice(deliveryFee)}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between items-center">
+                      <span className="text-body-lg text-green-700">Pickup (No delivery fee)</span>
+                      <span className="text-body-lg text-green-700 font-semibold">
+                        {formatPrice(0)}
+                      </span>
+                    </div>
+                  )
                 )}
                 
                 {/* Total with separator */}

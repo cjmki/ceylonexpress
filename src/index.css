@@ -174,4 +174,23 @@
     .custom-scrollbar-thin::-webkit-scrollbar-thumb:hover {
       background: #D35400;
     }
+
+    /* Date input mobile fixes */
+    input[type="date"] {
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      min-width: 0; /* Prevent overflow on mobile */
+    }
+
+    /* Ensure date picker button doesn't overflow */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Firefox date input */
+    input[type="date"]::-moz-calendar-picker-indicator {
+      cursor: pointer;
+    }
   }

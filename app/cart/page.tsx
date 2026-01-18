@@ -11,7 +11,7 @@ import { formatDateForDisplay } from '@/lib/utils'
 import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import OrderConfirmationModal from '../components/OrderConfirmationModal'
-import { formatPrice, CURRENCY, DELIVERY_FEE } from '../constants/currency'
+import { formatPrice, CURRENCY, DELIVERY_FEE, ENABLE_DELIVERY_FEE } from '../constants/currency'
 import { DeliveryMethod, DeliveryTime, DELIVERY_TIMES, getDeliveryTimeDisplay } from '../constants/enums'
 import CustomSelect from '../components/CustomSelect'
 
@@ -42,6 +42,7 @@ export default function CartPage() {
   // Calculate totals
   const getSubtotal = () => getTotal()
   const getDeliveryFee = () => {
+    if (!ENABLE_DELIVERY_FEE) return 0
     return formData.deliveryMethod === DeliveryMethod.DELIVERY ? DELIVERY_FEE : 0
   }
   const getFinalTotal = () => {
