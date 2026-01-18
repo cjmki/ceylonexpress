@@ -45,7 +45,7 @@ export default function Footer() {
             
             <p className="text-sm md:text-base text-white/80 leading-relaxed mb-6 max-w-md">
               Bringing authentic island flavors to your neighborhood through 
-              our food truck and catering services. Experience the warmth of home-cooked Sri Lankan cuisine.
+              our cloud kitchen and catering services. Experience the warmth of home-cooked Sri Lankan cuisine.
             </p>
 
             {/* Contact Info */}
