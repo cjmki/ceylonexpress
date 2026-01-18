@@ -14,7 +14,7 @@ type SortField = 'created_at' | 'customer_name' | 'delivery_date' | 'total_amoun
 type SortDirection = 'asc' | 'desc'
 
 interface Order {
-  id: string
+  id: number
   customer_name: string
   customer_email: string
   customer_phone: string
@@ -37,17 +37,17 @@ interface Order {
 
 export function OrdersTable({ orders }: { orders: Order[] }) {
   const router = useRouter()
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState<number | null>(null)
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null)
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean
-    orderId: string
+    orderId: number
     newStatus: string
     title: string
     message: string
   }>({
     isOpen: false,
-    orderId: '',
+    orderId: 0,
     newStatus: '',
     title: '',
     message: ''
@@ -312,7 +312,7 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
             <tr key={order.id} className="hover:bg-gray-50 transition-colors">
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-mono text-gray-900">
-                  #{order.id.slice(0, 8)}
+                  #{order.id}
                 </div>
                 <div className="text-xs text-gray-500">
                   {formatDate(order.created_at)}

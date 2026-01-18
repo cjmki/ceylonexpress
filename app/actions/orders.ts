@@ -393,8 +393,8 @@ export async function deleteMenuItem(id: string) {
 }
 
 // Get a single order with its items (for admin or order confirmation)
-export async function getOrderById(orderId: string) {
-  // Validate input
+export async function getOrderById(orderId: string | number) {
+  // Validate input - handles both string (from URL) and number types
   const validation = safeValidate(getOrderByIdSchema, { orderId })
   
   if (!validation.success) {
@@ -612,14 +612,14 @@ export async function getFilteredOrders({
 }
 
 // Update order status (for admin)
-export async function updateOrderStatus(orderId: string, status: string) {
+export async function updateOrderStatus(orderId: string | number, status: string) {
   'use server'
   
   try {
     // Require authentication - admin only
     await requireAuth()
     
-    // Validate input
+    // Validate input - handles both string and number types
     const validation = safeValidate(updateOrderStatusSchema, { orderId, status })
     
     if (!validation.success) {

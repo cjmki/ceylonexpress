@@ -2,7 +2,7 @@ import * as XLSX from 'xlsx'
 import { formatPrice } from '@/app/constants/currency'
 
 interface ExportOrder {
-  id: string
+  id: number
   customer_name: string
   total_amount: number
   created_at: string
@@ -46,7 +46,7 @@ export function generateOrdersExcel(orders: ExportOrder[]) {
       // First item with full order details
       const firstItem = order.order_items[0]
       orderRows.push([
-        order.id.substring(0, 8),
+        order.id,
         orderDate,
         completedDate,
         order.customer_name,
@@ -72,7 +72,7 @@ export function generateOrdersExcel(orders: ExportOrder[]) {
     } else {
       // Order with no items
       orderRows.push([
-        order.id.substring(0, 8),
+        order.id,
         orderDate,
         completedDate,
         order.customer_name,

@@ -9,6 +9,25 @@ import { z } from 'zod'
 export const uuidSchema = z.string().uuid('Invalid ID format')
 
 /**
+ * Numeric ID validation (for auto-incrementing integer IDs)
+ */
+export const numericIdSchema = z
+  .number()
+  .int('ID must be an integer')
+  .positive('ID must be positive')
+  .max(2147483647, 'ID exceeds maximum value')
+
+/**
+ * String numeric ID validation (for IDs passed as strings, e.g., from URL params)
+ */
+export const stringNumericIdSchema = z
+  .string()
+  .trim()
+  .regex(/^\d+$/, 'ID must contain only digits')
+  .transform(val => parseInt(val, 10))
+  .pipe(numericIdSchema)
+
+/**
  * Email validation with normalization
  */
 export const emailSchema = z
