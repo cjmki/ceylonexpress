@@ -25,6 +25,7 @@ interface MenuItem {
   pre_orders_only?: boolean
   next_available_date?: string
   available_slots?: number
+  minimum_order_quantity?: number
 }
 
 export default function MenuPage() {
@@ -248,6 +249,15 @@ export default function MenuPage() {
                           <p className="text-[10px] md:text-xs text-ceylon-text/60 mb-2 line-clamp-2 leading-relaxed">
                             {item.description}
                           </p>
+
+                          {/* MOQ Badge */}
+                          {item.minimum_order_quantity && item.minimum_order_quantity > 1 && (
+                            <div className="mb-2">
+                              <div className="text-[10px] md:text-xs font-bold bg-ceylon-orange/10 px-2 py-1 rounded-lg">
+                                <span className="text-ceylon-orange">Minimum order - {item.minimum_order_quantity}</span>
+                              </div>
+                            </div>
+                          )}
 
                           {/* Availability Badge */}
                           {item.has_limited_availability && (

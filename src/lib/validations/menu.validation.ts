@@ -46,6 +46,7 @@ export const createMenuItemSchema = z.object({
   includes: menuItemIncludesSchema,
   has_limited_availability: z.boolean().default(false).optional(),
   pre_orders_only: z.boolean().default(false).optional(),
+  minimum_order_quantity: z.number().int().min(1, 'Minimum order quantity must be at least 1').default(1).optional(),
 })
 
 /**
@@ -98,6 +99,7 @@ export const updateMenuItemSchema = z.object({
       }),
     has_limited_availability: z.boolean().optional(),
     pre_orders_only: z.boolean().optional(),
+    minimum_order_quantity: z.number().int().min(1, 'Minimum order quantity must be at least 1').optional(),
   }).refine(
     data => Object.keys(data).filter(key => data[key as keyof typeof data] !== undefined).length > 0,
     'At least one field must be provided for update'

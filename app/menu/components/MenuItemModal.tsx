@@ -18,6 +18,7 @@ interface MenuItem {
   pre_orders_only?: boolean
   next_available_date?: string
   available_slots?: number
+  minimum_order_quantity?: number
 }
 
 interface MenuItemModalProps {
@@ -82,6 +83,21 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
           <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 mb-6 leading-relaxed">
             {item.description}
           </p>
+
+          {/* MOQ Info */}
+          {item.minimum_order_quantity && item.minimum_order_quantity > 1 && (
+            <div className="mb-6 p-4 md:p-5 bg-ceylon-orange/10 border-3 border-ceylon-orange/30 rounded-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl md:text-2xl">📦</span>
+                <h3 className="text-xs md:text-sm font-bold text-ceylon-text uppercase tracking-wider">
+                  Minimum Order Quantity
+                </h3>
+              </div>
+              <p className="text-ceylon-orange font-bold text-lg">
+                Minimum order - {item.minimum_order_quantity}
+              </p>
+            </div>
+          )}
 
           {/* Availability Info */}
           {item.has_limited_availability && (
