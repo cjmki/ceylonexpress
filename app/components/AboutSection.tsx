@@ -99,10 +99,6 @@ export default function AboutSection() {
               />
             </span>
           </h2>
-
-          <p className="text-base md:text-lg text-ceylon-text/60 max-w-2xl mx-auto">
-            Real Sri Lankan food made by Sri Lankans, for Sri Lankans in Stockholm
-          </p>
         </motion.div>
 
         {/* Main content grid - Editorial Layout */}
