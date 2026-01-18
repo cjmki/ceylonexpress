@@ -198,7 +198,7 @@ export default function CartPage() {
       <div className="min-h-screen bg-ceylon-cream flex flex-col">
         <Navigation />
         
-        <div className="flex-1 flex items-center justify-center px-6 pt-32">
+        <div className="flex-1 flex items-center justify-center px-6 pt-32 pb-16 md:pb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
