@@ -114,7 +114,7 @@ export default function MenuPage() {
     return acc
   }, {} as Record<string, MenuItem[]>)
 
-  // Sort items within each category: available items first, sold out last
+  // Sort items within each category: available items first, sold out last, then alphabetically by name
   Object.keys(groupedItems).forEach(category => {
     groupedItems[category].sort((a, b) => {
       // If item has limited availability, check slots
@@ -125,8 +125,8 @@ export default function MenuPage() {
       if (aIsSoldOut && !bIsSoldOut) return 1
       if (!aIsSoldOut && bIsSoldOut) return -1
       
-      // If both have same availability status, maintain original order
-      return 0
+      // If both have same availability status, sort alphabetically by name
+      return a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
     })
   })
 

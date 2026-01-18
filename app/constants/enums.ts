@@ -11,6 +11,7 @@ export enum MenuCategory {
   BITES = 'bites',
   SNACKS = 'snacks',
   DRINKS = 'drinks',
+  DESSERTS = 'desserts',
   SPECIALS = 'specials'
 }
 
@@ -20,6 +21,7 @@ export const MENU_CATEGORY_DISPLAY: Record<MenuCategory, string> = {
   [MenuCategory.SPECIALS]: 'Specials',
   [MenuCategory.SNACKS]: 'Snacks',
   [MenuCategory.DRINKS]: 'Drinks',
+  [MenuCategory.DESSERTS]: 'Desserts',
   [MenuCategory.BITES]: 'Bites'
 }
 
@@ -30,6 +32,7 @@ export const MENU_CATEGORIES = [
   MenuCategory.MAINS,
   MenuCategory.SNACKS,
   MenuCategory.DRINKS,
+  MenuCategory.DESSERTS,
   MenuCategory.BITES,
 ] as const
 
