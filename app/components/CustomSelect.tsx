@@ -163,7 +163,7 @@ export default function CustomSelect({
           className="absolute z-50 w-full mt-2 bg-white border-2 border-ceylon-orange/40 rounded-xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
           role="listbox"
         >
-          <div className="max-h-64 overflow-y-auto py-2">
+          <div className="max-h-64 overflow-y-auto py-2 custom-scrollbar-thin">
             {options.map((option, index) => {
               const isSelected = option.value === value
               const isHighlighted = index === highlightedIndex

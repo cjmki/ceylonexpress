@@ -113,6 +113,22 @@ export default function MenuPage() {
     return acc
   }, {} as Record<string, MenuItem[]>)
 
+  // Sort items within each category: available items first, sold out last
+  Object.keys(groupedItems).forEach(category => {
+    groupedItems[category].sort((a, b) => {
+      // If item has limited availability, check slots
+      const aIsSoldOut = a.has_limited_availability && a.available_slots === 0
+      const bIsSoldOut = b.has_limited_availability && b.available_slots === 0
+      
+      // Available items (not sold out) come first
+      if (aIsSoldOut && !bIsSoldOut) return 1
+      if (!aIsSoldOut && bIsSoldOut) return -1
+      
+      // If both have same availability status, maintain original order
+      return 0
+    })
+  })
+
   // Sort categories by defined order
   const sortedCategories = Object.entries(groupedItems).sort(([categoryA], [categoryB]) => {
     const indexA = MENU_CATEGORIES.indexOf(categoryA as any)

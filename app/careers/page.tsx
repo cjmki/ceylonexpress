@@ -28,7 +28,6 @@ const jobOpenings = [
       'Mainly from Upplands Bro to Stockholm area',
       '3-4 hours per day',
       'Mostly weekend work',
-      'Flexible schedule',
       'Great for students or part-time workers'
     ]
   },
@@ -41,13 +40,14 @@ const jobOpenings = [
     iconColor: 'text-ceylon-blue',
     iconBg: 'bg-ceylon-blue/10',
     borderColor: 'border-ceylon-blue/30',
-    description: 'Looking for a passionate female cook who can help us with cooking, mainly on Friday nights and Saturday mornings.',
+    description: 'We\'re seeking a passionate female cook for a part-time role with long-term potential. This position offers the opportunity to grow with us and transition into a permanent role as we expand.',
     details: [
-      'Work at our location',
-      'Mainly Friday nights and Saturday mornings (may change in the future)',
-      'Passionate about food and cooking',
       'If you can cook an awesome watalappan or butter cake, you\'re the person we\'re looking for!',
-      'We use quality ingredients - no compromising on quality',
+      'Part-time position with long-term opportunity',
+      'Work at our location (Upplands Bro)',
+      'Mainly Friday nights and Saturday mornings (may change in the future)',
+      'Passionate about food and cooking, someone who can help us to improve our menu and recipes',
+      'We do not compromise on ingredients so you have the opportunity to work with quality sri lankan ingredients',
       'Share your social media if you post your cooking creations'
     ]
   }
@@ -273,7 +273,7 @@ Submitted from Ceylon Express Careers Page`,
                 className="text-3xl md:text-5xl lg:text-6xl font-bold text-ceylon-text mb-4 md:mb-6"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
-                Grow With{' '}
+                Join{' '}
                 <span className="text-ceylon-orange relative inline-block">
                   Ceylon Express
                   <motion.div
@@ -332,8 +332,8 @@ Submitted from Ceylon Express Careers Page`,
                     <ul className="space-y-2 mb-6">
                       {job.details.map((detail, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-sm text-ceylon-text/70">
-                          <span className="text-ceylon-orange mt-1">•</span>
-                          <span>{detail}</span>
+                          <span className="text-ceylon-orange flex-shrink-0 leading-[1.4]">•</span>
+                          <span className="flex-1">{detail}</span>
                         </li>
                       ))}
                     </ul>
