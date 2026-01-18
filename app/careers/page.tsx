@@ -42,7 +42,7 @@ const jobOpenings = [
     borderColor: 'border-ceylon-blue/30',
     description: 'We\'re seeking a passionate female cook for a part-time role with long-term potential. This position offers the opportunity to grow with us and transition into a permanent role as we expand.',
     details: [
-      'If you can cook an awesome watalappan or butter cake, you\'re the person we\'re looking for!',
+      'If you can make an awesome watalappan or butter cake, you\'re the person we\'re looking for!',
       'Part-time position with long-term opportunity',
       'Work at our location (Upplands Bro)',
       'Mainly Friday nights and Saturday mornings (may change in the future)',
