@@ -136,6 +136,15 @@ export default function CartPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    
+    // Validate form using HTML5 validation
+    const form = e.target as HTMLFormElement
+    if (!form.checkValidity()) {
+      // Trigger browser validation UI
+      form.reportValidity()
+      return
+    }
+    
     setShowConfirmModal(true)
   }
 
@@ -504,6 +513,7 @@ export default function CartPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg flex-shrink-0"
                           aria-label="Decrease quantity"
@@ -516,6 +526,7 @@ export default function CartPage() {
                         </span>
                         
                         <button
+                          type="button"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg flex-shrink-0"
                           aria-label="Increase quantity"
@@ -529,6 +540,7 @@ export default function CartPage() {
                           {formatPrice(item.price * item.quantity)}
                         </p>
                         <button
+                          type="button"
                           onClick={() => removeFromCart(item.id)}
                           className="text-red-600 hover:text-red-800 transition-colors flex-shrink-0"
                           aria-label="Remove item"
@@ -556,6 +568,7 @@ export default function CartPage() {
                     
                     <div className="flex items-center gap-4">
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                         aria-label="Decrease quantity"
@@ -568,6 +581,7 @@ export default function CartPage() {
                       </span>
                       
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         className="w-8 h-8 flex items-center justify-center border-2 border-ceylon-text text-ceylon-text hover:bg-ceylon-text hover:text-white transition-colors rounded-lg"
                         aria-label="Increase quantity"
@@ -576,6 +590,7 @@ export default function CartPage() {
                       </button>
                       
                       <button
+                        type="button"
                         onClick={() => removeFromCart(item.id)}
                         className="ml-4 text-red-600 hover:text-red-800 transition-colors"
                         aria-label="Remove item"

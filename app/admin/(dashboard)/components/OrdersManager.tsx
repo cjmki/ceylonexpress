@@ -166,7 +166,7 @@ export function OrdersManager() {
       {/* Orders Table */}
       {!loading && orders.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <OrdersTable orders={orders} />
+          <OrdersTable orders={orders} onOrderUpdate={fetchOrders} />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

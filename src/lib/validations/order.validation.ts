@@ -55,7 +55,7 @@ export const createOrderSchema = z.object({
   data => {
     // If delivery method is 'delivery', address is required
     if (data.deliveryMethod === DeliveryMethod.DELIVERY) {
-      return data.deliveryAddress.length >= 10
+      return data.deliveryAddress.length >= 2
     }
     return true
   },

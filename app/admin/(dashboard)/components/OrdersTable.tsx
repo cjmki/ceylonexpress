@@ -35,7 +35,7 @@ interface Order {
   }>
 }
 
-export function OrdersTable({ orders }: { orders: Order[] }) {
+export function OrdersTable({ orders, onOrderUpdate }: { orders: Order[]; onOrderUpdate?: () => void }) {
   const router = useRouter()
   const [updatingStatus, setUpdatingStatus] = useState<number | null>(null)
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null)
@@ -193,6 +193,12 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
       
       if (result.success) {
         setNotification({ type: 'success', message: result.message || 'Order updated successfully!' })
+        
+        // Refetch orders to update the UI
+        if (onOrderUpdate) {
+          await onOrderUpdate()
+        }
+        
         router.refresh()
         
         // Clear notification after 3 seconds
