@@ -127,9 +127,6 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
                       ⏰ Pre-orders only - Order in advance
                     </p>
                   )}
-                  <p className="text-xs text-ceylon-text/60 mt-2 italic">
-                    💡 More dates may be available at checkout
-                  </p>
                 </div>
               ) : item.available_slots === 0 ? (
                 <div>
@@ -144,9 +141,6 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
                         })})
                       </span>
                     )}
-                  </p>
-                  <p className="text-xs text-ceylon-text/60 italic">
-                    💡 Other dates may be available at checkout
                   </p>
                 </div>
               ) : (
