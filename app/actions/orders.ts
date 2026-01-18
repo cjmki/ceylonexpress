@@ -245,6 +245,7 @@ export async function createMenuItem(menuItemData: {
   includes?: string[]
   has_limited_availability?: boolean
   pre_orders_only?: boolean
+  minimum_order_quantity?: number
 }) {
   'use server'
   
@@ -273,7 +274,8 @@ export async function createMenuItem(menuItemData: {
         available: validatedData.available,
         includes: validatedData.includes || null,
         has_limited_availability: validatedData.has_limited_availability || false,
-        pre_orders_only: validatedData.pre_orders_only || false
+        pre_orders_only: validatedData.pre_orders_only || false,
+        minimum_order_quantity: validatedData.minimum_order_quantity || 1
       }])
       .select()
       .single()
@@ -308,6 +310,7 @@ export async function updateMenuItem(id: string, menuItemData: {
   includes?: string[]
   has_limited_availability?: boolean
   pre_orders_only?: boolean
+  minimum_order_quantity?: number
 }) {
   'use server'
   

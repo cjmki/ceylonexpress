@@ -15,7 +15,7 @@ Name: ${validatedData.name}
 Email: ${validatedData.email}
 Phone: ${validatedData.phone || 'Not provided'}
 Event Date: ${validatedData.eventDate || 'Not provided'}
-Guest Count: ${validatedData.guestCount || 'Not provided'}
+Event Time: ${validatedData.eventTime || 'Not provided'}
 
 Message:
 ${validatedData.message}
@@ -38,7 +38,7 @@ This inquiry was submitted through the Ceylon Express website.
           email: validatedData.email,
           message: `Phone: ${validatedData.phone || 'Not provided'}
 Event Date: ${validatedData.eventDate || 'Not provided'}
-Number of Guests: ${validatedData.guestCount || 'Not provided'}
+Event Time: ${validatedData.eventTime || 'Not provided'}
 
 Message:
 ${validatedData.message}

@@ -1,11 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, Phone, Calendar, Users, Sparkles, ArrowLeft, CheckCircle } from 'lucide-react'
+import { Send, Mail, Phone, Calendar, Clock, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import type { ContactFormData } from '@/lib/validations/contact.validation'
 import Navigation from '@/app/components/Navigation'
 import Footer from '@/app/components/Footer'
+import { MenuItemRow } from './components/MenuItemRow'
+import { InquiryCart } from './components/InquiryCart'
+import { InquiryItemModal } from './components/InquiryItemModal'
+import { getMenuItems } from '../actions/orders'
+import { MENU_CATEGORIES, getMenuCategoryDisplay } from '../constants/enums'
+import { formatPrice, DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from '../constants/currency'
+
+interface MenuItem {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: string
+  image_url: string | null
+  minimum_order_quantity?: number
+  includes: string[] | null
+}
+
+interface InquiryItem {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  minimum_order_quantity?: number
+  image_url: string | null
+}
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -19,7 +45,7 @@ export default function ContactPage() {
     email: '',
     phone: '',
     eventDate: '',
-    guestCount: '',
+    eventTime: '',
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -27,10 +53,102 @@ export default function ContactPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   
-  // Check if guest count exceeds limit
-  const guestCount = parseInt(formData.guestCount || '0')
-  const exceedsGuestLimit = guestCount > 20
-  const isFormValid = !exceedsGuestLimit
+  // Menu items state
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+  const [menuLoading, setMenuLoading] = useState(true)
+  const [menuError, setMenuError] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  
+  // Inquiry cart state
+  const [inquiryItems, setInquiryItems] = useState<InquiryItem[]>([])
+  
+  // Fetch menu items on mount
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const items = await getMenuItems()
+        setMenuItems(items || [])
+        setMenuError(false)
+      } catch (error) {
+        console.error('Failed to load menu:', error)
+        setMenuError(true)
+      } finally {
+        setMenuLoading(false)
+      }
+    }
+    
+    fetchMenu()
+  }, [])
+  
+  const isFormValid = true
+  
+  // Group menu items by category
+  const groupedItems = menuItems.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = []
+    }
+    acc[item.category].push(item)
+    return acc
+  }, {} as Record<string, MenuItem[]>)
+  
+  // Sort categories by defined order
+  const sortedCategories = Object.entries(groupedItems).sort(([categoryA], [categoryB]) => {
+    const indexA = MENU_CATEGORIES.indexOf(categoryA as any)
+    const indexB = MENU_CATEGORIES.indexOf(categoryB as any)
+    const orderA = indexA === -1 ? 999 : indexA
+    const orderB = indexB === -1 ? 999 : indexB
+    return orderA - orderB
+  })
+  
+  // Inquiry cart handlers
+  const handleAddToInquiry = (item: MenuItem) => {
+    setInquiryItems(prev => {
+      const existing = prev.find(i => i.id === item.id)
+      if (existing) {
+        // After MOQ is met, increment by 1
+        return prev.map(i => 
+          i.id === item.id 
+            ? { ...i, quantity: i.quantity + 1 }
+            : i
+        )
+      }
+      // First add: use MOQ
+      return [...prev, {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.minimum_order_quantity || 1,
+        minimum_order_quantity: item.minimum_order_quantity,
+        image_url: item.image_url
+      }]
+    })
+  }
+  
+  const handleUpdateQuantity = (id: string, quantity: number) => {
+    if (quantity <= 0) {
+      handleRemoveItem(id)
+      return
+    }
+    setInquiryItems(prev => 
+      prev.map(i => i.id === id ? { ...i, quantity } : i)
+    )
+  }
+  
+  const handleRemoveItem = (id: string) => {
+    setInquiryItems(prev => prev.filter(i => i.id !== id))
+  }
+  
+  const openModal = (item: MenuItem) => {
+    setSelectedItem(item)
+    setIsModalOpen(true)
+  }
+  
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setTimeout(() => setSelectedItem(null), 200)
+  }
 
   // Validate individual fields with friendly messages
   const validateField = (name: string, value: string) => {
@@ -49,9 +167,7 @@ export default function ContactPage() {
         if (value && value.length > 20) return 'Phone number is too long'
         return ''
       case 'message':
-        if (!value) return 'Please enter a message'
-        if (value.length < 10) return 'Message must be at least 10 characters'
-        if (value.length > 1000) return 'Message is too long (max 1000 characters)'
+        if (value && value.length > 1000) return 'Message is too long (max 1000 characters)'
         return ''
       default:
         return ''
@@ -101,6 +217,40 @@ export default function ContactPage() {
         return
       }
 
+      // Build items inquiry section with pricing
+      let itemsSection = ''
+      if (inquiryItems.length > 0) {
+        const totalCost = inquiryItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        const isFreeDelivery = totalCost >= FREE_DELIVERY_THRESHOLD
+        const finalTotal = totalCost + (isFreeDelivery ? 0 : DELIVERY_FEE)
+        
+        itemsSection = `
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ITEMS INQUIRY DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${inquiryItems.map(item => 
+  `${item.name}
+  Quantity: ${item.quantity}
+  Price per unit: ${formatPrice(item.price)}
+  Subtotal: ${formatPrice(item.price * item.quantity)}`
+).join('\n\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRICING SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Subtotal: ${formatPrice(totalCost)}
+Delivery Fee: ${isFreeDelivery ? 'FREE (Order over ' + formatPrice(FREE_DELIVERY_THRESHOLD) + ')' : formatPrice(DELIVERY_FEE)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ESTIMATED TOTAL: ${formatPrice(finalTotal)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Note: This is an estimated total.
+`
+      }
+
       // Submit directly to Web3Forms from client-side (bypasses Cloudflare protection)
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -115,8 +265,8 @@ export default function ContactPage() {
           email: formData.email,
           message: `Phone: ${formData.phone || 'Not provided'}
 Event Date: ${formData.eventDate || 'Not provided'}
-Number of Guests: ${formData.guestCount || 'Not provided'}
-
+Event Time: ${formData.eventTime || 'Not provided'}
+${itemsSection}
 Message:
 ${formData.message}
 
@@ -133,15 +283,16 @@ Submitted from Ceylon Express Catering Form`,
           message: 'Thank you for your inquiry! We will get back to you soon.',
         })
         
-        // Reset form on success
+        // Reset form and inquiry items on success
         setFormData({
           name: '',
           email: '',
           phone: '',
           eventDate: '',
-          guestCount: '',
+          eventTime: '',
           message: '',
         })
+        setInquiryItems([])
         setErrors({})
         setTouched({})
       } else {
@@ -235,10 +386,88 @@ Submitted from Ceylon Express Catering Form`,
             </h1>
 
             <p className="text-base md:text-lg lg:text-xl text-ceylon-text/70 max-w-2xl mx-auto">
-              Planning an event? We'd love to make it special with authentic Sri Lankan cuisine. 
-              Fill out the form below and we'll get back to you soon!
+              Planning an event? Browse our menu and let us know what interests you!
             </p>
           </motion.div>
+
+          {/* Menu Section - Only show if menu loaded successfully */}
+          {!menuError && menuItems.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-12"
+            >
+              {/* Menu Header Toggle */}
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="w-full flex items-center justify-between p-4 md:p-6 bg-white rounded-2xl border-3 border-ceylon-orange/30 shadow-lg hover:shadow-xl transition-all mb-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🍛</span>
+                  <div className="text-left">
+                    <h2 className="text-lg md:text-xl font-bold text-ceylon-text">
+                      Browse Our Menu
+                    </h2>
+                    <p className="text-sm text-ceylon-text/60">
+                      Click items to view details and add to your inquiry
+                    </p>
+                  </div>
+                </div>
+                {showMenu ? (
+                  <ChevronUp className="h-5 w-5 md:h-6 md:w-6 text-ceylon-orange" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 md:h-6 md:w-6 text-ceylon-orange" />
+                )}
+              </button>
+
+              {/* Menu Items */}
+              {showMenu && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  {menuLoading ? (
+                    <div className="text-center py-12 bg-white rounded-2xl">
+                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-ceylon-orange/20 border-t-ceylon-orange"></div>
+                      <p className="mt-4 text-ceylon-text/70 text-sm">Loading menu...</p>
+                    </div>
+                  ) : (
+                    sortedCategories.map(([category, items]) => (
+                      <div key={category}>
+                        <div className="flex items-center gap-2 mb-3">
+                          <h3 className="text-base md:text-lg font-bold text-ceylon-text bg-ceylon-orange/10 px-4 py-2 rounded-xl">
+                            {getMenuCategoryDisplay(category)}
+                          </h3>
+                          <div className="flex-1 h-0.5 bg-ceylon-orange/20"></div>
+                        </div>
+                        <div className="space-y-2">
+                          {items.map((item) => (
+                            <MenuItemRow
+                              key={item.id}
+                              item={item}
+                              onViewDetails={openModal}
+                              onAdd={handleAddToInquiry}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Inquiry Cart */}
+          <InquiryCart
+            items={inquiryItems}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+          />
 
           {/* Form Card */}
           <motion.div
@@ -351,7 +580,7 @@ Submitted from Ceylon Express Catering Form`,
                   )}
                 </div>
 
-                {/* Event Date and Guest Count Row */}
+                {/* Event Date and Time Row */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="eventDate" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
@@ -371,43 +600,27 @@ Submitted from Ceylon Express Catering Form`,
                   </div>
 
                   <div>
-                    <label htmlFor="guestCount" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
-                      Number of Guests (Max 20)
+                    <label htmlFor="eventTime" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
+                      Event Time
                     </label>
                     <div className="relative">
-                      <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-ceylon-orange/50" />
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-ceylon-orange/50" />
                       <input
-                        type="number"
-                        id="guestCount"
-                        name="guestCount"
-                        value={formData.guestCount}
+                        type="time"
+                        id="eventTime"
+                        name="eventTime"
+                        value={formData.eventTime}
                         onChange={handleChange}
-                        min="1"
-                        className={`w-full pl-11 pr-4 py-3 rounded-xl border-2 ${
-                          exceedsGuestLimit 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-red-200' 
-                            : 'border-ceylon-orange/30 focus:border-ceylon-orange focus:ring-ceylon-orange/20'
-                        } focus:outline-none focus:ring-2 transition-all`}
-                        placeholder="Number of guests"
+                        className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-ceylon-orange/30 focus:border-ceylon-orange focus:outline-none focus:ring-2 focus:ring-ceylon-orange/20 transition-all"
                       />
                     </div>
-                    {exceedsGuestLimit && (
-                      <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-2 text-sm text-red-600 font-semibold flex items-center gap-2"
-                      >
-                        <span>⚠️</span>
-                        <span>We're still a small operation and can only cater for up to 20 people at once. Please contact us directly for larger events.</span>
-                      </motion.p>
-                    )}
                   </div>
                 </div>
 
                 {/* Message */}
                 <div>
                   <label htmlFor="message" className="block text-sm font-bold text-ceylon-text mb-2 uppercase tracking-wide">
-                    Message *
+                    Message
                   </label>
                   <textarea
                     id="message"
@@ -415,7 +628,6 @@ Submitted from Ceylon Express Catering Form`,
                     value={formData.message}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    required
                     rows={6}
                     className={`w-full px-4 py-3 rounded-xl border-2 ${
                       touched.message && errors.message 
@@ -438,10 +650,6 @@ Submitted from Ceylon Express Catering Form`,
                   {isSubmitting ? (
                     <>
                       <span className="animate-pulse">Sending...</span>
-                    </>
-                  ) : exceedsGuestLimit ? (
-                    <>
-                      <span>Guest Limit Exceeded</span>
                     </>
                   ) : (
                     <>
@@ -473,6 +681,14 @@ Submitted from Ceylon Express Catering Form`,
         </div>
       </section>
       </main>
+      
+      {/* Item Details Modal */}
+      <InquiryItemModal
+        item={selectedItem}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onAdd={handleAddToInquiry}
+      />
       
       <Footer />
     </div>

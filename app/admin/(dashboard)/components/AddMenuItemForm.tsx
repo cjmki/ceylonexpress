@@ -23,6 +23,7 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
     available: boolean
     has_limited_availability: boolean
     pre_orders_only: boolean
+    minimum_order_quantity: string
   }>({
     name: '',
     description: '',
@@ -31,7 +32,8 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
     image_url: '',
     available: true,
     has_limited_availability: false,
-    pre_orders_only: false
+    pre_orders_only: false,
+    minimum_order_quantity: '1'
   })
   const [includes, setIncludes] = useState<string[]>([''])
 
@@ -58,6 +60,13 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
       // Filter out empty includes
       const filteredIncludes = includes.filter(item => item.trim() !== '')
 
+      const moq = parseInt(formData.minimum_order_quantity)
+      if (isNaN(moq) || moq < 1) {
+        setError('Please enter a valid minimum order quantity (at least 1)')
+        setIsSubmitting(false)
+        return
+      }
+
       const result = await createMenuItem({
         name: formData.name,
         description: formData.description,
@@ -67,7 +76,8 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
         available: formData.available,
         includes: filteredIncludes.length > 0 ? filteredIncludes : undefined,
         has_limited_availability: formData.has_limited_availability,
-        pre_orders_only: formData.pre_orders_only
+        pre_orders_only: formData.pre_orders_only,
+        minimum_order_quantity: moq
       })
 
       if (result.success) {
@@ -163,8 +173,8 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
             />
           </div>
 
-          {/* Price and Category */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Price, Category, and MOQ */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label htmlFor="price" className="block text-sm font-semibold text-gray-900 mb-2">
                 Price (SEK) <span className="text-red-500">*</span>
@@ -209,6 +219,26 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
                   </svg>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="minimum_order_quantity" className="block text-sm font-semibold text-gray-900 mb-2">
+                Min Order Qty <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                id="minimum_order_quantity"
+                required
+                min="1"
+                step="1"
+                value={formData.minimum_order_quantity}
+                onChange={(e) => setFormData({ ...formData, minimum_order_quantity: e.target.value })}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                placeholder="1"
+              />
+              <p className="mt-2 text-xs text-gray-600">
+                📦 Minimum portions per order
+              </p>
             </div>
           </div>
 
