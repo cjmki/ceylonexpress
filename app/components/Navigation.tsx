@@ -124,19 +124,19 @@ export default function Navigation() {
                 href="https://www.instagram.com/ceylonexpress.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:flex items-center justify-center text-ceylon-text hover:text-white hover:bg-ceylon-orange transition-all duration-300 p-2.5 sm:p-3 rounded-full border-2 border-ceylon-orange/30 hover:border-ceylon-orange hover:scale-110"
+                className="hidden sm:flex items-center justify-center text-ceylon-text hover:text-white hover:bg-ceylon-orange transition-all duration-300 p-2 rounded-full border-2 border-ceylon-orange/30 hover:border-ceylon-orange hover:scale-110 ml-4"
                 aria-label="Follow us on Instagram"
               >
-                <Instagram className="h-4 w-4 sm:h-5 sm:w-5" />
+                <Instagram className="h-4 w-4" />
               </a>
               <a
                 href="https://www.facebook.com/ceylonexpressse"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:flex items-center justify-center text-ceylon-text hover:text-white hover:bg-ceylon-blue transition-all duration-300 p-2.5 sm:p-3 rounded-full border-2 border-ceylon-blue/30 hover:border-ceylon-blue hover:scale-110"
+                className="hidden sm:flex items-center justify-center text-ceylon-text hover:text-white hover:bg-ceylon-blue transition-all duration-300 p-2 rounded-full border-2 border-ceylon-blue/30 hover:border-ceylon-blue hover:scale-110"
                 aria-label="Follow us on Facebook"
               >
-                <Facebook className="h-4 w-4 sm:h-5 sm:w-5" />
+                <Facebook className="h-4 w-4" />
               </a>
 
               {/* Join Us Link - Desktop only, slightly smaller */}

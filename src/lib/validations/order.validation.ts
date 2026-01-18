@@ -4,6 +4,8 @@
 import { z } from 'zod'
 import {
   uuidSchema,
+  numericIdSchema,
+  stringNumericIdSchema,
   emailSchema,
   phoneSchema,
   nameSchema,
@@ -53,7 +55,7 @@ export const createOrderSchema = z.object({
   data => {
     // If delivery method is 'delivery', address is required
     if (data.deliveryMethod === DeliveryMethod.DELIVERY) {
-      return data.deliveryAddress.length >= 10
+      return data.deliveryAddress.length >= 2
     }
     return true
   },
@@ -86,7 +88,7 @@ export const createOrderSchema = z.object({
  * Update order status validation schema
  */
 export const updateOrderStatusSchema = z.object({
-  orderId: uuidSchema,
+  orderId: z.union([numericIdSchema, stringNumericIdSchema]),
   status: z.nativeEnum(OrderStatus),
 })
 
@@ -94,7 +96,7 @@ export const updateOrderStatusSchema = z.object({
  * Get order by ID validation schema
  */
 export const getOrderByIdSchema = z.object({
-  orderId: uuidSchema,
+  orderId: z.union([numericIdSchema, stringNumericIdSchema]),
 })
 
 /**

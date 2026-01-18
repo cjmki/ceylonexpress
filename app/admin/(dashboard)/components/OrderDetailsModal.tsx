@@ -14,7 +14,7 @@ interface OrderItem {
 }
 
 interface Order {
-  id: string
+  id: number
   customer_name: string
   customer_email: string
   customer_phone: string
@@ -67,7 +67,7 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
         <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Order Details</h2>
-            <p className="text-sm text-gray-500 mt-1">Order ID: #{order.id.slice(0, 8)}...</p>
+            <p className="text-sm text-gray-500 mt-1">Order ID: #{order.id}</p>
           </div>
           <div className="flex items-center gap-3">
             {getStatusBadge(order.status)}
