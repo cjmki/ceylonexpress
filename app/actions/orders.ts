@@ -629,6 +629,19 @@ export async function updateOrderStatus(orderId: string | number, status: string
     const { orderId: validatedOrderId, status: validatedStatus } = validation.data
     const serverClient = createServerSupabaseClient()
     
+    // Get the current order details before updating
+    const { data: currentOrder, error: fetchError } = await serverClient
+      .from('orders')
+      .select('status, delivery_date')
+      .eq('id', validatedOrderId)
+      .single()
+    
+    if (fetchError || !currentOrder) {
+      console.error('Failed to fetch current order:', fetchError)
+      throw new Error('Order not found')
+    }
+    
+    // Update the order status
     const { data, error } = await serverClient
       .from('orders')
       .update({ 
@@ -641,6 +654,74 @@ export async function updateOrderStatus(orderId: string | number, status: string
     if (error) {
       console.error('Supabase error:', error)
       throw error
+    }
+    
+    // If order is being cancelled, restore availability
+    if (validatedStatus === OrderStatus.CANCELLED && currentOrder.status !== OrderStatus.CANCELLED) {
+      try {
+        console.log(`Order ${validatedOrderId} is being cancelled, restoring availability...`)
+        
+        // Get order items
+        const { data: orderItems, error: itemsError } = await serverClient
+          .from('order_items')
+          .select('menu_item_id, quantity')
+          .eq('order_id', validatedOrderId)
+        
+        if (itemsError) {
+          console.error('Failed to fetch order items:', itemsError)
+        } else if (orderItems && orderItems.length > 0) {
+          console.log(`Found ${orderItems.length} order items to process`)
+          
+          // Restore availability for each item
+          for (const item of orderItems) {
+            try {
+              // Check if item has limited availability
+              const { data: menuItem } = await serverClient
+                .from('menu_items')
+                .select('has_limited_availability')
+                .eq('id', item.menu_item_id)
+                .single()
+
+              if (menuItem?.has_limited_availability) {
+                // Get the current availability slot
+                const { data: currentSlot } = await serverClient
+                  .from('menu_item_availability')
+                  .select('current_orders')
+                  .eq('menu_item_id', item.menu_item_id)
+                  .eq('available_date', currentOrder.delivery_date)
+                  .eq('is_active', true)
+                  .single()
+
+                if (currentSlot) {
+                  // Calculate new current_orders (ensure it doesn't go below 0)
+                  const newCurrentOrders = Math.max(0, currentSlot.current_orders - item.quantity)
+                  
+                  // Update the availability slot
+                  const { error: restoreError } = await serverClient
+                    .from('menu_item_availability')
+                    .update({ current_orders: newCurrentOrders })
+                    .eq('menu_item_id', item.menu_item_id)
+                    .eq('available_date', currentOrder.delivery_date)
+                    .eq('is_active', true)
+
+                  if (restoreError) {
+                    console.error('Failed to restore availability:', restoreError)
+                  } else {
+                    console.log(`✓ Restored ${item.quantity} slot(s) for item ${item.menu_item_id} on ${currentOrder.delivery_date} (${currentSlot.current_orders} -> ${newCurrentOrders})`)
+                  }
+                } else {
+                  console.log(`No availability slot found for item ${item.menu_item_id} on ${currentOrder.delivery_date}`)
+                }
+              }
+            } catch (err) {
+              console.error('Error restoring availability for item:', item.menu_item_id, err)
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error restoring availability:', err)
+        // Don't fail the status update if availability restore fails
+      }
     }
     
     console.log('Order updated successfully:', data)
