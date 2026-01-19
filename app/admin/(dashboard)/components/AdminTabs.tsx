@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3 } from 'lucide-react'
+import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3, Truck } from 'lucide-react'
 import { OrdersManager } from './OrdersManager'
 import { MenuItemsTable } from './MenuItemsTable'
 import { KitchenManager } from './KitchenManager'
 import { StatisticsManager } from './StatisticsManager'
+import { DeliveryManager } from './DeliveryManager'
 import { AddMenuItemForm } from './AddMenuItemForm'
 import { useRouter } from 'next/navigation'
-import { OrderStatus } from '../../../constants/enums'
+import { OrderStatus, DeliveryMethod } from '../../../constants/enums'
 
 interface Order {
   id: string
@@ -51,7 +52,7 @@ interface AdminTabsProps {
   menuItems: MenuItem[]
 }
 
-type Tab = 'orders' | 'menu' | 'kitchen' | 'statistics'
+type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics'
 
 export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
@@ -65,6 +66,15 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
 
   // Count confirmed orders
   const confirmedOrdersCount = orders.filter(order => order.status === OrderStatus.CONFIRMED).length
+  
+  // Count confirmed delivery orders (today or future)
+  const getTodayDate = () => new Date().toISOString().split('T')[0]
+  const today = getTodayDate()
+  const deliveryOrdersCount = orders.filter(
+    order => order.status === OrderStatus.CONFIRMED && 
+             order.delivery_method === DeliveryMethod.DELIVERY && 
+             order.delivery_date >= today
+  ).length
 
   return (
     <>
@@ -130,6 +140,25 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
             </button>
 
             <button
+              onClick={() => setActiveTab('delivery')}
+              className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
+                activeTab === 'delivery'
+                  ? 'bg-indigo-50 text-indigo-700 border-b-2 border-indigo-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <Truck className="h-5 w-5" />
+              Delivery
+              <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                activeTab === 'delivery'
+                  ? 'bg-indigo-200 text-indigo-800'
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {deliveryOrdersCount}
+              </span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('statistics')}
               className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
                 activeTab === 'statistics'
@@ -188,6 +217,17 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
               </div>
 
               <KitchenManager />
+            </div>
+          )}
+
+          {activeTab === 'delivery' && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Delivery Route Management</h2>
+                <p className="text-sm text-gray-600 mt-1">Plan and optimize delivery routes for confirmed orders</p>
+              </div>
+
+              <DeliveryManager />
             </div>
           )}
 
