@@ -15,6 +15,12 @@ export default async function AdminDashboard() {
   const completedOrders = orders.filter(order => order.status === OrderStatus.COMPLETED)
   const cancelledOrders = orders.filter(order => order.status === OrderStatus.CANCELLED)
 
+  // Potential Revenue: pending + confirmed orders
+  const potentialRevenue = orders
+    .filter(order => order.status === OrderStatus.PENDING || order.status === OrderStatus.CONFIRMED)
+    .reduce((sum, order) => sum + order.total_amount, 0)
+
+  // Total Revenue: completed orders only (actual realized revenue)
   const totalRevenue = orders
     .filter(order => order.status === OrderStatus.COMPLETED)
     .reduce((sum, order) => sum + order.total_amount, 0)
@@ -28,8 +34,8 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* Quick Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard 
           title="Total Orders" 
           value={orders.length} 
@@ -43,16 +49,10 @@ export default async function AdminDashboard() {
           icon="⏳"
         />
         <StatCard 
-          title="Confirmed" 
-          value={confirmedOrders.length} 
-          color="green"
-          icon="✅"
-        />
-        <StatCard 
-          title="Completed" 
-          value={completedOrders.length} 
-          color="gray"
-          icon="🎉"
+          title="Potential Revenue" 
+          value={formatPrice(potentialRevenue)} 
+          color="orange"
+          icon="💵"
         />
         <StatCard 
           title="Total Revenue" 
@@ -93,7 +93,7 @@ function StatCard({
 }: { 
   title: string
   value: number | string
-  color: 'blue' | 'yellow' | 'green' | 'gray' | 'purple'
+  color: 'blue' | 'yellow' | 'green' | 'gray' | 'purple' | 'orange'
   icon: string
 }) {
   const colorClasses = {
@@ -102,6 +102,7 @@ function StatCard({
     green: 'bg-green-50 border-green-200 text-green-700',
     gray: 'bg-gray-50 border-gray-200 text-gray-700',
     purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    orange: 'bg-orange-50 border-orange-200 text-orange-700',
   }
 
   return (

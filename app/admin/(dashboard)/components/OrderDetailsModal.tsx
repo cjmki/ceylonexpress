@@ -1,6 +1,7 @@
 'use client'
 
-import { X, User, Mail, Phone, MapPin, Calendar, Clock, Package } from 'lucide-react'
+import { useState } from 'react'
+import { X, User, Mail, Phone, MapPin, Calendar, Clock, Package, Copy, Check } from 'lucide-react'
 import { formatPrice, DELIVERY_FEE, ENABLE_DELIVERY_FEE } from '../../../constants/currency'
 import { formatDateReadable } from '../../../constants/dateUtils'
 import { OrderStatus, DeliveryMethod, getOrderStatusDisplay, getDeliveryMethodDisplay, getDeliveryTimeDisplay } from '../../../constants/enums'
@@ -36,7 +37,45 @@ interface OrderDetailsModalProps {
 }
 
 export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalProps) {
+  const [copied, setCopied] = useState(false)
+  
   if (!isOpen || !order) return null
+
+  const generateSMSTemplate = () => {
+    const orderDetails = order.order_items
+      .map(item => `${item.quantity}x ${item.menu_item_name} - ${formatPrice(item.menu_item_price)}`)
+      .join('\n')
+    
+    const deliveryInfo = order.delivery_method === DeliveryMethod.DELIVERY
+      ? `Delivery: 🚚\n📍 ${order.delivery_address}`
+      : `Pickup: 🏪\n📍 At Ceylon Express`
+    
+    return `${order.customer_phone}
+Hi ${order.customer_name},
+Your order has been confirmed.
+
+${deliveryInfo}
+📅 ${formatDateReadable(order.delivery_date)}
+⏰ ${getDeliveryTimeDisplay(order.delivery_time, true)}
+
+Order:
+${orderDetails}
+
+Total: ${formatPrice(order.total_amount)}
+
+Thank you for ordering from Ceylon Express. If you have any questions, just reply to this message 😊.`
+  }
+
+  const handleCopyTemplate = async () => {
+    try {
+      const template = generateSMSTemplate()
+      await navigator.clipboard.writeText(template)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
 
   const getStatusBadge = (status: string) => {
     const styles = {
@@ -220,6 +259,41 @@ export function OrderDetailsModal({ isOpen, order, onClose }: OrderDetailsModalP
                   {formatPrice(order.total_amount)}
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* SMS Template */}
+          <div className="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <Phone className="h-5 w-5 text-indigo-600" />
+                SMS Confirmation Template
+              </h3>
+              <button
+                onClick={handleCopyTemplate}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  copied
+                    ? 'bg-green-600 text-white'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    Copy Template
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="bg-white border border-indigo-300 rounded-lg p-4">
+              <pre className="text-sm text-gray-800 whitespace-pre-wrap font-mono leading-relaxed">
+                {generateSMSTemplate()}
+              </pre>
             </div>
           </div>
 

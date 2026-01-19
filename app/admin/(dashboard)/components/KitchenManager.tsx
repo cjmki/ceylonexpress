@@ -103,7 +103,7 @@ export function KitchenManager() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#2C5F7F]" />
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
         <span className="ml-3 text-gray-600">Loading kitchen orders...</span>
       </div>
     )
@@ -124,21 +124,21 @@ export function KitchenManager() {
   return (
     <div className="space-y-8">
       {/* Item Summary Section */}
-      <div className="bg-gradient-to-br from-[#E8F2F7] to-[#D6E8F0] rounded-lg shadow-md border-2 border-[#A7C7D7] p-6">
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg shadow-md border-2 border-green-200 p-6">
         <div className="flex items-center gap-3 mb-6">
-          <ChefHat className="h-7 w-7 text-[#2C5F7F]" />
+          <ChefHat className="h-7 w-7 text-green-700" />
           <div>
-            <h2 className="text-2xl font-bold text-[#1A4158]">Preparation Summary</h2>
-            <p className="text-sm text-[#2C5F7F] mt-1">
+            <h2 className="text-2xl font-bold text-green-900">Preparation Summary</h2>
+            <p className="text-sm text-green-700 mt-1">
               Total items to prepare for confirmed orders
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-[#A7C7D7] overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-green-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[#2C5F7F] text-white">
+              <thead className="bg-green-600 text-white">
                 <tr>
                   <th className="px-4 py-3 text-left font-bold">Menu Item</th>
                   {uniqueDates.map(date => (
@@ -150,7 +150,7 @@ export function KitchenManager() {
                     </th>
                   ))}
                   {uniqueDates.length > 1 && (
-                    <th className="px-4 py-3 text-center font-bold bg-[#1A4158]">
+                    <th className="px-4 py-3 text-center font-bold bg-green-700">
                       Total
                     </th>
                   )}
@@ -167,14 +167,14 @@ export function KitchenManager() {
                     </td>
                     {uniqueDates.map(date => (
                       <td key={date} className="px-4 py-3 text-center">
-                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1.5 rounded-full text-sm font-bold bg-[#D6E8F0] text-[#1A4158]">
+                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1.5 rounded-full text-sm font-bold bg-green-100 text-green-800">
                           {item.quantities[date] || '-'}
                         </span>
                       </td>
                     ))}
                     {uniqueDates.length > 1 && (
-                      <td className="px-4 py-3 text-center bg-[#E8F2F7]">
-                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1.5 rounded-full text-sm font-bold bg-[#2C5F7F] text-white">
+                      <td className="px-4 py-3 text-center bg-green-50">
+                        <span className="inline-flex items-center justify-center min-w-[40px] px-3 py-1.5 rounded-full text-sm font-bold bg-green-600 text-white">
                           {item.totalQuantity}
                         </span>
                       </td>
@@ -191,7 +191,7 @@ export function KitchenManager() {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-2xl font-bold text-gray-900">Kitchen Order Tickets</h2>
-          <span className="px-3 py-1 rounded-full text-sm font-bold bg-[#D6E8F0] text-[#1A4158]">
+          <span className="px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-800">
             {orders.length} {orders.length === 1 ? 'order' : 'orders'}
           </span>
         </div>
@@ -211,7 +211,7 @@ function KitchenOrderTicket({ order }: { order: Order }) {
   return (
     <div className="bg-white rounded-lg shadow-lg border-2 border-gray-300 overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
       {/* Header */}
-      <div className="bg-[#2C5F7F] text-white px-4 py-3">
+      <div className="bg-green-600 text-white px-4 py-3">
         <div className="flex justify-between items-start">
           <div>
             <div className="text-xs font-medium opacity-90">Order #</div>
@@ -251,7 +251,7 @@ function KitchenOrderTicket({ order }: { order: Order }) {
                 </div>
               </div>
               <div className="ml-3 flex-shrink-0">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#2C5F7F] text-white font-bold text-sm">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-bold text-sm">
                   {item.quantity}
                 </span>
               </div>
