@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Package, UtensilsCrossed } from 'lucide-react'
+import { Plus, Package, UtensilsCrossed, ChefHat } from 'lucide-react'
 import { OrdersManager } from './OrdersManager'
 import { MenuItemsTable } from './MenuItemsTable'
+import { KitchenManager } from './KitchenManager'
 import { AddMenuItemForm } from './AddMenuItemForm'
 import { useRouter } from 'next/navigation'
+import { OrderStatus } from '../../../constants/enums'
 
 interface Order {
   id: string
@@ -48,7 +50,7 @@ interface AdminTabsProps {
   menuItems: MenuItem[]
 }
 
-type Tab = 'orders' | 'menu'
+type Tab = 'orders' | 'kitchen' | 'menu'
 
 export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
@@ -59,6 +61,9 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
     setShowAddMenuForm(false)
     router.refresh()
   }
+
+  // Count confirmed orders
+  const confirmedOrdersCount = orders.filter(order => order.status === OrderStatus.CONFIRMED).length
 
   return (
     <>
@@ -103,6 +108,25 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
                 {menuItems.length}
               </span>
             </button>
+
+            <button
+              onClick={() => setActiveTab('kitchen')}
+              className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all ${
+                activeTab === 'kitchen'
+                  ? 'bg-[#A7C7D7] text-[#2C5F7F] border-b-2 border-[#2C5F7F]'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <ChefHat className="h-5 w-5" />
+              Kitchen
+              <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                activeTab === 'kitchen'
+                  ? 'bg-[#8BB4CC] text-[#1A4158]'
+                  : 'bg-gray-200 text-gray-700'
+              }`}>
+                {confirmedOrdersCount}
+              </span>
+            </button>
           </div>
         </div>
 
@@ -138,6 +162,19 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
               </div>
 
               <MenuItemsTable items={menuItems} onUpdate={() => router.refresh()} />
+            </div>
+          )}
+
+          {activeTab === 'kitchen' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Kitchen Dashboard</h2>
+                  <p className="text-sm text-gray-600 mt-1">View confirmed orders and preparation summary</p>
+                </div>
+              </div>
+
+              <KitchenManager />
             </div>
           )}
         </div>
