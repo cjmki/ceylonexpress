@@ -65,10 +65,6 @@ export function DeliveryManager() {
 
   useEffect(() => {
     fetchDeliveryOrders()
-    
-    // Auto-refresh every 60 seconds
-    const interval = setInterval(fetchDeliveryOrders, 60000)
-    return () => clearInterval(interval)
   }, [fetchDeliveryOrders])
 
   // Filter orders by selected date
