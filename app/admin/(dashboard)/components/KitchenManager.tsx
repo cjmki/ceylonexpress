@@ -61,10 +61,6 @@ export function KitchenManager() {
 
   useEffect(() => {
     fetchConfirmedOrders()
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchConfirmedOrders, 30000)
-    return () => clearInterval(interval)
   }, [fetchConfirmedOrders])
 
   // Calculate item summary grouped by date
