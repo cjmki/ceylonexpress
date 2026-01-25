@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3, Truck } from 'lucide-react'
+import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3, Truck, ShieldCheck } from 'lucide-react'
 import { OrdersManager } from './OrdersManager'
 import { MenuItemsTable } from './MenuItemsTable'
 import { KitchenManager } from './KitchenManager'
 import { StatisticsManager } from './StatisticsManager'
 import { DeliveryManager } from './DeliveryManager'
+import { HealthSafetyManager } from './HealthSafetyManager'
 import { AddMenuItemForm } from './AddMenuItemForm'
 import { useRouter } from 'next/navigation'
 import { OrderStatus, DeliveryMethod } from '../../../constants/enums'
@@ -52,7 +53,7 @@ interface AdminTabsProps {
   menuItems: MenuItem[]
 }
 
-type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics'
+type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics' | 'health-safety'
 
 export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
@@ -169,6 +170,18 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
               <BarChart3 className="h-5 w-5" />
               Statistics
             </button>
+
+            <button
+              onClick={() => setActiveTab('health-safety')}
+              className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
+                activeTab === 'health-safety'
+                  ? 'bg-green-50 text-green-700 border-b-2 border-green-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <ShieldCheck className="h-5 w-5" />
+              Health & Safety
+            </button>
           </div>
         </div>
 
@@ -239,6 +252,17 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
               </div>
 
               <StatisticsManager orders={orders} />
+            </div>
+          )}
+
+          {activeTab === 'health-safety' && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Health & Safety</h2>
+                <p className="text-sm text-gray-600 mt-1">Food safety compliance and inspection readiness</p>
+              </div>
+
+              <HealthSafetyManager />
             </div>
           )}
         </div>
