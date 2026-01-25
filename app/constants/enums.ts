@@ -183,3 +183,107 @@ export function isDeliveryMethod(value: string): value is DeliveryMethod {
 export function isDeliveryTime(value: string): value is DeliveryTime {
   return Object.values(DeliveryTime).includes(value as DeliveryTime)
 }
+
+// ==================== Health & Safety - Cleaning Areas ====================
+
+export enum CleaningArea {
+  KITCHEN = 'kitchen',
+  FRIDGE = 'fridge',
+  FREEZER = 'freezer',
+  STORAGE = 'storage',
+  OTHER = 'other'
+}
+
+export const CLEANING_AREA_DISPLAY: Record<CleaningArea, string> = {
+  [CleaningArea.KITCHEN]: 'Kitchen',
+  [CleaningArea.FRIDGE]: 'Fridge',
+  [CleaningArea.FREEZER]: 'Freezer',
+  [CleaningArea.STORAGE]: 'Storage',
+  [CleaningArea.OTHER]: 'Other'
+}
+
+export const CLEANING_AREAS = Object.values(CleaningArea)
+
+// ==================== Health & Safety - Cleaning Frequency ====================
+
+export enum CleaningFrequency {
+  DAILY = 'daily',
+  WEEKLY = 'weekly',
+  MONTHLY = 'monthly',
+  AFTER_USE = 'after_use'
+}
+
+export const CLEANING_FREQUENCY_DISPLAY: Record<CleaningFrequency, string> = {
+  [CleaningFrequency.DAILY]: 'Daily',
+  [CleaningFrequency.WEEKLY]: 'Weekly',
+  [CleaningFrequency.MONTHLY]: 'Monthly',
+  [CleaningFrequency.AFTER_USE]: 'After Use'
+}
+
+export const CLEANING_FREQUENCIES = Object.values(CleaningFrequency)
+
+// ==================== Health & Safety - Temperature Types ====================
+
+export enum TemperatureType {
+  FRIDGE = 'fridge',
+  FREEZER = 'freezer',
+  COOKING = 'cooking',
+  COOLING = 'cooling',
+  REHEATING = 'reheating',
+  HOT_HOLDING = 'hot_holding'
+}
+
+export const TEMPERATURE_TYPE_DISPLAY: Record<TemperatureType, string> = {
+  [TemperatureType.FRIDGE]: 'Fridge',
+  [TemperatureType.FREEZER]: 'Freezer',
+  [TemperatureType.COOKING]: 'Cooking',
+  [TemperatureType.COOLING]: 'Cooling',
+  [TemperatureType.REHEATING]: 'Reheating',
+  [TemperatureType.HOT_HOLDING]: 'Hot Holding'
+}
+
+export const TEMPERATURE_TYPES = Object.values(TemperatureType)
+
+// ==================== Health & Safety Helper Functions ====================
+
+/**
+ * Get display name for a cleaning area
+ */
+export function getCleaningAreaDisplay(area: CleaningArea | string): string {
+  return CLEANING_AREA_DISPLAY[area as CleaningArea] || area
+}
+
+/**
+ * Get display name for a cleaning frequency
+ */
+export function getCleaningFrequencyDisplay(frequency: CleaningFrequency | string): string {
+  return CLEANING_FREQUENCY_DISPLAY[frequency as CleaningFrequency] || frequency
+}
+
+/**
+ * Get display name for a temperature type
+ */
+export function getTemperatureTypeDisplay(type: TemperatureType | string): string {
+  return TEMPERATURE_TYPE_DISPLAY[type as TemperatureType] || type
+}
+
+/**
+ * Type guard to check if a string is a valid CleaningArea
+ */
+export function isCleaningArea(value: string): value is CleaningArea {
+  return Object.values(CleaningArea).includes(value as CleaningArea)
+}
+
+/**
+ * Type guard to check if a string is a valid CleaningFrequency
+ */
+export function isCleaningFrequency(value: string): value is CleaningFrequency {
+  return Object.values(CleaningFrequency).includes(value as CleaningFrequency)
+}
+
+/**
+ * Type guard to check if a string is a valid TemperatureType
+ */
+export function isTemperatureType(value: string): value is TemperatureType {
+  return Object.values(TemperatureType).includes(value as TemperatureType)
+}
