@@ -103,16 +103,15 @@ export function RecipeCard({ recipe, onView, onEdit, onUpdate }: RecipeCardProps
       </div>
 
       {/* Delete Confirmation */}
-      {deletingRecipe && (
-        <ConfirmModal
-          title="Delete Recipe"
-          message={`Are you sure you want to delete "${recipe.recipe_name}"? This action cannot be undone.`}
-          confirmText="Delete"
-          confirmStyle="danger"
-          onConfirm={handleDelete}
-          onCancel={() => setDeletingRecipe(false)}
-        />
-      )}
+      <ConfirmModal
+        isOpen={deletingRecipe}
+        title="Delete Recipe"
+        message={`Are you sure you want to delete "${recipe.recipe_name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        type="danger"
+        onConfirm={handleDelete}
+        onCancel={() => setDeletingRecipe(false)}
+      />
     </>
   )
 }
