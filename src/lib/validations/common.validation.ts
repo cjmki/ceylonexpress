@@ -150,4 +150,4 @@ export const paginationSchema = z.object({
 /**
  * Sort order validation
  */
-export const sortOrderSchema = z.enum(['asc', 'desc']).default('desc')
+export const sortOrderSchema = z.enum(['asc', 'desc'] as const).default('desc')

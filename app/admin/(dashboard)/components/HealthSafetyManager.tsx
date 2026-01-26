@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Thermometer, ClipboardCheck } from 'lucide-react'
+import { Shield, Thermometer, ClipboardCheck, AlertCircle } from 'lucide-react'
 import { CleaningScheduleManager } from './CleaningScheduleManager'
 import { TemperatureControlManager } from './TemperatureControlManager'
+import { AllergenManager } from './AllergenManager'
 import { getHealthSafetyStats } from '../../../actions/health-safety'
 
-type SubTab = 'cleaning' | 'temperature'
+type SubTab = 'cleaning' | 'temperature' | 'allergens'
 
 export function HealthSafetyManager() {
   const [activeSubTab, setActiveSubTab] = useState<SubTab>('cleaning')
@@ -91,12 +92,25 @@ export function HealthSafetyManager() {
                 </span>
               )}
             </button>
+
+            <button
+              onClick={() => setActiveSubTab('allergens')}
+              className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all ${
+                activeSubTab === 'allergens'
+                  ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-700'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <AlertCircle className="h-5 w-5" />
+              Allergen Management
+            </button>
           </div>
         </div>
 
         <div className="p-6">
           {activeSubTab === 'cleaning' && <CleaningScheduleManager onUpdate={loadStats} />}
           {activeSubTab === 'temperature' && <TemperatureControlManager onUpdate={loadStats} />}
+          {activeSubTab === 'allergens' && <AllergenManager />}
         </div>
       </div>
     </div>

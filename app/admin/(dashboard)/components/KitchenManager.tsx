@@ -2,9 +2,38 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { getFilteredOrders } from '../../../actions/orders'
-import { Loader2, ChefHat, Calendar } from 'lucide-react'
+import { getMenuItemIngredientsForOrders, calculateIngredientRequirements } from '../../../actions/recipes'
+import { Loader2, ChefHat, Calendar, Beef, Archive, Package, AlertTriangle } from 'lucide-react'
 import { OrderStatus } from '../../../constants/enums'
 import { formatPrice } from '../../../constants/currency'
+import { RecipeManager } from './RecipeManager'
+import { StockManager } from './StockManager'
+
+type SubTab = 'orders' | 'recipes' | 'stock'
+
+interface IngredientRequirement {
+  stock_item_id: number
+  stock_item_name: string
+  total_quantity_needed: number
+  unit: string
+  current_stock: number
+  minimum_threshold: number
+}
+
+interface MenuItemIngredients {
+  menu_item_id: string
+  menu_item_name: string
+  total_portions: number
+  ingredients: Array<{
+    stock_item_id: number
+    stock_item_name: string
+    quantity_per_portion: number
+    unit: string
+    total_needed: number
+    current_stock: number
+    minimum_threshold: number
+  }>
+}
 
 interface OrderItem {
   id: string
@@ -35,6 +64,7 @@ interface ItemSummary {
 }
 
 export function KitchenManager() {
+  const [activeSubTab, setActiveSubTab] = useState<SubTab>('orders')
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -63,7 +93,71 @@ export function KitchenManager() {
     fetchConfirmedOrders()
   }, [fetchConfirmedOrders])
 
-  // Calculate item summary grouped by date
+  return (
+    <div className="space-y-6">
+      {/* Sub-Tab Navigation */}
+      <div className="flex gap-2 border-b border-gray-200">
+        <button
+          onClick={() => setActiveSubTab('orders')}
+          className={`flex items-center gap-2 px-4 py-3 font-semibold transition-all ${
+            activeSubTab === 'orders'
+              ? 'text-green-700 border-b-2 border-green-700'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          <ChefHat className="h-4 w-4" />
+          Kitchen Orders
+          {orders.length > 0 && (
+            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+              activeSubTab === 'orders'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-gray-200 text-gray-700'
+            }`}>
+              {orders.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('recipes')}
+          className={`flex items-center gap-2 px-4 py-3 font-semibold transition-all ${
+            activeSubTab === 'recipes'
+              ? 'text-amber-700 border-b-2 border-amber-700'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          <Beef className="h-4 w-4" />
+          Recipes
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('stock')}
+          className={`flex items-center gap-2 px-4 py-3 font-semibold transition-all ${
+            activeSubTab === 'stock'
+              ? 'text-purple-700 border-b-2 border-purple-700'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          <Archive className="h-4 w-4" />
+          Stock
+        </button>
+      </div>
+
+      {/* Sub-Tab Content */}
+      {activeSubTab === 'orders' && <KitchenOrdersContent orders={orders} loading={loading} />}
+      {activeSubTab === 'recipes' && <RecipeManager />}
+      {activeSubTab === 'stock' && <StockManager />}
+    </div>
+  )
+}
+
+// Kitchen Orders Content Component
+function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: boolean }) {
+  const [menuItemIngredients, setMenuItemIngredients] = useState<MenuItemIngredients[]>([])
+  const [ingredientRequirements, setIngredientRequirements] = useState<IngredientRequirement[]>([])
+  const [loadingIngredients, setLoadingIngredients] = useState(false)
+
+  // Calculate item summary grouped by date - MUST be before early returns
   const itemSummary: ItemSummary[] = React.useMemo(() => {
     const summaryMap = new Map<string, ItemSummary>()
 
@@ -90,10 +184,39 @@ export function KitchenManager() {
     )
   }, [orders])
 
-  // Get unique dates sorted
+  // Get unique dates sorted - MUST be before early returns
   const uniqueDates = React.useMemo(() => {
     const dates = new Set(orders.map(o => o.delivery_date))
     return Array.from(dates).sort()
+  }, [orders])
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      if (orders.length === 0) return
+      
+      setLoadingIngredients(true)
+      try {
+        const orderIds = orders.map(o => o.id)
+        
+        // Fetch menu item-specific ingredients
+        const menuItemResult = await getMenuItemIngredientsForOrders(orderIds)
+        if (menuItemResult.success) {
+          setMenuItemIngredients(menuItemResult.data)
+        }
+        
+        // Fetch total ingredients
+        const totalResult = await calculateIngredientRequirements(orderIds)
+        if (totalResult.success) {
+          setIngredientRequirements(totalResult.data)
+        }
+      } catch (error) {
+        console.error('Error fetching ingredient requirements:', error)
+      } finally {
+        setLoadingIngredients(false)
+      }
+    }
+
+    fetchIngredients()
   }, [orders])
 
   if (loading) {
@@ -119,19 +242,26 @@ export function KitchenManager() {
 
   return (
     <div className="space-y-8">
-      {/* Item Summary Section */}
+      {/* Item Summary Section (with Ingredient Requirements) */}
       <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg shadow-md border-2 border-green-200 p-6">
         <div className="flex items-center gap-3 mb-6">
           <ChefHat className="h-7 w-7 text-green-700" />
           <div>
             <h2 className="text-2xl font-bold text-green-900">Preparation Summary</h2>
             <p className="text-sm text-green-700 mt-1">
-              Total items to prepare for confirmed orders
+              Menu items and ingredient requirements for confirmed orders
             </p>
           </div>
+          {loadingIngredients && (
+            <Loader2 className="h-5 w-5 animate-spin text-green-600 ml-auto" />
+          )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-green-200 overflow-hidden">
+        {/* Menu Items Table */}
+        <div className="bg-white rounded-lg shadow-sm border border-green-200 overflow-hidden mb-6">
+          <div className="bg-green-600 text-white px-4 py-2">
+            <h3 className="font-bold text-sm">Menu Items by Date</h3>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-green-600 text-white">
@@ -181,6 +311,144 @@ export function KitchenManager() {
             </table>
           </div>
         </div>
+
+        {/* Ingredient Requirements by Menu Item */}
+        {menuItemIngredients.length > 0 && (
+          <div className="space-y-4">
+            <div className="bg-blue-600 text-white px-4 py-2 rounded-t-lg">
+              <h3 className="font-bold text-sm flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Ingredient Requirements by Menu Item
+              </h3>
+            </div>
+
+            {/* Show ingredients for each menu item that has a recipe */}
+            {menuItemIngredients.map((menuItem) => (
+              <div key={menuItem.menu_item_id} className="bg-white rounded-lg border-2 border-blue-200 overflow-hidden">
+                <div className="bg-blue-100 px-4 py-2 border-b border-blue-200">
+                  <h4 className="font-bold text-blue-900">
+                    {menuItem.menu_item_name}
+                    <span className="ml-2 text-sm font-normal text-blue-700">
+                      ({menuItem.total_portions} {menuItem.total_portions === 1 ? 'portion' : 'portions'})
+                    </span>
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 text-gray-700">Ingredient</th>
+                        <th className="text-center py-2 text-gray-700">Per Portion</th>
+                        <th className="text-center py-2 text-gray-700">Total Needed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {menuItem.ingredients.map((ing) => (
+                        <tr key={ing.stock_item_id} className="border-b border-gray-100 last:border-0">
+                          <td className="py-2 text-gray-900">{ing.stock_item_name}</td>
+                          <td className="text-center py-2 text-gray-600">
+                            {ing.quantity_per_portion.toFixed(2)} {ing.unit}
+                          </td>
+                          <td className="text-center py-2">
+                            <span className="font-semibold text-blue-900">
+                              {ing.total_needed.toFixed(2)} {ing.unit}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+
+            {/* Total Ingredients Summary */}
+            <div className="bg-white rounded-lg border-2 border-green-300 overflow-hidden mt-6">
+              <div className="bg-green-600 text-white px-4 py-2">
+                <h4 className="font-bold flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  TOTAL INGREDIENTS REQUIRED
+                </h4>
+              </div>
+              <div className="p-4">
+                <table className="w-full">
+                  <thead className="border-b-2 border-gray-200">
+                    <tr>
+                      <th className="text-left py-2 font-bold text-gray-900">Ingredient</th>
+                      <th className="text-center py-2 font-bold text-gray-900">Total Needed</th>
+                      <th className="text-center py-2 font-bold text-gray-900">Current Stock</th>
+                      <th className="text-center py-2 font-bold text-gray-900">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {ingredientRequirements.map((ingredient) => {
+                      const isSufficient = ingredient.current_stock >= ingredient.total_quantity_needed
+                      const isLow = ingredient.current_stock <= ingredient.minimum_threshold
+                      const remaining = ingredient.current_stock - ingredient.total_quantity_needed
+                      
+                      return (
+                        <tr 
+                          key={ingredient.stock_item_id}
+                          className={`${
+                            !isSufficient ? 'bg-red-50' : isLow ? 'bg-yellow-50' : ''
+                          }`}
+                        >
+                          <td className="py-3 font-semibold text-gray-900">
+                            {ingredient.stock_item_name}
+                          </td>
+                          <td className="text-center py-3">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
+                              {ingredient.total_quantity_needed.toFixed(2)} {ingredient.unit}
+                            </span>
+                          </td>
+                          <td className="text-center py-3">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                              !isSufficient 
+                                ? 'bg-red-100 text-red-800' 
+                                : isLow 
+                                ? 'bg-yellow-100 text-yellow-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {ingredient.current_stock.toFixed(2)} {ingredient.unit}
+                            </span>
+                          </td>
+                          <td className="text-center py-3">
+                            {!isSufficient ? (
+                              <div className="flex items-center justify-center gap-1 text-red-700 font-bold text-sm">
+                                <AlertTriangle className="h-4 w-4" />
+                                SHORT {Math.abs(remaining).toFixed(2)} {ingredient.unit}
+                              </div>
+                            ) : isLow ? (
+                              <div className="flex items-center justify-center gap-1 text-yellow-700 font-semibold text-sm">
+                                <AlertTriangle className="h-4 w-4" />
+                                Low Stock
+                              </div>
+                            ) : (
+                              <div className="text-green-700 font-semibold text-sm">
+                                ✓ Sufficient
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {ingredientRequirements.some(i => i.current_stock < i.total_quantity_needed) && (
+                <div className="mx-4 mb-4 p-3 bg-red-100 border-2 border-red-300 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-900">
+                    <AlertTriangle className="h-5 w-5" />
+                    <span className="font-bold text-sm">
+                      Warning: Some ingredients are insufficient for confirmed orders. Restock immediately!
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* KOT Grid Section */}

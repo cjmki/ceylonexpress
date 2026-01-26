@@ -8,6 +8,7 @@ import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
+import { getMenuItemAllergens } from '../actions/allergens'
 import { formatPrice } from '../constants/currency'
 import { MenuItemModal } from './components/MenuItemModal'
 import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, getMenuCategoryDisplay } from '../constants/enums'
@@ -26,6 +27,12 @@ interface MenuItem {
   next_available_date?: string
   available_slots?: number
   minimum_order_quantity?: number
+  allergens?: Array<{
+    allergen_id: number
+    allergen_name: string
+    allergen_code: string
+    icon_emoji: string
+  }>
 }
 
 export default function MenuPage() {
@@ -36,11 +43,28 @@ export default function MenuPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { addToCart, getItemCount } = useCart()
 
-  // Function to fetch menu data (now includes availability)
+  // Function to fetch menu data (now includes availability and allergens)
   const fetchMenuData = async () => {
     try {
       const items = await getMenuItems()
-      setMenuItems(items || [])
+      
+      // Fetch allergens for each menu item
+      if (items && items.length > 0) {
+        const itemsWithAllergens = await Promise.all(
+          items.map(async (item) => {
+            const allergenResult = await getMenuItemAllergens(item.id)
+            return {
+              ...item,
+              allergens: allergenResult.success && allergenResult.data.allergens 
+                ? allergenResult.data.allergens 
+                : []
+            }
+          })
+        )
+        setMenuItems(itemsWithAllergens)
+      } else {
+        setMenuItems([])
+      }
     } catch (error) {
       console.error('Failed to load menu:', error)
     } finally {

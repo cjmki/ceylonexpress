@@ -54,7 +54,7 @@ export const getCleaningLogsSchema = z.object({
 export const createTemperatureLogSchema = z.object({
   temperatureType: z.nativeEnum(TemperatureType),
   temperatureValue: z.number().min(-50).max(200, 'Temperature must be between -50°C and 200°C'),
-  unit: z.enum(['celsius', 'fahrenheit']).default('celsius'),
+  unit: z.enum(['celsius', 'fahrenheit'] as const).default('celsius'),
   recordedAt: z.string().datetime().optional(), // ISO datetime string
   orderId: z.number().int().positive().optional(),
   batchDate: z.string().optional(), // YYYY-MM-DD
@@ -87,14 +87,14 @@ export const getTemperatureLogsSchema = z.object({
 // ==================== Temperature Range Schemas ====================
 
 export const updateTemperatureRangeSchema = z.object({
-  temperatureType: z.enum(TemperatureType),
+  temperatureType: z.nativeEnum(TemperatureType),
   minTemp: z.number().min(-50).max(200).nullable().optional(),
   maxTemp: z.number().min(-50).max(200).nullable().optional(),
   warningMessage: z.string().max(500).optional(),
 })
 
 export const getTemperatureRangeSchema = z.object({
-  temperatureType: z.enum(TemperatureType),
+  temperatureType: z.nativeEnum(TemperatureType),
 })
 
 // ==================== Dashboard Stats Schemas ====================
