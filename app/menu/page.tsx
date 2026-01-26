@@ -285,38 +285,6 @@ export default function MenuPage() {
                             {item.description}
                           </p>
 
-                          {/* Allergen Information - Subtle with Hover */}
-                          {item.allergens && item.allergens.length > 0 && (
-                            <div className="mb-2 group/allergen relative">
-                              <div className="inline-flex items-center gap-1 px-2 py-1 bg-orange-50 border border-orange-300 rounded-lg cursor-help">
-                                <span className="text-xs">⚠️</span>
-                                <span className="text-[10px] md:text-xs font-semibold text-orange-700">
-                                  Allergen Info
-                                </span>
-                              </div>
-                              
-                              {/* Hover Tooltip with Full Details */}
-                              <div className="absolute bottom-full left-0 mb-2 p-3 bg-white border-2 border-orange-300 rounded-lg shadow-xl opacity-0 group-hover/allergen:opacity-100 transition-opacity pointer-events-none z-20 min-w-[200px]">
-                                <div className="text-[10px] font-bold text-orange-700 mb-2 flex items-center gap-1">
-                                  ⚠️ Contains Allergens:
-                                </div>
-                                <div className="space-y-1">
-                                  {item.allergens.map((allergen) => (
-                                    <div
-                                      key={allergen.allergen_id}
-                                      className="flex items-center gap-2 text-[10px] md:text-xs"
-                                    >
-                                      <span className="text-sm">{allergen.icon_emoji}</span>
-                                      <span className="font-semibold text-ceylon-text">
-                                        {allergen.allergen_name}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
                           {/* MOQ Badge */}
                           {item.minimum_order_quantity && item.minimum_order_quantity > 1 && (
                             <div className="mb-2">
