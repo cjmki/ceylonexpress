@@ -47,8 +47,8 @@ export const adjustStockSchema = z.object({
   quantityChange: z.number().refine((val) => val !== 0, {
     message: 'Quantity change cannot be zero'
   }),
-  transactionType: z.enum(['RESTOCK', 'USAGE', 'ADJUSTMENT', 'WASTE', 'INITIAL'], {
-    errorMap: () => ({ message: 'Invalid transaction type' })
+  transactionType: z.enum(['RESTOCK', 'USAGE', 'ADJUSTMENT', 'WASTE', 'INITIAL'] as const, {
+    message: 'Invalid transaction type'
   }),
   notes: z.string().optional(),
   createdBy: z.string().min(1, 'Created by is required'),
@@ -56,7 +56,7 @@ export const adjustStockSchema = z.object({
 
 export const getStockTransactionsSchema = z.object({
   stockItemId: z.number().int().positive().optional(),
-  transactionType: z.enum(['RESTOCK', 'USAGE', 'ADJUSTMENT', 'DELIVERY', 'WASTE', 'INITIAL']).optional(),
+  transactionType: z.enum(['RESTOCK', 'USAGE', 'ADJUSTMENT', 'DELIVERY', 'WASTE', 'INITIAL'] as const).optional(),
   dateFrom: z.string().optional(),
   dateTo: z.string().optional(),
   limit: z.number().int().positive().max(1000).optional(),

@@ -200,16 +200,15 @@ export function StockItemsTable({ items, onEdit, onAdjust, onUpdate }: StockItem
       </div>
 
       {/* Delete Confirmation Modal */}
-      {deletingId && (
-        <ConfirmModal
-          title="Delete Stock Item"
-          message="Are you sure you want to delete this stock item? This action cannot be undone."
-          confirmText="Delete"
-          confirmStyle="danger"
-          onConfirm={() => handleDelete(deletingId)}
-          onCancel={() => setDeletingId(null)}
-        />
-      )}
+      <ConfirmModal
+        isOpen={deletingId !== null}
+        title="Delete Stock Item"
+        message="Are you sure you want to delete this stock item? This action cannot be undone."
+        confirmText="Delete"
+        type="danger"
+        onConfirm={() => handleDelete(deletingId!)}
+        onCancel={() => setDeletingId(null)}
+      />
 
       {/* Transaction History Modal */}
       {viewingTransactions && (
