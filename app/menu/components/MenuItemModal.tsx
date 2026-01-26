@@ -1,9 +1,10 @@
 'use client'
 
 import { X, Plus, Check } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { formatPrice } from '../../constants/currency'
 import { getMenuCategoryDisplay } from '../../constants/enums'
+import { getMenuItemAllergens } from '../../actions/allergens'
 
 interface MenuItem {
   id: string
@@ -21,6 +22,13 @@ interface MenuItem {
   minimum_order_quantity?: number
 }
 
+interface Allergen {
+  allergen_id: number
+  allergen_name: string
+  allergen_code: string
+  icon_emoji: string
+}
+
 interface MenuItemModalProps {
   item: MenuItem | null
   isOpen: boolean
@@ -30,6 +38,28 @@ interface MenuItemModalProps {
 }
 
 export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: MenuItemModalProps) {
+  const [allergens, setAllergens] = useState<Allergen[]>([])
+  const [loadingAllergens, setLoadingAllergens] = useState(false)
+
+  // Fetch allergens when modal opens with an item
+  useEffect(() => {
+    if (isOpen && item) {
+      const fetchAllergens = async () => {
+        setLoadingAllergens(true)
+        const result = await getMenuItemAllergens(item.id)
+        if (result.success && result.data.allergens) {
+          setAllergens(result.data.allergens)
+        } else {
+          setAllergens([])
+        }
+        setLoadingAllergens(false)
+      }
+      fetchAllergens()
+    } else {
+      setAllergens([])
+    }
+  }, [isOpen, item])
+
   if (!isOpen || !item) return null
 
   return (
@@ -148,6 +178,29 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
                   Check availability at checkout
                 </p>
               )}
+            </div>
+          )}
+
+          {/* Allergens Section */}
+          {allergens.length > 0 && (
+            <div className="mb-6 p-4 md:p-5 bg-orange-50 rounded-2xl border-3 border-orange-300 shadow-sm">
+              <h3 className="text-xs md:text-sm font-bold text-ceylon-text mb-3 uppercase tracking-wider flex items-center gap-2">
+                <span className="text-base md:text-lg">⚠️</span>
+                Allergen Information:
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {allergens.map((allergen) => (
+                  <div
+                    key={allergen.allergen_id}
+                    className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-orange-300 rounded-lg shadow-sm"
+                  >
+                    <span className="text-lg">{allergen.icon_emoji}</span>
+                    <span className="text-xs md:text-sm font-semibold text-ceylon-text">
+                      {allergen.allergen_name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

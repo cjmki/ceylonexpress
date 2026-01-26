@@ -8,6 +8,7 @@ import Navigation from '../components/Navigation'
 import Footer from '../components/Footer'
 import { useCart } from '../contexts/CartContext'
 import { getMenuItems } from '../actions/orders'
+import { getMenuItemAllergens } from '../actions/allergens'
 import { formatPrice } from '../constants/currency'
 import { MenuItemModal } from './components/MenuItemModal'
 import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, getMenuCategoryDisplay } from '../constants/enums'
@@ -26,6 +27,12 @@ interface MenuItem {
   next_available_date?: string
   available_slots?: number
   minimum_order_quantity?: number
+  allergens?: Array<{
+    allergen_id: number
+    allergen_name: string
+    allergen_code: string
+    icon_emoji: string
+  }>
 }
 
 export default function MenuPage() {
@@ -36,11 +43,28 @@ export default function MenuPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { addToCart, getItemCount } = useCart()
 
-  // Function to fetch menu data (now includes availability)
+  // Function to fetch menu data (now includes availability and allergens)
   const fetchMenuData = async () => {
     try {
       const items = await getMenuItems()
-      setMenuItems(items || [])
+      
+      // Fetch allergens for each menu item
+      if (items && items.length > 0) {
+        const itemsWithAllergens = await Promise.all(
+          items.map(async (item) => {
+            const allergenResult = await getMenuItemAllergens(item.id)
+            return {
+              ...item,
+              allergens: allergenResult.success && allergenResult.data.allergens 
+                ? allergenResult.data.allergens 
+                : []
+            }
+          })
+        )
+        setMenuItems(itemsWithAllergens)
+      } else {
+        setMenuItems([])
+      }
     } catch (error) {
       console.error('Failed to load menu:', error)
     } finally {
@@ -260,6 +284,38 @@ export default function MenuPage() {
                           <p className="text-[10px] md:text-xs text-ceylon-text/60 mb-2 line-clamp-2 leading-relaxed">
                             {item.description}
                           </p>
+
+                          {/* Allergen Information - Subtle with Hover */}
+                          {item.allergens && item.allergens.length > 0 && (
+                            <div className="mb-2 group/allergen relative">
+                              <div className="inline-flex items-center gap-1 px-2 py-1 bg-orange-50 border border-orange-300 rounded-lg cursor-help">
+                                <span className="text-xs">⚠️</span>
+                                <span className="text-[10px] md:text-xs font-semibold text-orange-700">
+                                  Allergen Info
+                                </span>
+                              </div>
+                              
+                              {/* Hover Tooltip with Full Details */}
+                              <div className="absolute bottom-full left-0 mb-2 p-3 bg-white border-2 border-orange-300 rounded-lg shadow-xl opacity-0 group-hover/allergen:opacity-100 transition-opacity pointer-events-none z-20 min-w-[200px]">
+                                <div className="text-[10px] font-bold text-orange-700 mb-2 flex items-center gap-1">
+                                  ⚠️ Contains Allergens:
+                                </div>
+                                <div className="space-y-1">
+                                  {item.allergens.map((allergen) => (
+                                    <div
+                                      key={allergen.allergen_id}
+                                      className="flex items-center gap-2 text-[10px] md:text-xs"
+                                    >
+                                      <span className="text-sm">{allergen.icon_emoji}</span>
+                                      <span className="font-semibold text-ceylon-text">
+                                        {allergen.allergen_name}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
 
                           {/* MOQ Badge */}
                           {item.minimum_order_quantity && item.minimum_order_quantity > 1 && (

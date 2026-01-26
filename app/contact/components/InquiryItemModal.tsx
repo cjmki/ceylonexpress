@@ -13,6 +13,12 @@ interface MenuItem {
   image_url: string | null
   minimum_order_quantity?: number
   includes: string[] | null
+  allergens?: Array<{
+    allergen_id: number
+    allergen_name: string
+    allergen_code: string
+    icon_emoji: string
+  }>
 }
 
 interface InquiryItemModalProps {
@@ -88,6 +94,32 @@ export function InquiryItemModal({ item, isOpen, onClose, onAdd }: InquiryItemMo
               </div>
               <p className="text-ceylon-orange font-bold text-lg">
                 Minimum order - {item.minimum_order_quantity}
+              </p>
+            </div>
+          )}
+
+          {/* Allergen Information */}
+          {item.allergens && item.allergens.length > 0 && (
+            <div className="mb-6 p-4 md:p-5 bg-orange-50 rounded-2xl border-3 border-orange-300 shadow-sm">
+              <h3 className="text-xs md:text-sm font-bold text-ceylon-text mb-3 uppercase tracking-wider flex items-center gap-2">
+                <span className="text-base md:text-lg">⚠️</span>
+                Allergen Information:
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {item.allergens.map((allergen) => (
+                  <div
+                    key={allergen.allergen_id}
+                    className="flex items-center gap-2 px-3 py-2 bg-white border-2 border-orange-300 rounded-lg shadow-sm"
+                  >
+                    <span className="text-lg">{allergen.icon_emoji}</span>
+                    <span className="text-xs md:text-sm font-semibold text-ceylon-text">
+                      {allergen.allergen_name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-ceylon-text/60 mt-3 italic">
+                If you have allergies, please mention them in your message below.
               </p>
             </div>
           )}

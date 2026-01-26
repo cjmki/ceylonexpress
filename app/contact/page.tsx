@@ -10,6 +10,7 @@ import { MenuItemRow } from './components/MenuItemRow'
 import { InquiryCart } from './components/InquiryCart'
 import { InquiryItemModal } from './components/InquiryItemModal'
 import { getMenuItems } from '../actions/orders'
+import { getMenuItemAllergens } from '../actions/allergens'
 import { MENU_CATEGORIES, getMenuCategoryDisplay } from '../constants/enums'
 
 interface MenuItem {
@@ -21,6 +22,12 @@ interface MenuItem {
   image_url: string | null
   minimum_order_quantity?: number
   includes: string[] | null
+  allergens?: Array<{
+    allergen_id: number
+    allergen_name: string
+    allergen_code: string
+    icon_emoji: string
+  }>
 }
 
 interface InquiryItem {
@@ -67,7 +74,25 @@ export default function ContactPage() {
     const fetchMenu = async () => {
       try {
         const items = await getMenuItems()
-        setMenuItems(items || [])
+        
+        // Fetch allergens for each menu item
+        if (items && items.length > 0) {
+          const itemsWithAllergens = await Promise.all(
+            items.map(async (item) => {
+              const allergenResult = await getMenuItemAllergens(item.id)
+              return {
+                ...item,
+                allergens: allergenResult.success && allergenResult.data.allergens 
+                  ? allergenResult.data.allergens 
+                  : []
+              }
+            })
+          )
+          setMenuItems(itemsWithAllergens)
+        } else {
+          setMenuItems([])
+        }
+        
         setMenuError(false)
       } catch (error) {
         console.error('Failed to load menu:', error)

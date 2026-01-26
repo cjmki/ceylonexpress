@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Plus, Minus } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, Plus, Minus, Search } from 'lucide-react'
 import { createMenuItem } from '../../../actions/orders'
+import { linkRecipeToMenuItem } from '../../../actions/recipes'
+import { getAllRecipesWithAllergens } from '../../../actions/recipes'
 import { formatPrice } from '../../../constants/currency'
 import { MENU_CATEGORIES, MENU_CATEGORY_DISPLAY, MenuCategory } from '../../../constants/enums'
 
@@ -36,6 +38,44 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
     minimum_order_quantity: '1'
   })
   const [includes, setIncludes] = useState<string[]>([''])
+  
+  // Recipe & Allergen state
+  const [availableRecipes, setAvailableRecipes] = useState<any[]>([])
+  const [selectedRecipeId, setSelectedRecipeId] = useState<number | null>(null)
+  const [recipeAllergens, setRecipeAllergens] = useState<any[]>([])
+  const [allergenInfoProvided, setAllergenInfoProvided] = useState(false)
+  const [recipeSearchTerm, setRecipeSearchTerm] = useState('')
+  const [showRecipeDropdown, setShowRecipeDropdown] = useState(false)
+
+  // Fetch available recipes
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const result = await getAllRecipesWithAllergens()
+      if (result.success) {
+        setAvailableRecipes(result.data)
+      }
+    }
+    fetchRecipes()
+  }, [])
+
+  // Handle recipe selection
+  const handleRecipeSelect = (recipe: any) => {
+    setSelectedRecipeId(recipe.recipe_id)
+    setRecipeAllergens(recipe.allergens || [])
+    setRecipeSearchTerm(recipe.recipe_name)
+    setShowRecipeDropdown(false)
+  }
+
+  const clearRecipe = () => {
+    setSelectedRecipeId(null)
+    setRecipeAllergens([])
+    setRecipeSearchTerm('')
+    setAllergenInfoProvided(false)
+  }
+
+  const filteredRecipes = availableRecipes.filter(recipe =>
+    recipe.recipe_name.toLowerCase().includes(recipeSearchTerm.toLowerCase())
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,7 +120,20 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
         minimum_order_quantity: moq
       })
 
-      if (result.success) {
+      if (result.success && result.data) {
+        // Link recipe if selected
+        if (selectedRecipeId) {
+          const linkResult = await linkRecipeToMenuItem(
+            result.data.id,
+            selectedRecipeId,
+            allergenInfoProvided
+          )
+          if (!linkResult.success) {
+            console.error('Failed to link recipe:', linkResult.error)
+            // Don't fail the whole operation, just log it
+          }
+        }
+        
         onSuccess()
       } else {
         setError(result.error || 'Failed to create menu item')
@@ -307,6 +360,117 @@ export function AddMenuItemForm({ onSuccess, onClose }: AddMenuItemFormProps) {
                 Add Item
               </button>
             </div>
+          </div>
+
+          {/* Recipe & Allergens */}
+          <div className="space-y-4 p-6 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border-2 border-orange-200">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">📖</span>
+              <h3 className="text-lg font-bold text-gray-900">Recipe & Allergens</h3>
+            </div>
+
+            {/* Recipe Selection */}
+            <div className="relative">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Link Recipe
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  value={recipeSearchTerm}
+                  onChange={(e) => {
+                    setRecipeSearchTerm(e.target.value)
+                    setShowRecipeDropdown(true)
+                  }}
+                  onFocus={() => setShowRecipeDropdown(true)}
+                  placeholder="Search recipes..."
+                  className="w-full pl-10 pr-10 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+                {selectedRecipeId && (
+                  <button
+                    type="button"
+                    onClick={clearRecipe}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Dropdown */}
+              {showRecipeDropdown && recipeSearchTerm && (
+                <div className="absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {filteredRecipes.length > 0 ? (
+                    filteredRecipes.map((recipe) => (
+                      <button
+                        key={recipe.recipe_id}
+                        type="button"
+                        onClick={() => handleRecipeSelect(recipe)}
+                        className="w-full px-4 py-3 text-left hover:bg-orange-50 transition-colors border-b border-gray-100 last:border-b-0"
+                      >
+                        <div className="font-semibold text-gray-900">{recipe.recipe_name}</div>
+                        {recipe.allergens && recipe.allergens.length > 0 && (
+                          <div className="flex gap-1 mt-1 flex-wrap">
+                            {recipe.allergens.map((allergen: any) => (
+                              <span key={allergen.allergen_id} className="text-xs">
+                                {allergen.icon_emoji}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-3 text-sm text-gray-500">
+                      No recipes found
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Selected Recipe Allergens */}
+            {selectedRecipeId && recipeAllergens.length > 0 && (
+              <div className="bg-white rounded-lg p-4 border-2 border-orange-300">
+                <p className="text-sm font-semibold text-gray-900 mb-3">
+                  ⚠️ Allergens in this recipe:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {recipeAllergens.map((allergen) => (
+                    <div
+                      key={allergen.allergen_id}
+                      className="flex items-center gap-2 px-3 py-2 bg-orange-100 border-2 border-orange-300 rounded-lg"
+                    >
+                      <span className="text-lg">{allergen.icon_emoji}</span>
+                      <span className="text-sm font-semibold text-gray-900">
+                        {allergen.allergen_name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Allergen Info Provided Checkbox */}
+            {selectedRecipeId && (
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg border-2 border-green-200">
+                <input
+                  type="checkbox"
+                  id="allergen_info_provided"
+                  checked={allergenInfoProvided}
+                  onChange={(e) => setAllergenInfoProvided(e.target.checked)}
+                  className="w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-green-500 mt-0.5"
+                />
+                <label htmlFor="allergen_info_provided" className="text-sm">
+                  <span className="font-bold text-gray-900">
+                    ✓ Allergen information provided to customers
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Available Toggle */}
