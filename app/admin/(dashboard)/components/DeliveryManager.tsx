@@ -140,7 +140,7 @@ export function DeliveryManager() {
     prompt += `5. Provide the total estimated driving time and distance\n`
     prompt += `6. List the optimized route order with turn-by-turn sequence\n\n`
     prompt += `**Additional Constraints:**\n`
-    prompt += `- All deliveries must be completed by 2:00 PM\n`
+    prompt += `- All deliveries must be completed latest by 2:00 PM\n`
     prompt += `- Please account for 5 minutes unloading time at each stop\n`
     prompt += `- Consider current traffic patterns for ${dayOfWeek} midday\n`
 
@@ -332,10 +332,9 @@ function DeliveryCard({ order, orderNumber }: { order: Order; orderNumber: numbe
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="bg-white text-blue-600 rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">
-              {orderNumber}
+              {order.id}
             </div>
             <div>
-              <div className="text-xs font-medium opacity-90">Order #{order.id}</div>
               <div className="text-lg font-bold">{order.customer_name}</div>
             </div>
           </div>
