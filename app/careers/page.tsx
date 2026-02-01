@@ -28,7 +28,7 @@ const jobOpenings = [
       'Mainly from Upplands Bro to Stockholm area',
       '3-4 hours per day',
       'Mostly weekend work',
-      'Great for students or part-time workers'
+      'Good if you have your own vehicle'
     ]
   },
   {
@@ -47,6 +47,8 @@ const jobOpenings = [
       'Work at our location (Upplands Bro)',
       'Mainly Friday nights and Saturday mornings (may change in the future)',
       'Passionate about food and cooking, someone who can help us to improve our menu and recipes',
+      'Help with kitchen cleaning and maintaining hygiene standards',
+      'Assist with stock management (ingredients, supplies, basic inventory tracking)',
       'We do not compromise on ingredients so you have the opportunity to work with quality sri lankan ingredients',
       'Share your social media if you post your cooking creations'
     ]
