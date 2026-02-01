@@ -23,12 +23,13 @@ const jobOpenings = [
     iconColor: 'text-ceylon-orange',
     iconBg: 'bg-ceylon-orange/10',
     borderColor: 'border-ceylon-orange/30',
-    description: 'Looking for someone who can make deliveries for us. Currently about 3-4 hours per day, mostly on weekends.',
+    description:
+      'Looking for someone who can make deliveries for us. Currently about 3–4 hours per day, mostly on weekends.',
     details: [
       'Mainly from Upplands Bro to Stockholm area',
-      '3-4 hours per day',
+      '3–4 hours per day',
       'Mostly weekend work',
-      'Great for students or part-time workers'
+      'Good if you have your own vehicle'
     ]
   },
   {
@@ -40,18 +41,22 @@ const jobOpenings = [
     iconColor: 'text-ceylon-blue',
     iconBg: 'bg-ceylon-blue/10',
     borderColor: 'border-ceylon-blue/30',
-    description: 'We\'re seeking a passionate female cook for a part-time role with long-term potential. This position offers the opportunity to grow with us and transition into a permanent role as we expand.',
+    description:
+      "We're seeking a passionate female cook for a part-time role with long-term potential. This position offers the opportunity to grow with us and transition into a permanent role as we expand.",
     details: [
-      'If you can cook an awesome watalappan or butter cake, you\'re the person we\'re looking for!',
+      "If you can cook an awesome watalappan or butter cake, you're the person we're looking for!",
       'Part-time position with long-term opportunity',
       'Work at our location (Upplands Bro)',
       'Mainly Friday nights and Saturday mornings (may change in the future)',
-      'Passionate about food and cooking, someone who can help us to improve our menu and recipes',
-      'We do not compromise on ingredients so you have the opportunity to work with quality sri lankan ingredients',
+      'Passionate about food and cooking, and helping us improve our menu and recipes',
+      'Help with kitchen cleaning and maintaining hygiene standards',
+      'Assist with stock management (ingredients, supplies, basic inventory tracking)',
+      'We do not compromise on ingredients, so you will work with quality Sri Lankan ingredients',
       'Share your social media if you post your cooking creations'
     ]
   }
 ]
+
 
 export default function CareersPage() {
   const [formData, setFormData] = useState<CareersFormData>({
