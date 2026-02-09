@@ -1,32 +1,40 @@
 'use client'
 
 import { X, Plus, Check } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import Image from 'next/image'
 import { formatPrice } from '../../constants/currency'
 import { getMenuCategoryDisplay } from '../../constants/enums'
-import { getMenuItemAllergens } from '../../actions/allergens'
+import type { MenuItem } from '../../actions/menu'
 
-interface MenuItem {
-  id: string
-  name: string
-  description: string
-  price: number
-  category: string
-  image_url: string | null
-  available: boolean
-  includes: string[] | null
-  has_limited_availability?: boolean
-  pre_orders_only?: boolean
-  next_available_date?: string
-  available_slots?: number
-  minimum_order_quantity?: number
-}
+// Shimmer skeleton for modal image
+function ModalImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false)
 
-interface Allergen {
-  allergen_id: number
-  allergen_name: string
-  allergen_code: string
-  icon_emoji: string
+  return (
+    <>
+      <div
+        className={`absolute inset-0 bg-gradient-to-r from-ceylon-cream/60 via-white/80 to-ceylon-cream/60 bg-[length:200%_100%] animate-shimmer transition-opacity duration-500 ${
+          loaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-4xl md:text-5xl opacity-30">🍛</span>
+        </div>
+      </div>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw, 672px"
+        className={`object-cover transition-opacity duration-500 ${
+          loaded ? 'opacity-100' : 'opacity-0'
+        }`}
+        onLoad={() => setLoaded(true)}
+        priority
+      />
+    </>
+  )
 }
 
 interface MenuItemModalProps {
@@ -38,29 +46,12 @@ interface MenuItemModalProps {
 }
 
 export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: MenuItemModalProps) {
-  const [allergens, setAllergens] = useState<Allergen[]>([])
-  const [loadingAllergens, setLoadingAllergens] = useState(false)
-
-  // Fetch allergens when modal opens with an item
-  useEffect(() => {
-    if (isOpen && item) {
-      const fetchAllergens = async () => {
-        setLoadingAllergens(true)
-        const result = await getMenuItemAllergens(item.id)
-        if (result.success && result.data.allergens) {
-          setAllergens(result.data.allergens)
-        } else {
-          setAllergens([])
-        }
-        setLoadingAllergens(false)
-      }
-      fetchAllergens()
-    } else {
-      setAllergens([])
-    }
-  }, [isOpen, item])
+  // Allergens are now passed directly via item.allergens (pre-fetched in batch)
+  // No more per-item fetch on modal open!
 
   if (!isOpen || !item) return null
+
+  const allergens = item.allergens || []
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -80,14 +71,10 @@ export function MenuItemModal({ item, isOpen, onClose, onAddToCart, isAdded }: M
           <X className="h-4 w-4 md:h-5 md:w-5" />
         </button>
 
-        {/* Image */}
+        {/* Image with skeleton shimmer */}
         {item.image_url && (
           <div className="w-full h-48 md:h-80 bg-gradient-to-br from-ceylon-yellow/20 to-ceylon-orange/20 overflow-hidden rounded-t-3xl relative">
-            <img 
-              src={item.image_url} 
-              alt={item.name}
-              className="w-full h-full object-cover"
-            />
+            <ModalImage src={item.image_url} alt={item.name} />
             <div className="absolute inset-0 bg-gradient-to-t from-ceylon-text/20 to-transparent"></div>
           </div>
         )}

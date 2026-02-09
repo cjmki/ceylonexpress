@@ -1,9 +1,17 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import '../src/index.css'
 import { CartProvider } from './contexts/CartContext'
 
 const inter = Inter({ subsets: ['latin'] })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
   title: 'Ceylon Express - Authentic Sri Lankan Cuisine',
@@ -11,20 +19,13 @@ export const metadata: Metadata = {
   keywords: ['Sri Lankan food', 'Ceylon cuisine', 'food truck', 'catering', 'authentic Sri Lankan', 'Ceylon Express'],
   authors: [{ name: 'Ceylon Express' }],
   manifest: '/site.webmanifest',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-    viewportFit: 'cover',
-  },
   icons: {
     icon: [
-      { url: '/logo_transparent.png', type: 'image/png' },
+      { url: '/images/logo_transparent.png', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' },
     ],
     apple: [
-      { url: '/logo_transparent.png', type: 'image/png' },
+      { url: '/images/logo_transparent.png', type: 'image/png' },
     ],
   },
   openGraph: {
