@@ -5,9 +5,9 @@ import { OrdersTable } from './OrdersTable'
 import { OrdersFilters, OrderFilters } from './OrdersFilters'
 import { Pagination } from './Pagination'
 import { getFilteredOrders } from '../../../actions/orders'
-import { Loader2, Download } from 'lucide-react'
+import { Loader2, FileDown } from 'lucide-react'
 import { OrderStatus } from '../../../constants/enums'
-import { generateOrdersExcel } from '@/lib/excelExport'
+import { generateOrdersPdf } from '@/lib/pdfExport'
 
 interface Order {
   id: number
@@ -111,8 +111,8 @@ export function OrdersManager() {
       })
 
       if (result.success && result.data && result.data.length > 0) {
-        const { filename, totalRevenue, orderCount } = generateOrdersExcel(result.data)
-        alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\nTotal Revenue: $${totalRevenue.toFixed(2)}`)
+        const { filename, totalRevenue, orderCount } = generateOrdersPdf(result.data)
+        alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\nTotal Revenue: ${totalRevenue.toFixed(2)} SEK`)
       } else {
         alert('No completed orders found with the current filters.')
       }
@@ -147,8 +147,8 @@ export function OrdersManager() {
               </>
             ) : (
               <>
-                <Download className="h-5 w-5" />
-                Export Completed Orders to Excel
+                <FileDown className="h-5 w-5" />
+                Export Completed Orders to PDF
               </>
             )}
           </button>
