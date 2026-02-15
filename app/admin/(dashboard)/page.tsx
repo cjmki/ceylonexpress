@@ -1,14 +1,60 @@
 import { getAllOrders, getAllMenuItems } from '../../actions/orders'
+import { getAllRecipeCosts } from '../../actions/recipes'
 import { OrdersTable } from './components/OrdersTable'
 import { formatPrice } from '../../constants/currency'
 import { AdminTabs } from './components/AdminTabs'
 import { OrderStatus } from '../../constants/enums'
 
+export type MenuItemCostInfo = {
+  menuItemId: string
+  menuItemName: string
+  sellingPrice: number
+  costPerPortion: number | null
+}
+
+export type IngredientDetail = {
+  stockItemName: string
+  quantity: number
+  unit: string
+  unitCost: number
+  lineCost: number
+}
+
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const orders = await getAllOrders()
-  const menuItems = await getAllMenuItems()
+  const [orders, menuItems, recipeCostsResult] = await Promise.all([
+    getAllOrders(),
+    getAllMenuItems(),
+    getAllRecipeCosts(),
+  ])
+
+  // Build a map of recipe_id -> cost_per_portion
+  const recipeCostMap: Record<number, number> = {}
+  if (recipeCostsResult.success && recipeCostsResult.data) {
+    recipeCostsResult.data.forEach((rc: any) => {
+      if (rc.recipe_id != null && rc.cost_per_portion != null) {
+        recipeCostMap[rc.recipe_id] = rc.cost_per_portion
+      }
+    })
+  }
+
+  // Build menu item cost info array
+  const menuItemCostData: MenuItemCostInfo[] = (menuItems || []).map((item: any) => ({
+    menuItemId: item.id,
+    menuItemName: item.name,
+    sellingPrice: item.price,
+    costPerPortion: item.recipe_id != null ? (recipeCostMap[item.recipe_id] ?? null) : null,
+  }))
+
+  // Build menu_item_id -> ingredient details map (for expandable profitability rows)
+  const recipeIngredientsMap: Record<string, IngredientDetail[]> = recipeCostsResult.ingredients || {}
+  const menuItemIngredients: Record<string, IngredientDetail[]> = {}
+  ;(menuItems || []).forEach((item: any) => {
+    if (item.recipe_id != null && recipeIngredientsMap[item.recipe_id]) {
+      menuItemIngredients[item.id] = recipeIngredientsMap[item.recipe_id]
+    }
+  })
 
   const pendingOrders = orders.filter(order => order.status === OrderStatus.PENDING)
   const confirmedOrders = orders.filter(order => order.status === OrderStatus.CONFIRMED)
@@ -80,7 +126,7 @@ export default async function AdminDashboard() {
       )}
 
       {/* Tabbed Interface */}
-      <AdminTabs orders={orders} menuItems={menuItems} />
+      <AdminTabs orders={orders} menuItems={menuItems} menuItemCostData={menuItemCostData} menuItemIngredients={menuItemIngredients} />
     </div>
   )
 }

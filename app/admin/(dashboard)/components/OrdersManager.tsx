@@ -78,19 +78,19 @@ export function OrdersManager() {
     fetchOrders()
   }, [fetchOrders])
 
-  const handleFilterChange = (newFilters: OrderFilters) => {
+  const handleFilterChange = useCallback((newFilters: OrderFilters) => {
     setFilters(newFilters)
     setCurrentPage(1) // Reset to first page when filters change
-  }
+  }, [])
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page)
-  }
+  }, [])
 
-  const handlePageSizeChange = (newPageSize: number) => {
+  const handlePageSizeChange = useCallback((newPageSize: number) => {
     setPageSize(newPageSize)
     setCurrentPage(1) // Reset to first page when page size changes
-  }
+  }, [])
 
   const handleExport = async () => {
     try {

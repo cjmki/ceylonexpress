@@ -154,7 +154,7 @@ export function generateOrdersPdf(orders: ExportOrder[]) {
   doc.text(`Total Revenue: ${formatPrice(totalRevenue)}`, 14, finalY)
 
   // --- Generate filename and trigger download ---
-  const filename = `CeylonExpress_Orders_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}.pdf`
+  const filename = `ceylon_express_orders_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}.pdf`
 
   doc.save(filename)
 

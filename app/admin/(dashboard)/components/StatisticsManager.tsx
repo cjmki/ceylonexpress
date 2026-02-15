@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { formatPrice } from '../../../constants/currency'
 import { OrderStatus } from '../../../constants/enums'
-import { TrendingUp, TrendingDown, DollarSign, ShoppingBag, XCircle, CheckCircle, Clock, Calendar } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, ShoppingBag, XCircle, CheckCircle, Clock, Calendar, AlertTriangle, Receipt, PieChart, ChevronDown, ChevronRight } from 'lucide-react'
 
 interface Order {
   id: string
@@ -24,19 +24,59 @@ interface Order {
 
 interface OrderItem {
   id: string
+  menu_item_id: string
   menu_item_name: string
   menu_item_price: number
   quantity: number
   subtotal: number
 }
 
-interface StatisticsManagerProps {
-  orders: Order[]
+interface MenuItemCostInfo {
+  menuItemId: string
+  menuItemName: string
+  sellingPrice: number
+  costPerPortion: number | null
 }
 
-export function StatisticsManager({ orders }: StatisticsManagerProps) {
+interface IngredientDetail {
+  stockItemName: string
+  quantity: number
+  unit: string
+  unitCost: number
+  lineCost: number
+}
+
+interface StatisticsManagerProps {
+  orders: Order[]
+  menuItemCostData: MenuItemCostInfo[]
+  menuItemIngredients: Record<string, IngredientDetail[]>
+}
+
+export function StatisticsManager({ orders, menuItemCostData, menuItemIngredients }: StatisticsManagerProps) {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+
+  const toggleExpanded = (menuItemId: string) => {
+    setExpandedItems(prev => {
+      const next = new Set(prev)
+      if (next.has(menuItemId)) {
+        next.delete(menuItemId)
+      } else {
+        next.add(menuItemId)
+      }
+      return next
+    })
+  }
+
+  // Build a cost lookup map: menu_item_id -> cost_per_portion
+  const costMap = useMemo(() => {
+    const map: Record<string, number | null> = {}
+    menuItemCostData.forEach(item => {
+      map[item.menuItemId] = item.costPerPortion
+    })
+    return map
+  }, [menuItemCostData])
 
   // Filter orders based on date range (using created_at)
   const filteredOrders = useMemo(() => {
@@ -76,6 +116,69 @@ export function StatisticsManager({ orders }: StatisticsManagerProps) {
       ? totalRevenue / completedOrders.length 
       : 0
 
+    // Cost calculations (from completed orders only)
+    let totalCost = 0
+    let uncostedItemCount = 0
+    let totalItemCount = 0
+
+    // Per-item profitability tracking (by menu_item_id)
+    const itemProfitability: Record<string, {
+      menuItemId: string
+      name: string
+      sellingPrice: number
+      costPerPortion: number
+      unitsSold: number
+      totalRevenue: number
+      totalCost: number
+    }> = {}
+
+    completedOrders.forEach(order => {
+      order.order_items.forEach(item => {
+        totalItemCount += item.quantity
+        const cost = costMap[item.menu_item_id]
+        
+        if (cost != null) {
+          const itemCost = cost * item.quantity
+          totalCost += itemCost
+
+          // Track per-item profitability
+          if (!itemProfitability[item.menu_item_id]) {
+            itemProfitability[item.menu_item_id] = {
+              menuItemId: item.menu_item_id,
+              name: item.menu_item_name,
+              sellingPrice: item.menu_item_price,
+              costPerPortion: cost,
+              unitsSold: 0,
+              totalRevenue: 0,
+              totalCost: 0,
+            }
+          }
+          itemProfitability[item.menu_item_id].unitsSold += item.quantity
+          itemProfitability[item.menu_item_id].totalRevenue += item.subtotal
+          itemProfitability[item.menu_item_id].totalCost += itemCost
+        } else {
+          uncostedItemCount += item.quantity
+        }
+      })
+    })
+
+    const profit = totalRevenue - totalCost
+    const profitMargin = totalRevenue > 0 
+      ? ((totalRevenue - totalCost) / totalRevenue) * 100 
+      : 0
+
+    // Sort per-item data by total profit descending
+    const itemProfitList = Object.values(itemProfitability)
+      .map(item => ({
+        ...item,
+        profitPerUnit: item.sellingPrice - item.costPerPortion,
+        margin: item.sellingPrice > 0 
+          ? ((item.sellingPrice - item.costPerPortion) / item.sellingPrice) * 100 
+          : 0,
+        totalProfit: item.totalRevenue - item.totalCost,
+      }))
+      .sort((a, b) => b.totalProfit - a.totalProfit)
+
     // Cancellation rate
     const cancellationRate = totalOrders > 0 
       ? (cancelledOrders.length / totalOrders) * 100 
@@ -110,12 +213,18 @@ export function StatisticsManager({ orders }: StatisticsManagerProps) {
       potentialRevenue,
       totalRevenue,
       avgOrderValue,
+      totalCost,
+      profit,
+      profitMargin,
+      uncostedItemCount,
+      totalItemCount,
+      itemProfitList,
       cancellationRate,
       deliveryOrders,
       pickupOrders,
       topItems,
     }
-  }, [filteredOrders])
+  }, [filteredOrders, costMap])
 
   const handleClearDates = () => {
     setDateFrom('')
@@ -193,6 +302,45 @@ export function StatisticsManager({ orders }: StatisticsManagerProps) {
           color="blue"
           trend="neutral"
         />
+      </div>
+
+      {/* Cost & Profit Metrics */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost & Profit Analysis</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <StatCard
+            title="Total Cost (Approx.)"
+            subtitle="Based on recipe ingredient costs"
+            value={formatPrice(stats.totalCost)}
+            icon={<Receipt className="h-6 w-6" />}
+            color="red"
+            trend="neutral"
+          />
+          <StatCard
+            title="Estimated Profit"
+            subtitle="Revenue minus ingredient costs"
+            value={formatPrice(stats.profit)}
+            icon={<DollarSign className="h-6 w-6" />}
+            color={stats.profit >= 0 ? 'green' : 'red'}
+            trend={stats.profit > 0 ? 'up' : stats.profit < 0 ? 'down' : 'none'}
+          />
+          <StatCard
+            title="Profit Margin"
+            subtitle="(Revenue - Cost) / Revenue"
+            value={`${stats.profitMargin.toFixed(1)}%`}
+            icon={<PieChart className="h-6 w-6" />}
+            color={stats.profitMargin >= 50 ? 'green' : stats.profitMargin >= 20 ? 'blue' : 'red'}
+            trend={stats.profitMargin >= 50 ? 'up' : stats.profitMargin < 20 ? 'down' : 'neutral'}
+          />
+        </div>
+        {stats.uncostedItemCount > 0 && (
+          <div className="mt-3 flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+            <span>
+              {stats.uncostedItemCount} of {stats.totalItemCount} item units sold have no linked recipe — cost may be underestimated.
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Order Status Metrics */}
@@ -301,6 +449,155 @@ export function StatisticsManager({ orders }: StatisticsManagerProps) {
           )}
         </div>
       </div>
+
+      {/* Per-Item Profitability Table */}
+      <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-1">Item Profitability</h3>
+        <p className="text-sm text-gray-500 mb-4">Only items with linked recipes (costed items) from completed orders</p>
+        
+        {stats.itemProfitList.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b-2 border-gray-200">
+                  <th className="text-left py-3 px-3 font-semibold text-gray-700">Item</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Price</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Cost</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Profit/Unit</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Margin</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Units Sold</th>
+                  <th className="text-right py-3 px-3 font-semibold text-gray-700">Total Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.itemProfitList.map((item) => {
+                  const isExpanded = expandedItems.has(item.menuItemId)
+                  const ingredients = menuItemIngredients[item.menuItemId] || []
+                  const hasIngredients = ingredients.length > 0
+
+                  return (
+                    <React.Fragment key={item.menuItemId}>
+                      <tr
+                        className={`border-b border-gray-100 transition-colors ${hasIngredients ? 'cursor-pointer hover:bg-gray-50' : ''} ${isExpanded ? 'bg-gray-50' : ''}`}
+                        onClick={() => hasIngredients && toggleExpanded(item.menuItemId)}
+                      >
+                        <td className="py-3 px-3">
+                          <div className="flex items-center gap-2">
+                            {hasIngredients && (
+                              <span className="text-gray-400 flex-shrink-0">
+                                {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                              </span>
+                            )}
+                            <p className="font-medium text-gray-900">{item.name}</p>
+                          </div>
+                        </td>
+                        <td className="text-right py-3 px-3 text-gray-700">
+                          {formatPrice(item.sellingPrice)}
+                        </td>
+                        <td className="text-right py-3 px-3 text-gray-700">
+                          {formatPrice(item.costPerPortion)}
+                        </td>
+                        <td className="text-right py-3 px-3">
+                          <span className={item.profitPerUnit >= 0 ? 'text-green-700' : 'text-red-700'}>
+                            {formatPrice(item.profitPerUnit)}
+                          </span>
+                        </td>
+                        <td className="text-right py-3 px-3">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
+                            item.margin >= 50
+                              ? 'bg-green-100 text-green-800'
+                              : item.margin >= 20
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {item.margin.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="text-right py-3 px-3 text-gray-700 font-medium">
+                          {item.unitsSold}
+                        </td>
+                        <td className="text-right py-3 px-3">
+                          <span className={`font-bold ${item.totalProfit >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                            {formatPrice(item.totalProfit)}
+                          </span>
+                        </td>
+                      </tr>
+                      {isExpanded && hasIngredients && (
+                        <tr>
+                          <td colSpan={7} className="p-0">
+                            <div className="bg-gray-50 border-y border-gray-200 px-6 py-3 ml-6">
+                              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recipe Ingredients</p>
+                              <table className="w-full text-xs">
+                                <thead>
+                                  <tr className="text-gray-500">
+                                    <th className="text-left py-1.5 pr-3 font-medium">Ingredient</th>
+                                    <th className="text-right py-1.5 px-3 font-medium">Quantity</th>
+                                    <th className="text-right py-1.5 px-3 font-medium">Unit Cost</th>
+                                    <th className="text-right py-1.5 pl-3 font-medium">Line Cost</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {ingredients.map((ing, idx) => (
+                                    <tr key={idx} className="border-t border-gray-100">
+                                      <td className="py-1.5 pr-3 text-gray-700">{ing.stockItemName}</td>
+                                      <td className="text-right py-1.5 px-3 text-gray-600">
+                                        {ing.quantity} {ing.unit}
+                                      </td>
+                                      <td className="text-right py-1.5 px-3 text-gray-600">
+                                        {ing.unitCost > 0 ? `${ing.unitCost.toFixed(4)} SEK/${ing.unit}` : '-'}
+                                      </td>
+                                      <td className="text-right py-1.5 pl-3 font-medium text-gray-700">
+                                        {ing.lineCost > 0 ? formatPrice(ing.lineCost) : '-'}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                                <tfoot>
+                                  <tr className="border-t border-gray-300">
+                                    <td colSpan={3} className="py-1.5 pr-3 font-semibold text-gray-700">Total per portion</td>
+                                    <td className="text-right py-1.5 pl-3 font-bold text-gray-900">
+                                      {formatPrice(ingredients.reduce((sum, ing) => sum + ing.lineCost, 0))}
+                                    </td>
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-gray-300 bg-gray-50">
+                  <td className="py-3 px-3 font-bold text-gray-900" colSpan={5}>
+                    Total (Costed Items)
+                  </td>
+                  <td className="text-right py-3 px-3 font-bold text-gray-900">
+                    {stats.itemProfitList.reduce((sum, item) => sum + item.unitsSold, 0)}
+                  </td>
+                  <td className="text-right py-3 px-3">
+                    <span className={`font-bold ${
+                      stats.itemProfitList.reduce((sum, item) => sum + item.totalProfit, 0) >= 0
+                        ? 'text-green-700'
+                        : 'text-red-700'
+                    }`}>
+                      {formatPrice(stats.itemProfitList.reduce((sum, item) => sum + item.totalProfit, 0))}
+                    </span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            <Receipt className="h-12 w-12 mx-auto mb-2 opacity-50" />
+            <p>No costed items sold yet</p>
+            <p className="text-xs mt-1">Link recipes to menu items to see profitability data</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -317,13 +614,15 @@ function StatCard({
   subtitle: string
   value: string
   icon: React.ReactNode
-  color: 'yellow' | 'green' | 'blue'
+  color: 'yellow' | 'green' | 'blue' | 'red' | 'orange'
   trend: 'up' | 'down' | 'neutral' | 'none'
 }) {
   const colorClasses = {
     yellow: 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 text-yellow-700',
     green: 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 text-green-700',
     blue: 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 text-blue-700',
+    red: 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 text-red-700',
+    orange: 'bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200 text-orange-700',
   }
 
   return (

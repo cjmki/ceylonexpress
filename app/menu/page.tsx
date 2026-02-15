@@ -32,7 +32,13 @@ export default async function MenuPage() {
             </h1>
 
             <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 max-w-3xl mx-auto">
-              Traditional recipes made fresh with love and authentic spices
+              Items sold out?{' '}
+              <Link 
+                href="/faq#sold-out" 
+                className="text-ceylon-orange font-semibold hover:text-ceylon-text underline decoration-ceylon-orange/30 hover:decoration-ceylon-orange transition-all"
+              >
+                Find out why &amp; when we make them available again
+              </Link>
             </p>
             
             <p className="text-sm md:text-base text-ceylon-text/60 max-w-3xl mx-auto mt-3">

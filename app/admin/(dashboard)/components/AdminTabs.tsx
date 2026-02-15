@@ -31,6 +31,7 @@ interface Order {
 
 interface OrderItem {
   id: string
+  menu_item_id: string
   menu_item_name: string
   menu_item_price: number
   quantity: number
@@ -48,14 +49,31 @@ interface MenuItem {
   includes: string[] | null
 }
 
+export interface MenuItemCostInfo {
+  menuItemId: string
+  menuItemName: string
+  sellingPrice: number
+  costPerPortion: number | null
+}
+
+export interface IngredientDetail {
+  stockItemName: string
+  quantity: number
+  unit: string
+  unitCost: number
+  lineCost: number
+}
+
 interface AdminTabsProps {
   orders: Order[]
   menuItems: MenuItem[]
+  menuItemCostData: MenuItemCostInfo[]
+  menuItemIngredients: Record<string, IngredientDetail[]>
 }
 
 type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics' | 'health-safety'
 
-export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
+export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredients }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
   const [showAddMenuForm, setShowAddMenuForm] = useState(false)
   const router = useRouter()
@@ -251,7 +269,7 @@ export function AdminTabs({ orders, menuItems }: AdminTabsProps) {
                 <p className="text-sm text-gray-600 mt-1">Overview of your restaurant's performance</p>
               </div>
 
-              <StatisticsManager orders={orders} />
+              <StatisticsManager orders={orders} menuItemCostData={menuItemCostData} menuItemIngredients={menuItemIngredients} />
             </div>
           )}
 
