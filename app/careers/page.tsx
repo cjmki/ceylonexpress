@@ -290,6 +290,13 @@ Submitted from Ceylon Express Careers Page`,
               <p className="text-base md:text-lg lg:text-xl text-ceylon-text/70 max-w-2xl mx-auto">
                 We're a small team with big dreams. Join us in bringing authentic Sri Lankan flavors to Stockholm!
               </p>
+
+              <div className="mt-4 inline-flex items-center gap-2 bg-ceylon-orange/10 border-2 border-ceylon-orange/30 px-5 py-2.5 rounded-full">
+                <span className="text-ceylon-orange text-lg">📍</span>
+                <span className="text-sm md:text-base font-bold text-ceylon-text">
+                  Based in Upplands Bro, Stockholm — ideal if you&apos;re nearby!
+                </span>
+              </div>
             </motion.div>
 
             {/* Job Openings */}

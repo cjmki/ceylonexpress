@@ -147,6 +147,14 @@ export default function Navigation() {
                 Join Us
               </Link>
 
+              {/* FAQ Link - Desktop only */}
+              <Link
+                href="/faq"
+                className="hidden md:flex items-center text-ceylon-text hover:text-white hover:bg-ceylon-orange transition-all duration-300 text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-full border-2 border-transparent hover:border-ceylon-orange hover:scale-105"
+              >
+                FAQ
+              </Link>
+
               {/* Hamburger Menu Button - Mobile Only */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -280,6 +288,13 @@ export default function Navigation() {
                         className="flex items-center gap-3 px-6 py-4 bg-ceylon-orange/10 hover:bg-ceylon-orange hover:text-white text-ceylon-text rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-ceylon-orange/30"
                       >
                         <span className="text-sm font-bold uppercase">Join Us</span>
+                      </Link>
+                      <Link
+                        href="/faq"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-6 py-4 bg-ceylon-yellow/20 hover:bg-ceylon-orange hover:text-white text-ceylon-text rounded-2xl hover:scale-105 transition-all duration-300 border-2 border-ceylon-yellow/30"
+                      >
+                        <span className="text-sm font-bold uppercase">FAQ</span>
                       </Link>
                     </div>
                   </motion.div>
