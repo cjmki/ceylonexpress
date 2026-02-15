@@ -99,7 +99,7 @@ export function StockItemsTable({ items, onEdit, onAdjust, onUpdate }: StockItem
                     <div className="flex items-center">
                       <div>
                         <div className="text-sm font-semibold text-gray-900">
-                          {item.stock_item_name}
+                          {item.stock_item_name || (item as any).name}
                         </div>
                         {item.storage_location && (
                           <div className="text-xs text-gray-500">

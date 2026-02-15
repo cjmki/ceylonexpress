@@ -707,3 +707,114 @@ export async function getAllRecipesWithAllergens() {
     return { success: false, error: 'Failed to fetch recipes', data: [] }
   }
 }
+
+// ==================== Get All Recipe Costs ====================
+
+/**
+ * Convert a quantity from one unit to another (weight or volume).
+ * Returns the quantity expressed in the target unit.
+ * If units are the same or conversion is not possible, returns the original quantity.
+ */
+function convertUnits(quantity: number, fromUnit: string, toUnit: string): number {
+  if (fromUnit === toUnit) return quantity
+
+  const from = fromUnit.toLowerCase().trim()
+  const to = toUnit.toLowerCase().trim()
+  if (from === to) return quantity
+
+  // Weight conversions: normalize to grams first
+  const toGrams: Record<string, number> = { g: 1, kg: 1000 }
+  // Volume conversions: normalize to ml first
+  const toMl: Record<string, number> = { ml: 1, l: 1000 }
+
+  // Weight conversion
+  if (from in toGrams && to in toGrams) {
+    return quantity * toGrams[from] / toGrams[to]
+  }
+
+  // Volume conversion
+  if (from in toMl && to in toMl) {
+    return quantity * toMl[from] / toMl[to]
+  }
+
+  // Units that don't need conversion (pieces, units, etc.) or incompatible units
+  return quantity
+}
+
+export async function getAllRecipeCosts() {
+  'use server'
+  
+  try {
+    await requireAuth()
+    
+    const serverClient = createServerSupabaseClient()
+    
+    // Query raw recipe_ingredients + stock_items instead of the recipe_costs view,
+    // because the view crashes when stock items have empty-string unit_cost values.
+    // Include units from both tables so we can do proper unit conversion.
+    const { data: ingredients, error } = await serverClient
+      .from('recipe_ingredients')
+      .select('recipe_id, quantity, unit, stock_items(id, name, unit_cost, unit)')
+    
+    if (error) throw error
+    
+    // Calculate costs per recipe manually and collect ingredient details
+    const recipeCosts: Record<number, { total_cost: number; ingredient_count: number }> = {}
+    const recipeIngredients: Record<number, Array<{
+      stockItemName: string
+      quantity: number
+      unit: string
+      unitCost: number
+      lineCost: number
+    }>> = {}
+    
+    ;(ingredients || []).forEach((ing: any) => {
+      if (!recipeCosts[ing.recipe_id]) {
+        recipeCosts[ing.recipe_id] = { total_cost: 0, ingredient_count: 0 }
+        recipeIngredients[ing.recipe_id] = []
+      }
+      recipeCosts[ing.recipe_id].ingredient_count++
+      
+      // parseFloat handles empty strings gracefully (returns NaN -> falls back to 0)
+      const unitCost = parseFloat(ing.stock_items?.unit_cost) || 0
+      const ingredientUnit = ing.unit || ''
+      const stockUnit = ing.stock_items?.unit || ''
+      const stockName = ing.stock_items?.name || 'Unknown'
+
+      // Convert the recipe ingredient quantity to the stock item's unit,
+      // so that (convertedQty * unit_cost) gives the correct cost.
+      // e.g. recipe uses 500g, stock unit_cost is per kg → convert 500g to 0.5kg
+      const convertedQuantity = convertUnits(ing.quantity, ingredientUnit, stockUnit)
+      const lineCost = convertedQuantity * unitCost
+      
+      recipeCosts[ing.recipe_id].total_cost += lineCost
+
+      // Collect ingredient detail for the expandable UI
+      recipeIngredients[ing.recipe_id].push({
+        stockItemName: stockName,
+        quantity: ing.quantity,
+        unit: ingredientUnit,
+        unitCost,
+        lineCost,
+      })
+    })
+    
+    // Convert to array format matching the recipe_costs view shape
+    const data = Object.entries(recipeCosts).map(([recipeId, costs]) => ({
+      recipe_id: parseInt(recipeId),
+      total_cost: costs.total_cost,
+      cost_per_portion: costs.total_cost,
+      ingredient_count: costs.ingredient_count,
+    }))
+    
+    return { success: true, data, ingredients: recipeIngredients }
+  } catch (error) {
+    console.error('Failed to fetch recipe costs:', error)
+    
+    if (error instanceof Error && error.message.includes('Unauthorized')) {
+      return { success: false, error: 'Authentication required. Please log in.', data: [], ingredients: {} }
+    }
+    
+    return { success: false, error: 'Failed to fetch recipe costs', data: [], ingredients: {} }
+  }
+}

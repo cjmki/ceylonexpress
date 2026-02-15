@@ -439,6 +439,7 @@ export async function getAllOrders() {
         *,
         order_items (
           id,
+          menu_item_id,
           menu_item_name,
           menu_item_price,
           quantity,
