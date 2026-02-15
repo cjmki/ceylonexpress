@@ -48,7 +48,7 @@ export default async function AdminDashboard() {
   }))
 
   // Build menu_item_id -> ingredient details map (for expandable profitability rows)
-  const recipeIngredientsMap = recipeCostsResult.ingredients || {}
+  const recipeIngredientsMap: Record<string, IngredientDetail[]> = recipeCostsResult.ingredients || {}
   const menuItemIngredients: Record<string, IngredientDetail[]> = {}
   ;(menuItems || []).forEach((item: any) => {
     if (item.recipe_id != null && recipeIngredientsMap[item.recipe_id]) {
