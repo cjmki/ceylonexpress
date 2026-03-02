@@ -4,6 +4,8 @@ import { OrdersTable } from './components/OrdersTable'
 import { formatPrice } from '../../constants/currency'
 import { AdminTabs } from './components/AdminTabs'
 import { OrderStatus } from '../../constants/enums'
+import { getUserWithRole } from '../../actions/auth'
+import { hasPermission } from '../../constants/roles'
 
 export type MenuItemCostInfo = {
   menuItemId: string
@@ -23,10 +25,11 @@ export type IngredientDetail = {
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const [orders, menuItems, recipeCostsResult] = await Promise.all([
+  const [orders, menuItems, recipeCostsResult, { role: userRole }] = await Promise.all([
     getAllOrders(),
     getAllMenuItems(),
     getAllRecipeCosts(),
+    getUserWithRole(),
   ])
 
   // Build a map of recipe_id -> cost_per_portion
@@ -80,33 +83,34 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Quick Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="Total Orders" 
-          value={orders.length} 
-          color="blue"
-          icon="📦"
-        />
-        <StatCard 
-          title="Pending" 
-          value={pendingOrders.length} 
-          color="yellow"
-          icon="⏳"
-        />
-        <StatCard 
-          title="Potential Revenue" 
-          value={formatPrice(potentialRevenue)} 
-          color="orange"
-          icon="💵"
-        />
-        <StatCard 
-          title="Total Revenue" 
-          value={formatPrice(totalRevenue)} 
-          color="purple"
-          icon="💰"
-        />
-      </div>
+      {hasPermission(userRole, 'view_dashboard_stats') && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard 
+            title="Total Orders" 
+            value={orders.length} 
+            color="blue"
+            icon="📦"
+          />
+          <StatCard 
+            title="Pending" 
+            value={pendingOrders.length} 
+            color="yellow"
+            icon="⏳"
+          />
+          <StatCard 
+            title="Potential Revenue" 
+            value={formatPrice(potentialRevenue)} 
+            color="orange"
+            icon="💵"
+          />
+          <StatCard 
+            title="Total Revenue" 
+            value={formatPrice(totalRevenue)} 
+            color="purple"
+            icon="💰"
+          />
+        </div>
+      )}
 
       {/* Pending Orders Alert */}
       {pendingOrders.length > 0 && (
@@ -126,7 +130,7 @@ export default async function AdminDashboard() {
       )}
 
       {/* Tabbed Interface */}
-      <AdminTabs orders={orders} menuItems={menuItems} menuItemCostData={menuItemCostData} menuItemIngredients={menuItemIngredients} />
+      <AdminTabs orders={orders} menuItems={menuItems} menuItemCostData={menuItemCostData} menuItemIngredients={menuItemIngredients} userRole={userRole} />
     </div>
   )
 }

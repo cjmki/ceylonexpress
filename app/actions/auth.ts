@@ -3,6 +3,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import { signInSchema, safeValidate } from '@/lib/validations'
+import { type UserRole, isValidRole } from '../constants/roles'
 
 export async function signIn(email: string, password: string) {
   // Validate input
@@ -37,4 +38,11 @@ export async function getUser() {
   const supabase = createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
   return user
+}
+
+export async function getUserWithRole(): Promise<{ user: Awaited<ReturnType<typeof getUser>>; role: UserRole | undefined }> {
+  const user = await getUser()
+  const rawRole = user?.app_metadata?.role
+  const role = isValidRole(rawRole) ? rawRole : undefined
+  return { user, role }
 }

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
-import { getUser, signOut } from '../../actions/auth'
+import { getUserWithRole, signOut } from '../../actions/auth'
+import { getRoleLabel } from '../../constants/roles'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -8,7 +9,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await getUser()
+  const { user, role } = await getUserWithRole()
 
   if (!user) {
     redirect('/admin/login')
@@ -43,7 +44,12 @@ export default async function DashboardLayout({
               </Link>
               <div className="flex items-center space-x-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">Admin</p>
+                  <div className="flex items-center justify-end gap-2">
+                    <p className="text-sm font-medium text-gray-900">{user.email?.split('@')[0]}</p>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {getRoleLabel(role)}
+                    </span>
+                  </div>
                   <p className="text-xs text-gray-500">{user.email}</p>
                 </div>
                 <form action={signOut}>
