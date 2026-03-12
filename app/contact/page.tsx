@@ -326,7 +326,7 @@ Submitted from Ceylon Express Catering Form`,
   }
 
   return (
-    <div className="min-h-screen bg-ceylon-cream">
+    <div className="min-h-screen bg-ceylon-bg">
       <Navigation />
       
       <main className="pt-16 md:pt-20">

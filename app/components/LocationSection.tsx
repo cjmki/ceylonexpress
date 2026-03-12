@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 export default function LocationSection() {
   return (
-    <section id="location" className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 bg-ceylon-cream overflow-hidden">
+    <section id="location" className="relative py-16 md:py-24 lg:py-32 px-4 md:px-6 bg-ceylon-bg overflow-hidden">
       {/* Decorative grid pattern */}
       <div className="absolute inset-0 opacity-[0.015]" style={{
         backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 40px, #1A1A1A 40px, #1A1A1A 41px),

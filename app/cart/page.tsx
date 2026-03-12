@@ -205,7 +205,7 @@ export default function CartPage() {
 
   if (cart.length === 0 && !isSubmitting) {
     return (
-      <div className="min-h-screen bg-ceylon-cream flex flex-col">
+      <div className="min-h-screen bg-ceylon-bg flex flex-col">
         <Navigation />
         
         <div className="flex-1 flex items-center justify-center px-6 pt-32 pb-16 md:pb-20">
@@ -236,7 +236,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ceylon-cream flex flex-col">
+    <div className="min-h-screen bg-ceylon-bg flex flex-col">
       <Navigation />
       
       <section className="flex-1 pt-36 pb-12 md:pt-40 md:pb-20 px-4 md:px-6">

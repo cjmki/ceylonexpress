@@ -87,7 +87,7 @@ module.exports = {
         },
         // Ceylon Express colors based on color palette
         ceylon: {
-          bg: "#F5EDA0", // Light cream/pale yellow background
+          bg: "#f1e67e", // Page background
           text: "#1A1A1A", // Black text for readability
           accent: "#D9873B", // Burnt orange for accents
           light: "#F5EDA0", // Light cream for subtle elements

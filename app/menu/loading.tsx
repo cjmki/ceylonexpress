@@ -1,6 +1,6 @@
 export default function MenuLoading() {
   return (
-    <div className="min-h-screen bg-ceylon-cream flex flex-col">
+    <div className="min-h-screen bg-ceylon-bg flex flex-col">
       {/* Navigation placeholder */}
       <div className="h-16 md:h-20" />
 
