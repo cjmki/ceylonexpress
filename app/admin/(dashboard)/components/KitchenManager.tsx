@@ -156,6 +156,7 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
   const [menuItemIngredients, setMenuItemIngredients] = useState<MenuItemIngredients[]>([])
   const [ingredientRequirements, setIngredientRequirements] = useState<IngredientRequirement[]>([])
   const [loadingIngredients, setLoadingIngredients] = useState(false)
+  const [selectedIngredientDate, setSelectedIngredientDate] = useState<string>('')
 
   // Calculate item summary grouped by date - MUST be before early returns
   const itemSummary: ItemSummary[] = React.useMemo(() => {
@@ -190,22 +191,38 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
     return Array.from(dates).sort()
   }, [orders])
 
+  // Auto-select the nearest upcoming date when uniqueDates changes
+  useEffect(() => {
+    if (uniqueDates.length === 0) return
+    const today = new Date().toISOString().split('T')[0]
+    const upcoming = uniqueDates.find(d => d >= today)
+    setSelectedIngredientDate(upcoming || uniqueDates[uniqueDates.length - 1])
+  }, [uniqueDates])
+
+  // Filter order IDs based on selected date
+  const filteredOrderIds = React.useMemo(() => {
+    if (!selectedIngredientDate) return orders.map(o => o.id)
+    return orders
+      .filter(o => o.delivery_date === selectedIngredientDate)
+      .map(o => o.id)
+  }, [orders, selectedIngredientDate])
+
   useEffect(() => {
     const fetchIngredients = async () => {
-      if (orders.length === 0) return
+      if (filteredOrderIds.length === 0) {
+        setMenuItemIngredients([])
+        setIngredientRequirements([])
+        return
+      }
       
       setLoadingIngredients(true)
       try {
-        const orderIds = orders.map(o => o.id)
-        
-        // Fetch menu item-specific ingredients
-        const menuItemResult = await getMenuItemIngredientsForOrders(orderIds)
+        const menuItemResult = await getMenuItemIngredientsForOrders(filteredOrderIds)
         if (menuItemResult.success) {
           setMenuItemIngredients(menuItemResult.data)
         }
         
-        // Fetch total ingredients
-        const totalResult = await calculateIngredientRequirements(orderIds)
+        const totalResult = await calculateIngredientRequirements(filteredOrderIds)
         if (totalResult.success) {
           setIngredientRequirements(totalResult.data)
         }
@@ -217,7 +234,7 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
     }
 
     fetchIngredients()
-  }, [orders])
+  }, [filteredOrderIds])
 
   if (loading) {
     return (
@@ -312,6 +329,29 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
           </div>
         </div>
 
+        {/* Date Selector for Ingredient Requirements */}
+        {uniqueDates.length > 0 && (
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm font-semibold text-gray-700">Ingredients for:</span>
+            {uniqueDates.map(date => (
+              <button
+                key={date}
+                onClick={() => setSelectedIngredientDate(date)}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  selectedIngredientDate === date
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:border-blue-400 hover:text-blue-700'
+                }`}
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                {formatDate(date)}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-2" />
+
         {/* Ingredient Requirements by Menu Item */}
         {menuItemIngredients.length > 0 && (
           <div className="space-y-4">
@@ -319,6 +359,11 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
               <h3 className="font-bold text-sm flex items-center gap-2">
                 <Package className="h-4 w-4" />
                 Ingredient Requirements by Menu Item
+                {selectedIngredientDate && (
+                  <span className="ml-1 font-normal opacity-90">
+                    — {formatDate(selectedIngredientDate)}
+                  </span>
+                )}
               </h3>
             </div>
 
@@ -368,6 +413,11 @@ function KitchenOrdersContent({ orders, loading }: { orders: Order[], loading: b
                 <h4 className="font-bold flex items-center gap-2">
                   <Package className="h-4 w-4" />
                   TOTAL INGREDIENTS REQUIRED
+                  {selectedIngredientDate && (
+                    <span className="font-normal opacity-90">
+                      — {formatDate(selectedIngredientDate)}
+                    </span>
+                  )}
                 </h4>
               </div>
               <div className="p-4">
