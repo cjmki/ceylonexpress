@@ -75,7 +75,7 @@ export default function OrderConfirmationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-ceylon-cream flex flex-col">
+      <div className="min-h-screen bg-ceylon-bg flex flex-col">
         <Navigation />
         <div className="flex-1 flex items-center justify-center pt-32">
           <div className="text-center">
@@ -90,7 +90,7 @@ export default function OrderConfirmationPage() {
 
   if (error || !order) {
     return (
-      <div className="min-h-screen bg-ceylon-cream flex flex-col">
+      <div className="min-h-screen bg-ceylon-bg flex flex-col">
         <Navigation />
         <div className="flex-1 flex items-center justify-center px-6 pt-32">
           <div className="text-center">
@@ -112,7 +112,7 @@ export default function OrderConfirmationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-ceylon-cream flex flex-col">
+    <div className="min-h-screen bg-ceylon-bg flex flex-col">
       <Navigation />
       
       <section className="flex-1 pt-40 pb-20 px-6">

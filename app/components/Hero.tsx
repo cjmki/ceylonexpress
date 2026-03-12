@@ -6,7 +6,7 @@ import { Instagram, Sparkles, ChefHat, ArrowRight } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen px-4 md:px-6 overflow-hidden bg-ceylon-cream">
+    <section className="relative min-h-screen px-4 md:px-6 overflow-hidden bg-ceylon-bg">
       {/* Subtle grid pattern background */}
       <div className="absolute inset-0 opacity-[0.015]" style={{
         backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 40px, #1A1A1A 40px, #1A1A1A 41px),

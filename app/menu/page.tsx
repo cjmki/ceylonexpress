@@ -13,7 +13,7 @@ export default async function MenuPage() {
   const menuItems = await getMenuItemsCached()
 
   return (
-    <div className="min-h-screen bg-ceylon-cream flex flex-col">
+    <div className="min-h-screen bg-ceylon-bg flex flex-col">
       <Navigation />
 
       {/* Menu Content */}
