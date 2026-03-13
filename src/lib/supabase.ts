@@ -8,6 +8,17 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 // Client-side Supabase client (existing one)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Admin client using service_role key — bypasses RLS, used for role assignment
+export function createAdminSupabaseClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceRoleKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set')
+  }
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  })
+}
+
 // Server-side Supabase client with auth support
 export function createServerSupabaseClient() {
   const cookieStore = cookies()

@@ -11,6 +11,7 @@ import { HealthSafetyManager } from './HealthSafetyManager'
 import { AddMenuItemForm } from './AddMenuItemForm'
 import { useRouter } from 'next/navigation'
 import { OrderStatus, DeliveryMethod } from '../../../constants/enums'
+import { type UserRole, hasPermission } from '../../../constants/roles'
 
 interface Order {
   id: string
@@ -69,11 +70,12 @@ interface AdminTabsProps {
   menuItems: MenuItem[]
   menuItemCostData: MenuItemCostInfo[]
   menuItemIngredients: Record<string, IngredientDetail[]>
+  userRole: UserRole | undefined
 }
 
 type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics' | 'health-safety'
 
-export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredients }: AdminTabsProps) {
+export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredients, userRole }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
   const [showAddMenuForm, setShowAddMenuForm] = useState(false)
   const router = useRouter()
@@ -177,17 +179,19 @@ export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredi
               </span>
             </button>
 
-            <button
-              onClick={() => setActiveTab('statistics')}
-              className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
-                activeTab === 'statistics'
-                  ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-700'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <BarChart3 className="h-5 w-5" />
-              Statistics
-            </button>
+            {hasPermission(userRole, 'view_statistics') && (
+              <button
+                onClick={() => setActiveTab('statistics')}
+                className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
+                  activeTab === 'statistics'
+                    ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <BarChart3 className="h-5 w-5" />
+                Statistics
+              </button>
+            )}
 
             <button
               onClick={() => setActiveTab('health-safety')}
@@ -262,7 +266,7 @@ export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredi
             </div>
           )}
 
-          {activeTab === 'statistics' && (
+          {activeTab === 'statistics' && hasPermission(userRole, 'view_statistics') && (
             <div>
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">Business Statistics</h2>
