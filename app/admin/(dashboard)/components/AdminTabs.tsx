@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3, Truck, ShieldCheck } from 'lucide-react'
+import { Plus, Package, UtensilsCrossed, ChefHat, BarChart3, Truck, ShieldCheck, CalendarClock } from 'lucide-react'
 import { OrdersManager } from './OrdersManager'
 import { MenuItemsTable } from './MenuItemsTable'
 import { KitchenManager } from './KitchenManager'
+import { LiveMenuManager } from './LiveMenuManager'
 import { StatisticsManager } from './StatisticsManager'
 import { DeliveryManager } from './DeliveryManager'
 import { HealthSafetyManager } from './HealthSafetyManager'
@@ -73,7 +74,7 @@ interface AdminTabsProps {
   userRole: UserRole | undefined
 }
 
-type Tab = 'orders' | 'menu' | 'kitchen' | 'delivery' | 'statistics' | 'health-safety'
+type Tab = 'orders' | 'menu' | 'live-menu' | 'kitchen' | 'delivery' | 'statistics' | 'health-safety'
 
 export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredients, userRole }: AdminTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('orders')
@@ -140,6 +141,20 @@ export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredi
                 {menuItems.length}
               </span>
             </button>
+
+            {hasPermission(userRole, 'manage_menu') && (
+              <button
+                onClick={() => setActiveTab('live-menu')}
+                className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-t-lg transition-all whitespace-nowrap ${
+                  activeTab === 'live-menu'
+                    ? 'bg-orange-50 text-orange-700 border-b-2 border-orange-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <CalendarClock className="h-5 w-5" />
+                Live Menu
+              </button>
+            )}
 
             <button
               onClick={() => setActiveTab('kitchen')}
@@ -239,6 +254,16 @@ export function AdminTabs({ orders, menuItems, menuItemCostData, menuItemIngredi
               </div>
 
               <MenuItemsTable items={menuItems} onUpdate={() => router.refresh()} />
+            </div>
+          )}
+
+          {activeTab === 'live-menu' && hasPermission(userRole, 'manage_menu') && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">Live Menu</h2>
+                <p className="text-sm text-gray-600 mt-1">Bulk manage availability and schedule go-live for menu items</p>
+              </div>
+              <LiveMenuManager />
             </div>
           )}
 
