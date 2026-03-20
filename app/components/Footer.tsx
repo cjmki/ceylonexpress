@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Instagram, Facebook, Heart, MapPin, Mail, Phone } from 'lucide-react'
+import { Instagram, Facebook, MapPin, Phone, MessageCircle } from 'lucide-react'
+import { CONTACT_PHONE } from '@/app/constants/socialLinks'
 
 export default function Footer() {
   return (
@@ -56,6 +57,32 @@ export default function Footer() {
                 </div>
                 <span>Stockholm, Sweden</span>
               </div>
+              <a
+                href={CONTACT_PHONE.telHref}
+                className="flex items-center gap-3 text-white/70 text-sm hover:text-ceylon-yellow transition-colors group"
+                aria-label={`Call ${CONTACT_PHONE.display}`}
+              >
+                <div className="bg-ceylon-orange/20 p-2 rounded-lg group-hover:bg-ceylon-orange/30">
+                  <Phone className="h-4 w-4 text-ceylon-yellow" />
+                </div>
+                <span className="underline decoration-white/20 underline-offset-2 group-hover:decoration-ceylon-yellow">
+                  {CONTACT_PHONE.display}
+                </span>
+              </a>
+              <a
+                href={CONTACT_PHONE.whatsappUrlWithPrefill}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-white/70 text-sm hover:text-ceylon-yellow transition-colors group"
+                aria-label="Message us on WhatsApp"
+              >
+                <div className="bg-ceylon-orange/20 p-2 rounded-lg group-hover:bg-ceylon-orange/30">
+                  <MessageCircle className="h-4 w-4 text-ceylon-yellow" />
+                </div>
+                <span className="underline decoration-white/20 underline-offset-2 group-hover:decoration-ceylon-yellow">
+                  WhatsApp
+                </span>
+              </a>
             </div>
           </div>
 

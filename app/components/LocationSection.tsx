@@ -1,8 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Instagram, Facebook, Sparkles, ArrowRight } from 'lucide-react'
+import { Instagram, Facebook, Sparkles, ArrowRight, Phone, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
+import { CONTACT_PHONE } from '@/app/constants/socialLinks'
 
 export default function LocationSection() {
   return (
@@ -95,16 +96,35 @@ export default function LocationSection() {
               {/* Description */}
               <p className="text-sm md:text-base lg:text-lg text-ceylon-text/70 mb-6 md:mb-8 leading-relaxed">
                 We cater for birthdays, office events, family gatherings, and parties. 
-                Get in touch through Instagram or Facebook to discuss your event.
+                Call, WhatsApp, reach us on Instagram or Facebook, or use the form to discuss your event.
               </p>
 
-              {/* Catering inquiry CTA button */}
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-sm md:text-base uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-              >
-                <span>Message us for catering inquiries</span>
-              </a>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center items-center">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-sm md:text-base uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  <span>Message us for catering inquiries</span>
+                </Link>
+                <a
+                  href={CONTACT_PHONE.telHref}
+                  className="inline-flex items-center justify-center gap-2 border-2 border-ceylon-orange/40 text-ceylon-text hover:bg-ceylon-orange/10 px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold text-xs md:text-sm uppercase tracking-wider transition-all duration-300"
+                  aria-label={`Call ${CONTACT_PHONE.display}`}
+                >
+                  <Phone className="h-4 w-4 shrink-0 text-ceylon-orange" />
+                  <span>{CONTACT_PHONE.display}</span>
+                </a>
+                <a
+                  href={CONTACT_PHONE.whatsappUrlWithPrefill}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border-2 border-[#25D366]/50 text-ceylon-text hover:bg-[#25D366]/10 px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold text-xs md:text-sm uppercase tracking-wider transition-all duration-300"
+                  aria-label="Message us on WhatsApp"
+                >
+                  <MessageCircle className="h-4 w-4 shrink-0 text-[#25D366]" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
 
               {/* Accent dots */}
               <div className="absolute top-4 right-4 w-3 h-3 md:w-4 md:h-4 rounded-full bg-ceylon-yellow shadow-lg"></div>
