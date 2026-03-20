@@ -399,9 +399,6 @@ Submitted from Ceylon Express Catering Form`,
               <p className="text-sm font-bold text-ceylon-text uppercase tracking-wider mb-2">
                 Reach us directly
               </p>
-              <p className="text-sm text-ceylon-text/65 mb-5 max-w-md mx-auto">
-                Prefer voice or chat? Call or WhatsApp us—we may not answer immediately; the form below works great too.
-              </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center">
                 <a
                   href={CONTACT_PHONE.telHref}
