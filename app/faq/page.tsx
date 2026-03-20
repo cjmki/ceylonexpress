@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HelpCircle, ChevronDown, Sparkles, MapPin, Truck, Clock } from 'lucide-react'
+import { HelpCircle, ChevronDown, Sparkles, MapPin, Truck, Clock, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 import Navigation from '@/app/components/Navigation'
 import Footer from '@/app/components/Footer'
+import { CONTACT_PHONE } from '@/app/constants/socialLinks'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
@@ -256,15 +257,26 @@ export default function FAQPage() {
                   Still have questions?
                 </h2>
                 <p className="text-ceylon-text/70 mb-6 max-w-lg mx-auto">
-                  We&apos;d love to hear from you! Reach out to us through our contact form or social media.
+                  We&apos;d love to hear from you! Reach out through our contact form, call{' '}
+                  {CONTACT_PHONE.display}, WhatsApp, or social media.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
                   <Link
                     href="/contact"
                     className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                   >
                     Contact Us
                   </Link>
+                  <a
+                    href={CONTACT_PHONE.whatsappUrlWithPrefill}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb855] text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    aria-label="Message us on WhatsApp"
+                  >
+                    <MessageCircle className="h-4 w-4 shrink-0" />
+                    <span>WhatsApp us</span>
+                  </a>
                   <a
                     href="https://www.instagram.com/ceylonexpress.se/"
                     target="_blank"

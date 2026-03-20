@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, Phone, Calendar, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Send, Mail, Phone, Calendar, Sparkles, CheckCircle, ChevronDown, ChevronUp, MessageCircle } from 'lucide-react'
 import type { ContactFormData } from '@/lib/validations/contact.validation'
 import Navigation from '@/app/components/Navigation'
 import Footer from '@/app/components/Footer'
@@ -12,6 +12,7 @@ import { InquiryItemModal } from './components/InquiryItemModal'
 import { getMenuItems } from '../actions/orders'
 import { getMenuItemAllergens } from '../actions/allergens'
 import { MENU_CATEGORIES, getMenuCategoryDisplay } from '../constants/enums'
+import { CONTACT_PHONE } from '../constants/socialLinks'
 
 interface MenuItem {
   id: string
@@ -385,6 +386,40 @@ Submitted from Ceylon Express Catering Form`,
             <p className="text-base md:text-lg lg:text-xl text-ceylon-text/70 max-w-2xl mx-auto">
               Planning an event? Browse our menu and let us know what interests you!
             </p>
+          </motion.div>
+
+          {/* Direct contact — call & WhatsApp */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mb-10 md:mb-12"
+          >
+            <div className="bg-white rounded-2xl md:rounded-3xl border-3 border-ceylon-orange/25 shadow-lg p-6 md:p-8 text-center">
+              <p className="text-sm font-bold text-ceylon-text uppercase tracking-wider mb-2">
+                Reach us directly
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center">
+                <a
+                  href={CONTACT_PHONE.telHref}
+                  className="inline-flex items-center justify-center gap-2 bg-ceylon-orange hover:bg-ceylon-text text-white px-6 py-3.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg"
+                  aria-label={`Call ${CONTACT_PHONE.display}`}
+                >
+                  <Phone className="h-4 w-4 shrink-0" />
+                  <span>{CONTACT_PHONE.display}</span>
+                </a>
+                <a
+                  href={CONTACT_PHONE.whatsappUrlWithPrefill}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb855] text-white px-6 py-3.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg"
+                  aria-label="Message us on WhatsApp"
+                >
+                  <MessageCircle className="h-4 w-4 shrink-0" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+            </div>
           </motion.div>
 
           {/* Menu Section - Only show if menu loaded successfully */}
