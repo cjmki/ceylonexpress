@@ -44,7 +44,8 @@ export function OrdersManager() {
     deliveryMethod: 'all',
     searchQuery: '',
     dateFrom: '',
-    dateTo: ''
+    dateTo: '',
+    dateFilterBy: 'delivery_date'
   })
 
   const fetchOrders = useCallback(async () => {
@@ -59,7 +60,9 @@ export function OrdersManager() {
         dateFrom: filters.dateFrom,
         dateTo: filters.dateTo,
         sortBy: 'created_at',
-        sortOrder: 'desc'
+        sortOrder: 'desc',
+        useDeliveryDate: filters.dateFilterBy === 'delivery_date',
+        useCompletionDate: filters.dateFilterBy === 'updated_at',
       })
 
       if (result.success) {
@@ -105,14 +108,15 @@ export function OrdersManager() {
         searchQuery: filters.searchQuery || undefined,
         dateFrom: filters.dateFrom || undefined,
         dateTo: filters.dateTo || undefined,
-        sortBy: 'updated_at',
+        sortBy: 'delivery_date',
         sortOrder: 'desc',
-        useCompletionDate: true
+        useDeliveryDate: filters.dateFilterBy === 'delivery_date',
+        useCompletionDate: filters.dateFilterBy === 'updated_at',
       })
 
       if (result.success && result.data && result.data.length > 0) {
-        const { filename, totalRevenue, orderCount } = generateOrdersPdf(result.data)
-        alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\nTotal Revenue: ${totalRevenue.toFixed(2)} SEK`)
+        const { filename, totalGross, totalNet, totalVat, orderCount } = generateOrdersPdf(result.data)
+        alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\n\nGross Revenue (incl. VAT): ${totalGross.toFixed(2)} SEK\nVAT Collected: ${totalVat.toFixed(2)} SEK\nNet Revenue (excl. VAT): ${totalNet.toFixed(2)} SEK`)
       } else {
         alert('No completed orders found with the current filters.')
       }

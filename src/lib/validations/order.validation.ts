@@ -148,6 +148,10 @@ export const getFilteredOrdersSchema = z.object({
     .boolean()
     .optional()
     .default(false),
+  useDeliveryDate: z
+    .boolean()
+    .optional()
+    .default(false),
 }).refine(
   data => {
     // If both dates provided, validate dateFrom is before dateTo

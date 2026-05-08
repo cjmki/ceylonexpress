@@ -15,6 +15,7 @@ export interface OrderFilters {
   searchQuery: string
   dateFrom: string
   dateTo: string
+  dateFilterBy: 'created_at' | 'delivery_date' | 'updated_at'
 }
 
 export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps) {
@@ -23,7 +24,8 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
     deliveryMethod: 'all',
     searchQuery: '',
     dateFrom: '',
-    dateTo: ''
+    dateTo: '',
+    dateFilterBy: 'delivery_date'
   })
   
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
@@ -47,23 +49,27 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
     setFilters(prev => ({ ...prev, [key]: value }))
   }
 
+
+
   const clearAllFilters = () => {
     setFilters({
       status: 'all',
       deliveryMethod: 'all',
       searchQuery: '',
       dateFrom: '',
-      dateTo: ''
+      dateTo: '',
+      dateFilterBy: 'delivery_date'
     })
     setSearchInput('')
   }
 
-  const hasActiveFilters = 
-    filters.status !== 'all' || 
-    filters.deliveryMethod !== 'all' || 
-    filters.searchQuery !== '' || 
-    filters.dateFrom !== '' || 
-    filters.dateTo !== ''
+  const hasActiveFilters =
+    filters.status !== 'all' ||
+    filters.deliveryMethod !== 'all' ||
+    filters.searchQuery !== '' ||
+    filters.dateFrom !== '' ||
+    filters.dateTo !== '' ||
+    filters.dateFilterBy !== 'delivery_date'
 
   return (
     <div className="space-y-4">
@@ -153,7 +159,7 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Delivery Method Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -167,6 +173,23 @@ export function OrdersFilters({ onFilterChange, totalCount }: OrdersFiltersProps
                 <option value="all">All Methods</option>
                 <option value={DeliveryMethod.DELIVERY}>{DELIVERY_METHOD_DISPLAY_WITH_EMOJI[DeliveryMethod.DELIVERY]}</option>
                 <option value={DeliveryMethod.PICKUP}>{DELIVERY_METHOD_DISPLAY_WITH_EMOJI[DeliveryMethod.PICKUP]}</option>
+              </select>
+            </div>
+
+            {/* Date Filter By */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Calendar className="h-4 w-4 inline mr-1" />
+                Filter Dates By
+              </label>
+              <select
+                value={filters.dateFilterBy}
+                onChange={(e) => handleFilterChange('dateFilterBy', e.target.value as OrderFilters['dateFilterBy'])}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white cursor-pointer"
+              >
+                <option value="delivery_date">Delivery Date (recommended for accounting)</option>
+                <option value="created_at">Order Date</option>
+                <option value="updated_at">Completion Date</option>
               </select>
             </div>
 
