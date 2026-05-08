@@ -473,7 +473,8 @@ export async function getFilteredOrders({
   dateTo,
   sortBy = 'created_at',
   sortOrder = 'desc',
-  useCompletionDate = false
+  useCompletionDate = false,
+  useDeliveryDate = false
 }: {
   page?: number
   pageSize?: number
@@ -485,6 +486,7 @@ export async function getFilteredOrders({
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
   useCompletionDate?: boolean
+  useDeliveryDate?: boolean
 } = {}) {
   'use server'
   
@@ -504,6 +506,7 @@ export async function getFilteredOrders({
       sortBy,
       sortOrder,
       useCompletionDate,
+      useDeliveryDate,
     })
     
     if (!validation.success) {
@@ -551,11 +554,15 @@ export async function getFilteredOrders({
       query = query.or(`customer_name.ilike.%${validatedData.searchQuery}%,customer_email.ilike.%${validatedData.searchQuery}%,customer_phone.ilike.%${validatedData.searchQuery}%`)
     }
 
-    // Use updated_at for date filtering when status is completed AND useCompletionDate is true
-    // Also auto-use updated_at if status is completed (regardless of flag)
-    const dateFilterField = (validatedData.status === OrderStatus.COMPLETED || validatedData.useCompletionDate) 
-      ? 'updated_at' 
-      : 'created_at'
+    // Determine which date column to filter on:
+    //   useDeliveryDate → delivery_date (recommended for accounting — when revenue was earned)
+    //   useCompletionDate or status=completed → updated_at
+    //   default → created_at
+    const dateFilterField = validatedData.useDeliveryDate
+      ? 'delivery_date'
+      : (validatedData.status === OrderStatus.COMPLETED || validatedData.useCompletionDate)
+        ? 'updated_at'
+        : 'created_at'
 
     if (validatedData.dateFrom) {
       // Convert date string to start of day in ISO format
