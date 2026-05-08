@@ -6,7 +6,6 @@ import { OrdersFilters, OrderFilters } from './OrdersFilters'
 import { Pagination } from './Pagination'
 import { getFilteredOrders } from '../../../actions/orders'
 import { Loader2, FileDown } from 'lucide-react'
-import { OrderStatus } from '../../../constants/enums'
 import { generateOrdersPdf } from '@/lib/pdfExport'
 
 interface Order {
@@ -115,7 +114,11 @@ export function OrdersManager() {
       })
 
       if (result.success && result.data && result.data.length > 0) {
-        const { filename, totalGross, totalNet, totalVat, orderCount } = generateOrdersPdf(result.data)
+        const { filename, totalGross, totalNet, totalVat, orderCount } = generateOrdersPdf(
+          result.data,
+          filters.dateFrom || undefined,
+          filters.dateTo || undefined,
+        )
         alert(`✅ Export successful!\n\nFile: ${filename}\nCompleted Orders: ${orderCount}\n\nGross Revenue (incl. VAT): ${totalGross.toFixed(2)} SEK\nVAT Collected: ${totalVat.toFixed(2)} SEK\nNet Revenue (excl. VAT): ${totalNet.toFixed(2)} SEK`)
       } else {
         alert('No completed orders found with the current filters.')

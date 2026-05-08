@@ -18,7 +18,11 @@ interface ExportOrder {
   }>
 }
 
-export function generateOrdersPdf(orders: ExportOrder[]) {
+export function generateOrdersPdf(
+  orders: ExportOrder[],
+  filterDateFrom?: string,
+  filterDateTo?: string,
+) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
 
   // --- Title ---
@@ -33,11 +37,21 @@ export function generateOrdersPdf(orders: ExportOrder[]) {
     month: 'long',
     day: 'numeric',
   })
+
+  const periodLabel = filterDateFrom && filterDateTo
+    ? `Period: ${filterDateFrom} to ${filterDateTo}`
+    : filterDateFrom
+      ? `Period: from ${filterDateFrom}`
+      : filterDateTo
+        ? `Period: up to ${filterDateTo}`
+        : 'Period: All time'
+
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
   doc.text(`Generated: ${reportDate}`, 14, 26)
-  doc.text(`Total Orders: ${orders.length}`, 14, 31)
-  doc.text('VAT rates: 12% applied to orders before 01/04/2026 · 6% applied from 01/04/2026 (Skatteverket)', 14, 36)
+  doc.text(periodLabel, 14, 31)
+  doc.text(`Total Orders: ${orders.length}`, 14, 36)
+  doc.text('VAT rates: 12% for orders before 01/04/2026 · 6% from 01/04/2026 (Skatteverket)', 14, 41)
 
   // --- Build table rows & accumulate VAT totals ---
   let totalGross = 0
@@ -121,7 +135,7 @@ export function generateOrdersPdf(orders: ExportOrder[]) {
 
   // --- Render table ---
   autoTable(doc, {
-    startY: 41,
+    startY: 47,
     head: [
       [
         'Order ID',
@@ -244,7 +258,14 @@ export function generateOrdersPdf(orders: ExportOrder[]) {
   })
 
   // --- Generate filename and trigger download ---
-  const filename = `ceylon_express_orders_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}.pdf`
+  const periodSuffix = filterDateFrom && filterDateTo
+    ? `_${filterDateFrom}_to_${filterDateTo}`
+    : filterDateFrom
+      ? `_from_${filterDateFrom}`
+      : filterDateTo
+        ? `_to_${filterDateTo}`
+        : ''
+  const filename = `ceylon_express_orders${periodSuffix}_generated_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}.pdf`
 
   doc.save(filename)
 
